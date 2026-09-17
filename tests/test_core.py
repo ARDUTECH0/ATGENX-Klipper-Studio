@@ -426,6 +426,75 @@ class TestFeatures(unittest.TestCase):
         self.assertTrue(any("mcu pico" in m for m in msgs), msgs)
 
 
+class TestWiringMap(unittest.TestCase):
+    def setUp(self):
+        i18n.set_lang("en")
+        self.text = read("simple_printer.cfg")
+        self.P, _ = import_config(self.text)
+        self.board = load_boards()[self.P["board"]]
+
+    def map(self, text=None):
+        from studio.wiring import wiring
+        return wiring(self.P, self.board, text if text is not None else self.text)
+
+    def test_every_device_and_pin_is_on_the_map(self):
+        from studio.wiring import GROUPS
+        data = self.map()
+        ids = {n["id"] for n in data["nodes"]}
+        for expected in ("motor:x", "motor:y", "motor:z", "motor:e", "heater:e", "sensor:e", "heater:bed", "fan:part"):
+            self.assertIn(expected, ids)
+        self.assertEqual([g for g in (n["group"] for n in data["nodes"]) if g not in GROUPS], [])
+        x = next(n for n in data["nodes"] if n["id"] == "motor:x")
+        pins = {p["role"]: p["pin"] for p in x["pins"]}
+        self.assertEqual(pins["step_pin"], "PB13")
+        self.assertEqual(pins["endstop_pin"], "^PC0")
+        self.assertEqual(pins["bus:uart_pin"], "PC11")
+        self.assertTrue(all(p["board"] == "mcu" for p in x["pins"]))
+        self.assertEqual([n for n in data["nodes"] if n["issues"]], [])
+
+    def test_a_pin_used_twice_shows_on_both_devices(self):
+        self.P["pins"]["fan"] = self.P["pins"]["bed_heater"]
+        data = self.map()
+        bad = [n["label"] for n in data["nodes"] if n["issues"]]
+        self.assertEqual(len(bad), 1, bad)
+        self.assertTrue(data["issues"] and "used by" in data["issues"][0])
+
+    def test_empty_pin_is_flagged(self):
+        self.P["pins"]["e_heater"] = ""
+        node = next(n for n in self.map()["nodes"] if n["id"] == "heater:e")
+        self.assertTrue(node["issues"])
+
+    def test_second_board_and_added_sections(self):
+        text = self.text.replace("#*# <", "[mcu adxl]\nserial: /dev/ttyACM1\n\n[adxl345]\ncs_pin: adxl:gpio1\n\n#*# <", 1)
+        data = self.map(text)
+        self.assertEqual([b["id"] for b in data["boards"]], ["mcu", "adxl"])
+        adxl = next(n for n in data["nodes"] if n["id"] == "section:adxl345")
+        self.assertEqual(adxl["pins"][0]["board"], "adxl")
+        self.assertFalse(adxl["issues"])
+        # the same thing with the board switched off
+        off = text.replace("[mcu adxl]\nserial:", "#[mcu adxl]\n#serial:", 1)
+        data2 = self.map(off)
+        adxl2 = next(n for n in data2["nodes"] if n["id"] == "section:adxl345")
+        self.assertTrue(any("switched off" in i for i in adxl2["issues"]), adxl2["issues"])
+
+    def test_editing_a_pin_on_the_map(self):
+        from studio.wiring import set_pin
+        self.assertTrue(set_pin(self.P, "motor:x", "step_pin", "PA1"))
+        self.assertEqual(self.P["motors"]["x"]["step_pin"], "PA1")
+        self.assertTrue(set_pin(self.P, "motor:x", "bus:uart_pin", "PB5"))
+        self.assertEqual(self.P["motors"]["x"]["bus"]["uart_pin"], "PB5")
+        self.assertTrue(set_pin(self.P, "fan:part", "fan", "PC7"))
+        self.assertEqual(self.P["pins"]["fan"], "PC7")
+        self.assertFalse(set_pin(self.P, "section:adxl345", "cs_pin", "PA0"))
+        self.assertIn("PA1", build(self.P, self.text, "merge"))
+
+    def test_map_labels_are_translated(self):
+        from studio.wiring import GROUPS
+        for key in ["map.group_" + g for g in GROUPS] + ["map.issue_empty", "map.issue_conflict", "map.off",
+                                                          "map.side_motors", "map.status"]:
+            self.assertIn(key, i18n.STRINGS, key)
+
+
 class TestConfigSet(unittest.TestCase):
     def load(self):
         folder = os.path.join(FIX, "modular")

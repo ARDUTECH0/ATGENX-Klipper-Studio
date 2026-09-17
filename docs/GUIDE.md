@@ -1,6 +1,6 @@
 # Klipper Studio - User guide
 
-This guide explains every page and every setting of Klipper Studio 1.0.0-beta.3, and walks through the most common tasks. The same explanations appear inside the app in the help panel on the right - point at any setting to read them.
+This guide explains every page and every setting of Klipper Studio 1.0.0-beta.4, and walks through the most common tasks. The same explanations appear inside the app in the help panel on the right - point at any setting to read them.
 
 ## Contents
 
@@ -261,6 +261,15 @@ Optional features. Each one adds its own section to printer.cfg and can be switc
 
 Every pin in one table: motor pins, driver bus pins, heaters, fans, probe, LEDs. Filled from the board page - edit only if your wiring differs.  
 ^ = pull-up, ~ = pull-down, ! = inverted.
+
+### Wiring map
+
+The wiring map: your board in the middle and every device around it, each line labelled with the pin it uses.  
+  
+Click a device to see and edit its pins. Red = a problem (empty pin, the same pin used twice, or a pin on a second board that is switched off).  
+Drag devices to arrange them, scroll to zoom, and Export image saves the diagram as a PNG - handy for documenting your printer or asking for help.  
+  
+Add device adds a motor, a feature or a section from the catalog.
 
 ### Review & upload
 

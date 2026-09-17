@@ -157,6 +157,23 @@ def main():
     check("features: catalog item removed", ("[%s]" % sec) not in win.generated)
     check("features: sidebar badges and help panel", win.nav.item(0).text() and win.help_page_title.text())
 
+    # ---- wiring map
+    win.goto_page("page_map")
+    app.processEvents()
+    check("map: devices drawn", len(win._map_nodes) >= 6 and "devices" in win.map_status.text())
+    node = win._map_nodes["motor:x"].node
+    win._map_select(node)
+    check("map: device selected", "X" in win.map_sel_title.text())
+    old_pin = win.P["motors"]["x"]["step_pin"]
+    win._map_set_pin("motor:x", "step_pin", "PA1")
+    check("map: pin edited from the map", win.P["motors"]["x"]["step_pin"] == "PA1" and "step_pin: PA1" in win.generated)
+    win._map_set_pin("motor:x", "step_pin", old_pin)
+    png = os.path.join(os.environ["ATGENX_STUDIO_HOME"], "map.png")
+    from PySide6.QtWidgets import QFileDialog
+    QFileDialog.getSaveFileName = staticmethod(lambda *a, **k: (png, "PNG image (*.png)"))
+    win.act_map_export()
+    check("map: exported as an image", os.path.exists(png) and os.path.getsize(png) > 10000)
+
     # ---- pins page edit survives navigation
     win.goto_page("page_pins")
     app.processEvents()

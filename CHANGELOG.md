@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.0.0-beta.4 - 2026-09-17
+
+### Wiring map (new page)
+- Your board in the middle and every connected device around it - motors with their driver sockets, heaters,
+  thermistors, fans, probe, filament sensor, LED strip, and any section you added yourself - with each line
+  labelled with the pin it uses.
+- A second board ([mcu pico], a toolhead board...) is drawn as its own board, and pins like `pico:gpio1` are
+  connected to it.
+- Red marks a problem: an empty pin, the same pin used by two devices, or a pin on a board that is switched off.
+- Click a device to see and edit its pins, drag devices to arrange them, scroll to zoom.
+- **Add device** adds a motor, switches a feature on, or adds a section from the catalog.
+- **Export image** saves the diagram as a PNG - useful for documenting your printer or when asking for help.
+
 ## 1.0.0-beta.3 - 2026-09-17
 
 ### Features you can switch on and off
