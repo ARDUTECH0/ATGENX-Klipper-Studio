@@ -17,7 +17,7 @@ from .widgets import CfgHighlighter, SearchCombo
 
 
 class PagesMixin:
-    PAGES = [("nav.start", "page_start"), ("nav.connection", "page_connection"), ("nav.board", "page_board"),
+    PAGES = [("nav.start", "page_start"), ("nav.connection", "page_connection"), ("nav.board", "page_board"), ("nav.features", "page_features"),
              ("nav.machine", "page_machine"), ("nav.motors", "page_motors"),
              ("nav.thermal", "page_thermal"), ("nav.probe", "page_probe"),
              ("nav.extras", "page_extras"), ("nav.pins", "page_pins"),
@@ -136,6 +136,7 @@ class PagesMixin:
         self.keep_inv = QCheckBox(tr("board.keep_inversion"))
         self.keep_inv.setChecked(True)
         f.addRow("", self.keep_inv)
+        self.register_help(self.keep_inv, "keep_inversion", tr("board.keep_inversion"))
         f.addRow("", self.check("board_extras", tr("board.extras")))
         row = QHBoxLayout()
         b = QPushButton(tr("board.apply"), objectName="primary")
@@ -297,6 +298,9 @@ class PagesMixin:
         self.rb_merge.setChecked(True)
         self.cb_keep = QCheckBox(tr("preview.keep_custom"))
         self.cb_keep.setChecked(True)
+        self.register_help(self.rb_merge, "preview.merge", tr("preview.merge"))
+        self.register_help(self.rb_full, "preview.full", tr("preview.full"))
+        self.register_help(self.cb_keep, "preview.full", tr("preview.keep_custom"))
         for x in (self.rb_merge, self.rb_full, self.cb_keep):
             opts.addWidget(x)
             x.toggled.connect(lambda _=None: self.do_generate())
@@ -309,6 +313,9 @@ class PagesMixin:
         self.out_box = QPlainTextEdit(readOnly=True)
         self.diff_box = QPlainTextEdit(readOnly=True)
         self.val_list = QListWidget()
+        self.val_list.setCursor(Qt.PointingHandCursor)
+        self.val_list.itemClicked.connect(
+            lambda it: it.data(Qt.UserRole) and it.data(Qt.UserRole) != "page_preview" and self.goto_page(it.data(Qt.UserRole)))
         self.log_box = QPlainTextEdit(readOnly=True)
         for x in (self.out_box, self.diff_box, self.log_box):
             x.setLayoutDirection(Qt.LeftToRight)

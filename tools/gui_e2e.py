@@ -132,6 +132,31 @@ def main():
     win.act_remove_motor()
     check("motors: remove " + extra, not win.P["motors"][extra]["enabled"])
 
+    # ---- features: built-in switch, section on/off, catalog
+    win.goto_page("page_features")
+    app.processEvents()
+    win._toggle_builtin("retraction", True)
+    win.do_generate()
+    check("features: built-in switch adds its section", win.P["retraction"] and "[firmware_retraction]" in win.generated)
+    macro = next((l[1:-1] for l in printer_cfg.splitlines() if l.startswith("[gcode_macro ")), None)
+    if macro:
+        win._toggle_section(macro, True, False)
+        win.do_generate()
+        check("features: section switched off is commented out", ("#[%s]" % macro) in win.generated)
+        win._toggle_section(macro, True, True)
+        win.do_generate()
+        check("features: section switched back on", ("\n[%s]" % macro) in win.generated)
+    from studio.features import CATALOG, section_names
+    cid, sec = next((c, section_names(spec[3])[0]) for c, spec in CATALOG.items()
+                    if c != "blank" and ("[%s]" % section_names(spec[3])[0]) not in printer_cfg)
+    win._add_catalog(cid)
+    win.do_generate()
+    check("features: catalog item added (%s)" % cid, ("[%s]" % sec) in win.generated)
+    win._remove_custom(len(win.P["custom_sections"]) - 1)
+    win.do_generate()
+    check("features: catalog item removed", ("[%s]" % sec) not in win.generated)
+    check("features: sidebar badges and help panel", win.nav.item(0).text() and win.help_page_title.text())
+
     # ---- pins page edit survives navigation
     win.goto_page("page_pins")
     app.processEvents()
@@ -144,7 +169,7 @@ def main():
 
     # ---- generate & upload
     win.do_generate()
-    errs = [m for k, m in win.results if k == "error"]
+    errs = [r[1] for r in win.results if r[0] == "error"]
     check("preview: generated without errors", win.generated and not errs, " | ".join(errs))
     check("preview: macros kept", win.generated.count("[gcode_macro ") >= printer_cfg.count("[gcode_macro "))
 

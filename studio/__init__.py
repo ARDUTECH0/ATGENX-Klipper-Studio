@@ -4,10 +4,10 @@ import os
 import sys
 
 APP_NAME = "ATGENX Klipper Studio"
-__version__ = "1.0.0-beta.2"
+__version__ = "1.0.0-beta.3"
 LICENSE_NAME = "PolyForm Noncommercial 1.0.0"
 REPO_URL = "https://github.com/ARDUTECH0/ATGENX-Klipper-Studio"
-SUPPORT_URL = REPO_URL + "#support"
+SUPPORT_URL = "https://buymeacoffee.com/seifemadatv"
 
 if getattr(sys, "frozen", False):  # PyInstaller
     ROOT = getattr(sys, "_MEIPASS", os.path.dirname(sys.executable))

@@ -45,4 +45,26 @@ QWidget#page { background: #0d1117; }
 QToolBar { background: #161b22; border: none; border-bottom: 1px solid #2b3441; spacing: 6px; padding: 4px; }
 QStatusBar { background: #161b22; color: #8b949e; }
 a { color: #58a6ff; }
+QFrame#helpPanel { background: #11161f; border-left: 1px solid #2b3441; }
+QWidget#helpBody { background: #11161f; }
+QLabel#helpCaption { color: #6e7681; font-size: 11px; font-weight: 600; letter-spacing: 1px; }
+QLabel#helpTitle { font-size: 15px; font-weight: 600; color: #e6edf3; }
+QLabel#helpText { color: #b7c3d1; font-size: 13px; line-height: 150%; }
+QLabel#helpCfg { background: #0d1117; border: 1px solid #2b3441; border-radius: 6px; padding: 6px 8px; color: #d2a8ff; font-family: Consolas, 'Cascadia Mono', monospace; font-size: 12px; }
+QFrame#helpLine { background: #2b3441; }
+QFrame#featureCard { background: #161b22; border: 1px solid #2b3441; border-radius: 12px; }
+QFrame#featureCard:hover { border-color: #3b8eea; }
+QFrame#featureCard[on="true"] { border-color: #2ea04388; background: #13201a; }
+QFrame#featureCard QLabel { background: transparent; }
+QLabel#featureIcon { font-size: 22px; }
+QLabel#featureTitle { font-size: 14px; font-weight: 600; }
+QLabel#featureBadge { color: #8b949e; font-size: 11px; }
+QLabel#sectionHead { font-size: 15px; font-weight: 600; color: #e6edf3; padding: 6px 0 2px; }
+QLabel#subHead { color: #58a6ff; font-weight: 600; padding: 4px 0 0; }
+QLabel#mono { font-family: Consolas, 'Cascadia Mono', monospace; color: #d2a8ff; }
+QFrame#listBox { background: #161b22; border: 1px solid #2b3441; border-radius: 10px; }
+QFrame#listRow { border-bottom: 1px solid #21262d; }
+QFrame#listRow:hover { background: #1a2230; }
+QPushButton#link { background: transparent; border: none; color: #58a6ff; padding: 2px 0; text-align: left; }
+QPushButton#link:hover { color: #79c0ff; text-decoration: underline; }
 """

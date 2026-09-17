@@ -32,12 +32,19 @@ def main(lang="en"):
     win.refresh()
     with io.open(os.path.join(fix, "simple_printer.cfg"), encoding="utf-8") as f:
         text = f.read()
+    demo_off = "\n".join([
+        "", "# an accelerometer that is switched off - the Features page can switch it back on",
+        "#[mcu adxl]", "#serial: /dev/serial/by-id/usb-Klipper_rp2040_DEMO-if00",
+        "#[adxl345]", "#cs_pin: adxl:gpio1", "#spi_bus: spi0a", "", "",
+    ])
+    text = text.replace("#*# <", demo_off + "#*# <", 1)
     win._load_text(text, "printer.cfg on mainsailos.local")
     win.set_configset(local_configset(os.path.join(fix, "modular")), ("local", "mainsailos.local"))
     win.show()
     out = os.path.join(ROOT, "docs", "screenshots")
     os.makedirs(out, exist_ok=True)
-    shots = {"page_start": "start", "page_board": "board", "page_probe": "probe", "page_preview": "review", "page_files": "files"}
+    shots = {"page_start": "start", "page_board": "board", "page_features": "features", "page_probe": "probe",
+             "page_preview": "review", "page_files": "files"}
 
     def shot(builder, name):
         win.goto_page(builder)
@@ -50,6 +57,10 @@ def main(lang="en"):
 
     for builder, name in shots.items():
         shot(builder, name)
+    win.goto_page("page_features")
+    win.feature_tabs.setCurrentIndex(1)
+    app.processEvents()
+    shot("page_features", "features-file")
 
     # a Voron 2.4 style machine for the motors page: 4 Z, sensorless X/Y, TMC Autotune
     from studio.boards import apply_board, get_board

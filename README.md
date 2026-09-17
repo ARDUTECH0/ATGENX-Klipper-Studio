@@ -11,8 +11,9 @@
 ![python](https://img.shields.io/badge/python-3.9%2B-3776ab)
 ![license](https://img.shields.io/badge/license-PolyForm%20Noncommercial-lightgrey)
 ![languages](https://img.shields.io/badge/UI-English%20%7C%20العربية-2ea043)
+[![Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-support-ffdd00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/seifemadatv)
 
-[العربية](README.ar.md) · [Supported boards](docs/BOARDS.md) · [Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md)
+[العربية](README.ar.md) · [User guide](docs/GUIDE.md) · [Supported boards](docs/BOARDS.md) · [Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md)
 
 <img src="docs/screenshots/start-en.png" width="900" alt="Klipper Studio start page">
 
@@ -59,6 +60,12 @@ checks the common mistakes, and uploads it through Moonraker with a backup.
 - **Covers the full machine.** Cartesian and CoreXY, `z_tilt` for 2-4 Z motors or `quad_gantry_level`, inductive probe,
   BLTouch or endstop, bed mesh, input shaper for X/Y/Z, filament sensor, NeoPixel with live heater and progress gauges,
   firmware retraction, temperature sensors, optional START_PRINT/END_PRINT/M600 macros with adaptive mesh.
+- **Features you switch on and off.** A switch per feature (dependencies are switched on with it), a switch for
+  every section of your own file (off = commented out with `#`, never deleted), and a catalog of 22 more sections
+  and plugins to add - ADXL345, Shake&Tune, Mainsail macros, skew correction, chamber fan, case light and more.
+- **It explains itself.** A help panel shows what every setting does, typical values and where it lands in
+  printer.cfg; the generated file gets a heading per group and an explanation per section; and there is a full
+  [user guide](docs/GUIDE.md).
 - **English and Arabic** (right-to-left) interface, switchable at any time.
 - **Command line** for automation and CI: `python -m studio check printer.cfg`.
 
@@ -69,6 +76,8 @@ checks the common mistakes, and uploads it through Moonraker with a backup.
 | <img src="docs/screenshots/board-en.png" width="440"> | <img src="docs/screenshots/files-en.png" width="440"> |
 | **Motors & drivers** | **Troubleshooter (Arabic UI)** |
 | <img src="docs/screenshots/motors-en.png" width="440"> | <img src="docs/screenshots/doctor-ar.png" width="440"> |
+| **Features** | **Switch any section of your file** |
+| <img src="docs/screenshots/features-en.png" width="440"> | <img src="docs/screenshots/features-file-en.png" width="440"> |
 
 ## Install
 
@@ -138,7 +147,7 @@ If Klipper Studio saved you time:
 - ⭐ **Star the repository.** It helps other makers find it.
 - Share it in your 3D printing groups.
 - Report your board working (or not) in [Issues](../../issues).
-- Sponsorship links will appear here soon.
+- ☕ **[Buy me a coffee](https://buymeacoffee.com/seifemadatv)** to keep new features and boards coming.
 
 ## License
 

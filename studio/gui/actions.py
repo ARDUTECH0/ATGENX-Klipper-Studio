@@ -101,13 +101,18 @@ class ActionsMixin:
         self.val_list.clear()
         icons = {"error": ("✖", "#f85149"), "warn": ("▲", "#d29922"), "ok": ("✔", "#3fb950")}
         errs = 0
-        for kind, msg in self.results:
+        order = {"error": 0, "warn": 1, "ok": 2}
+        for kind, msg, page in sorted(self.results, key=lambda r: order[r[0]]):
             ic, col = icons[kind]
             it = QListWidgetItem("%s   %s" % (ic, msg))
             it.setForeground(QColor(col))
+            it.setData(Qt.UserRole, page)
+            if kind != "ok" and page != "page_preview":
+                it.setToolTip(tr("preview.check_click"))
             self.val_list.addItem(it)
             errs += kind == "error"
         self.tabs.setTabText(0, tr("preview.checks_errors", count=errs) if errs else tr("preview.checks") + "  ✔")
+        self.update_nav_status()
 
     # ---------- projects ----------
     def act_new(self):
@@ -293,7 +298,7 @@ class ActionsMixin:
 
     def act_upload(self):
         self.do_generate()
-        errs = [m for k, m in self.results if k == "error"]
+        errs = [r[1] for r in self.results if r[0] == "error"]
         if errs:
             QMessageBox.critical(self, APP_NAME, tr("msg.fix_errors") + "\n\n• " + "\n• ".join(errs))
             self.tabs.setCurrentIndex(0)
@@ -302,7 +307,7 @@ class ActionsMixin:
             if QMessageBox.warning(self, APP_NAME, tr("msg.no_current_upload"),
                                    QMessageBox.Yes | QMessageBox.No) != QMessageBox.Yes:
                 return
-        warns = [m for k, m in self.results if k == "warn"]
+        warns = [r[1] for r in self.results if r[0] == "warn"]
         msg = tr("msg.upload_steps")
         if warns:
             msg += "\n\n" + tr("msg.warnings") + "\n• " + "\n• ".join(warns)

@@ -49,6 +49,11 @@ class MotorsMixin:
 
         self.motor_table = QTableWidget(0, len(COLS))
         self.motor_table.setHorizontalHeaderLabels([tr("motors.col." + c) for c in COLS])
+        for i, key in enumerate(("", "motor.slot", "motor.driver", "motor.run_current", "motor.microsteps",
+                                 "motor.rotation_distance", "motor.invert", "motor.stealthchop", "motor.sensorless")):
+            if key:
+                from ..help import help_text
+                self.motor_table.horizontalHeaderItem(i).setToolTip(help_text(key))
         self.motor_table.verticalHeader().setVisible(False)
         self.motor_table.setSelectionBehavior(QTableWidget.SelectRows)
         self.motor_table.setSelectionMode(QTableWidget.SingleSelection)
@@ -114,6 +119,19 @@ class MotorsMixin:
         right.addRow(tr("motors.tuning_goal"), self.d_goal)
         self.bus_form = right
         v.addWidget(self.detail_box)
+        for form, widget, key in ((left, self.d_hold, "motor.hold_current"), (left, self.d_sense, "motor.sense_resistor"),
+                                  (left, self.d_full, "motor.full_steps"), (left, self.d_interp, "motor.interpolate"),
+                                  (left, self.d_sg, "motor.sg"), (left, self.d_diag, "motor.diag_pin"),
+                                  (left, self.d_zpos, "motor.z_position"), (right, self.d_autotune, "motor.autotune"),
+                                  (right, self.d_goal, "motor.tuning_goal")):
+            label = form.labelForField(widget)
+            title = label.text() if isinstance(label, QLabel) and label.text() else getattr(widget, "text", lambda: "")()
+            self.register_help(widget, key, title)
+            if isinstance(label, QLabel):
+                self.register_help(label, key, title)
+        for key, e in self.bus_edits.items():
+            self.register_help(e, "motor.bus", key)
+            self.register_help(right.labelForField(e), "motor.bus", key)
 
         # ---- global
         f2 = self._group(v, tr("motors.leveling"))
@@ -239,6 +257,11 @@ class MotorsMixin:
             sl.setEnabled(mid in ("x", "y") and bool(DRIVER_INFO.get(m["driver"], {}).get("sg_key")))
             sl.toggled.connect(lambda val, mid=mid: self._sensorless_changed(mid, val))
             t.setCellWidget(r, 8, self._centered(sl))
+        col_help = ("", "motor.slot", "motor.driver", "motor.run_current", "motor.microsteps",
+                    "motor.rotation_distance", "motor.invert", "motor.stealthchop", "motor.sensorless")
+        for r in range(t.rowCount()):
+            for c in range(1, len(COLS)):
+                self.register_help(t.cellWidget(r, c), col_help[c], tr("motors.col." + COLS[c]))
         row = mids.index(self.sel_motor) if self.sel_motor in mids else 0
         t.setCurrentCell(row, 0)
         self._select_motor_row(row)

@@ -4,8 +4,8 @@ import os
 import sys
 import threading
 
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QAction, QIcon
+from PySide6.QtCore import Qt, QUrl
+from PySide6.QtGui import QAction, QDesktopServices, QIcon
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDoubleSpinBox, QFormLayout, QGroupBox,
                                QHBoxLayout, QLabel, QLineEdit, QListWidget, QListWidgetItem, QMainWindow,
                                QMessageBox, QPushButton, QScrollArea, QSizePolicy, QSpinBox, QStackedWidget,
@@ -18,14 +18,16 @@ from ..i18n import tr
 from ..model import MOTOR_LABEL, PIN_ROLES, bus_keys, enabled_motors, new_params
 from .actions import ActionsMixin
 from .doctor_page import DoctorMixin
+from .features_page import FeaturesMixin
 from .files_page import FilesMixin
+from .help_panel import HelpMixin
 from .motors_page import MotorsMixin
 from .pages import PagesMixin
 from .style import STYLE
 from .widgets import Bridge
 
 
-class Studio(PagesMixin, MotorsMixin, FilesMixin, DoctorMixin, ActionsMixin, QMainWindow):
+class Studio(PagesMixin, FeaturesMixin, MotorsMixin, FilesMixin, DoctorMixin, HelpMixin, ActionsMixin, QMainWindow):
     def __init__(self, P=None, current_text=None, current_src=None):
         super().__init__()
         self.P = P or new_params()
@@ -37,7 +39,7 @@ class Studio(PagesMixin, MotorsMixin, FilesMixin, DoctorMixin, ActionsMixin, QMa
         self.bridge.log.connect(self._log)
 
         self.setWindowTitle("%s  %s" % (APP_NAME, __version__))
-        self.resize(1300, 860)
+        self.resize(1440, 900)
         root = QWidget(objectName="root")
         self.setCentralWidget(root)
         lay = QHBoxLayout(root)
@@ -78,6 +80,7 @@ class Studio(PagesMixin, MotorsMixin, FilesMixin, DoctorMixin, ActionsMixin, QMa
         navrow.addWidget(self.btn_next)
         ml.addLayout(navrow)
         lay.addWidget(main, 1)
+        lay.addWidget(self.build_help_panel())
 
         for key, builder in self.PAGES:
             self.nav.addItem(QListWidgetItem(tr(key)))
@@ -90,9 +93,11 @@ class Studio(PagesMixin, MotorsMixin, FilesMixin, DoctorMixin, ActionsMixin, QMa
         self.btn_prev.clicked.connect(lambda: self.nav.setCurrentRow(max(0, self.nav.currentRow() - 1)))
         self.btn_next.clicked.connect(lambda: self.nav.setCurrentRow(min(self.nav.count() - 1, self.nav.currentRow() + 1)))
         self._toolbar()
+        self.register_bound_help()
         self.statusBar().showMessage(tr("app.ready"))
         self.refresh()
         self.nav.setCurrentRow(0)
+        self.show_page_help(0)
 
     # ---------- chrome ----------
     def _toolbar(self):
@@ -107,8 +112,19 @@ class Studio(PagesMixin, MotorsMixin, FilesMixin, DoctorMixin, ActionsMixin, QMa
         spacer = QWidget()
         spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
         tb.addWidget(spacer)
+        a = QAction(tr("tb.help_panel"), self)
+        a.setCheckable(True)
+        a.setChecked(True)
+        a.toggled.connect(self.act_toggle_help)
+        tb.addAction(a)
+        a = QAction(tr("tb.guide"), self)
+        a.triggered.connect(self.act_guide)
+        tb.addAction(a)
         a = QAction(tr("tb.language"), self)
         a.triggered.connect(self.act_language)
+        tb.addAction(a)
+        a = QAction("☕  " + tr("tb.support"), self)
+        a.triggered.connect(lambda: QDesktopServices.openUrl(QUrl(SUPPORT_URL)))
         tb.addAction(a)
         a = QAction(tr("tb.about"), self)
         a.triggered.connect(self.act_about)
@@ -191,6 +207,7 @@ class Studio(PagesMixin, MotorsMixin, FilesMixin, DoctorMixin, ActionsMixin, QMa
                 setter(self.P[key])
         self._fill_pins()
         self._fill_motors()
+        self._fill_features()
 
     def page_index(self, builder):
         return [b for _, b in self.PAGES].index(builder)
@@ -264,8 +281,10 @@ class Studio(PagesMixin, MotorsMixin, FilesMixin, DoctorMixin, ActionsMixin, QMa
             self._fill_pins()
         if key == "page_motors":
             self._fill_motors()
-        if key in ("page_probe", "page_preview"):
-            self.do_generate()
+        if key == "page_features":
+            self._fill_features()
+        self.do_generate()  # keeps checks and the sidebar badges up to date
+        self.show_page_help(idx)
 
     def bg(self, fn, done):
         if self.busy:
