@@ -168,6 +168,18 @@ def main():
     win._map_set_pin("motor:x", "step_pin", "PA1")
     check("map: pin edited from the map", win.P["motors"]["x"]["step_pin"] == "PA1" and "step_pin: PA1" in win.generated)
     win._map_set_pin("motor:x", "step_pin", old_pin)
+    item = win._map_nodes["motor:x"]
+    edge = item.edges[0]
+    start_before = edge.path().pointAtPercent(0.0)
+    label_before = edge.label.pos() if edge.label else None
+    item.setPos(item.pos().x() - 140, item.pos().y() - 70)
+    win._map_remember("motor:x", item.pos())
+    check("map: wire follows the device", edge.path().pointAtPercent(0.0) != start_before)
+    if label_before is not None:
+        check("map: pin label follows the wire", edge.label.pos() != label_before)
+    check("map: arrangement saved with the project", "motor:x" in win.P["map_positions"])
+    win.act_map_reset()
+    check("map: reset layout", not win.P["map_positions"])
     png = os.path.join(os.environ["ATGENX_STUDIO_HOME"], "map.png")
     from PySide6.QtWidgets import QFileDialog
     QFileDialog.getSaveFileName = staticmethod(lambda *a, **k: (png, "PNG image (*.png)"))

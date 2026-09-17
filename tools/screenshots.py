@@ -12,6 +12,7 @@ sys.path.insert(0, ROOT)
 os.environ.setdefault("ATGENX_STUDIO_HOME", os.path.join(ROOT, "tests", ".studio_home"))
 
 from PySide6.QtCore import Qt  # noqa: E402
+from PySide6.QtGui import QColor
 from PySide6.QtWidgets import QApplication  # noqa: E402
 
 from studio import i18n  # noqa: E402
@@ -83,6 +84,19 @@ def main(lang="en"):
     win.P["pins"].update(probe="^PB7", neopixel="PB0", fil_sensor="^PG12")
     win.refresh()
     shot("page_map", "map")
+    # the diagram itself, at full resolution (what "Export image" produces)
+    from PySide6.QtCore import QRectF
+    from PySide6.QtGui import QImage, QPainter as _QP
+    rect = win.map_scene.itemsBoundingRect().adjusted(-30, -30, 30, 30)
+    img = QImage(int(rect.width() * 1.6), int(rect.height() * 1.6), QImage.Format_ARGB32)
+    img.fill(QColor("#0d1117"))
+    pp = _QP(img)
+    pp.setRenderHints(_QP.Antialiasing | _QP.TextAntialiasing)
+    win.map_scene.render(pp, target=QRectF(img.rect()), source=rect)
+    pp.end()
+    path = os.path.join(out, "map-diagram-%s.png" % lang)
+    img.save(path)
+    print(path)
 
     win._doctor_show("MCU 'mcu' shutdown: Timer too close\n"
                      "Unable to read tmc uart 'stepper_x' register IFCNT", "klippy.log")
