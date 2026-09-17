@@ -127,6 +127,7 @@ def main(argv=None):
     argv = sys.argv[1:] if argv is None else argv
     p = argparse.ArgumentParser(prog="python -m studio", description="%s %s" % (APP_NAME, __version__))
     p.add_argument("--lang", choices=i18n.LANGS)
+    p.add_argument("--version", action="version", version="%s %s" % (APP_NAME, __version__))
     p.add_argument("--smoke", action="store_true", help=argparse.SUPPRESS)
     sub = p.add_subparsers(dest="cmd")
     b = sub.add_parser("boards", help="list supported boards")

@@ -1,6 +1,19 @@
 # Releasing a version
 
 Every release ships **the source and a ready-to-run executable**, so a user on Windows needs neither Python nor Git.
+This is not optional: a release without an exe is not a release.
+
+## The short way
+
+```bash
+python tools/release.py              # runs the tests, builds the exe, tests the exe
+python tools/release.py --publish    # ... and creates the GitHub release with the exe attached
+```
+
+It refuses to publish if a check failed, if the tree is dirty, if you are not on `main`, or if the tag exists.
+The notes come from the top section of `CHANGELOG.md` unless you pass `--notes FILE`.
+
+The rest of this page is the same thing by hand, plus the steps `release.py` does not do (screenshots, docs).
 
 ## 1. Check everything
 
@@ -34,9 +47,10 @@ On Windows use `QT_QPA_FONTDIR=C:/Windows/Fonts`.
 python tools/build_exe.py --test
 ```
 
-Produces `dist/KlipperStudio.exe` (~48 MB) and checks that it starts, finds the bundled boards, and can
-import / merge / validate a config. **Build it on the system you are releasing for** - a Windows exe must be
-built on Windows, a Linux binary on Linux.
+Produces `dist/KlipperStudio.exe` (~48 MB) and `dist/KlipperStudio.exe.sha256`, and checks that it starts,
+finds the bundled boards, answers `--version`, can import / merge / validate a config, and - on Windows - that
+its file properties carry the app name, the version and the author. **Build it on the system you are releasing
+for** - a Windows exe must be built on Windows, a Linux binary on Linux.
 
 Before uploading, double-click it once yourself: the headless test proves the pages build, not that the window
 looks right.
@@ -50,7 +64,13 @@ gh pr create --base main --head <branch> --title "..." --body-file <notes>
 git checkout main && git pull
 gh release create v1.0.0-beta.5 --target main --prerelease \
     --title "Klipper Studio 1.0.0 Beta 5" --notes-file <notes>
-gh release upload v1.0.0-beta.5 dist/KlipperStudio.exe
+gh release upload v1.0.0-beta.5 dist/KlipperStudio.exe dist/KlipperStudio.exe.sha256
+```
+
+The exe upload takes a few minutes. **Check that it finished** before you post the link anywhere:
+
+```bash
+gh release view v1.0.0-beta.5 --json assets -q '.assets[].name'
 ```
 
 Mention in the notes that Windows SmartScreen shows a warning for the exe (it is not code-signed):
