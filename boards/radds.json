@@ -1,0 +1,108 @@
+{
+ "schema": 1,
+ "id": "radds",
+ "name": "RADDS",
+ "vendor": "RADDS",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-radds.cfg",
+ "mcu": {
+  "family": "atsam",
+  "processors": [
+   "sam3x8e"
+  ],
+  "bootloader": [],
+  "crystal": [],
+  "interfaces": []
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PA15",
+   "dir_pin": "PA14",
+   "enable_pin": "PD1",
+   "endstop_pin": "^PD3",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PA12",
+   "dir_pin": "!PA13",
+   "enable_pin": "PB26",
+   "endstop_pin": "^PD9",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB25",
+   "dir_pin": "PC28",
+   "enable_pin": "PD5",
+   "endstop_pin": "^PD10",
+   "tmc": {}
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PA2",
+   "dir_pin": "PA3",
+   "enable_pin": "PB17",
+   "tmc": {}
+  },
+  {
+   "slot": "extruder1",
+   "label": "",
+   "commented": true,
+   "step_pin": "PB19",
+   "dir_pin": "PB18",
+   "enable_pin": "PB20",
+   "tmc": {}
+  },
+  {
+   "slot": "extruder2",
+   "label": "",
+   "commented": true,
+   "step_pin": "PC12",
+   "dir_pin": "PB14",
+   "enable_pin": "PC14",
+   "tmc": {}
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PB27",
+   "sensor_pin": "PA16",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "PC23",
+   "sensor_pin": "PA24",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "PC21",
+   "label": "",
+   "commented": false
+  },
+  {
+   "name": "heater_fan heatbreak_cooling_fan",
+   "pin": "PC22",
+   "label": "",
+   "commented": true
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [],
+ "aliases": "",
+ "tmc_types": []
+}

@@ -1,0 +1,88 @@
+{
+ "schema": 1,
+ "id": "creality-v4.2.7",
+ "name": "Creality V4.2.7",
+ "vendor": "Creality",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-creality-v4.2.7.cfg",
+ "mcu": {
+  "family": "stm32",
+  "processors": [
+   "stm32f103"
+  ],
+  "bootloader": [
+   "28KiB"
+  ],
+  "crystal": [],
+  "interfaces": [
+   "UART"
+  ]
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB9",
+   "dir_pin": "PC2",
+   "enable_pin": "!PC3",
+   "endstop_pin": "^PA5",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB7",
+   "dir_pin": "PB8",
+   "enable_pin": "!PC3",
+   "endstop_pin": "^PA6",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB5",
+   "dir_pin": "!PB6",
+   "enable_pin": "!PC3",
+   "endstop_pin": "^PA7",
+   "tmc": {}
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB3",
+   "dir_pin": "PB4",
+   "enable_pin": "!PC3",
+   "tmc": {}
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PA1",
+   "sensor_pin": "PC5",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "PA2",
+   "sensor_pin": "PC4",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "PA0",
+   "label": "",
+   "commented": false
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [],
+ "aliases": "EXP1_1=PC6,EXP1_3=PB10,EXP1_5=PB14,EXP1_7=PB12,EXP1_9=<GND>,\nEXP1_2=PB2,EXP1_4=PB11,EXP1_6=PB13,EXP1_8=PB15,EXP1_10=<5V>,\nPROBE_IN=PB0,PROBE_OUT=PB1,FIL_RUNOUT=PA4",
+ "tmc_types": []
+}

@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+build/
+dist/
+*.spec
+tests/.studio_home/
+.studio_home/
+*.bak
+.vscode/
+.idea/

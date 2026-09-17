@@ -1,0 +1,196 @@
+{
+ "schema": 1,
+ "id": "mini-rambo",
+ "name": "Ultimachine Mini Rambo",
+ "vendor": "Ultimachine",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-mini-rambo.cfg",
+ "mcu": {
+  "family": "avr",
+  "processors": [
+   "atmega2560"
+  ],
+  "bootloader": [],
+  "crystal": [],
+  "interfaces": []
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC0",
+   "dir_pin": "PL1",
+   "enable_pin": "!PA7",
+   "endstop_pin": "^PB6",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC1",
+   "dir_pin": "!PL0",
+   "enable_pin": "!PA6",
+   "endstop_pin": "^PB5",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC2",
+   "dir_pin": "PL2",
+   "enable_pin": "!PA5",
+   "endstop_pin": "^PB4",
+   "tmc": {}
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC3",
+   "dir_pin": "PL6",
+   "enable_pin": "!PA4",
+   "tmc": {}
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PE5",
+   "sensor_pin": "PF0",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "PG5",
+   "sensor_pin": "PF2",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "PH5",
+   "label": "",
+   "commented": false
+  },
+  {
+   "name": "heater_fan heatbreak_cooling_fan",
+   "pin": "PH3",
+   "label": "",
+   "commented": true
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [
+  {
+   "name": "output_pin stepper_xy_current",
+   "options": [
+    [
+     "pin",
+     "PL3"
+    ],
+    [
+     "pwm",
+     "True"
+    ],
+    [
+     "scale",
+     "2.0"
+    ],
+    [
+     "cycle_time",
+     ".000030"
+    ],
+    [
+     "hardware_pwm",
+     "True"
+    ],
+    [
+     "value",
+     "1.3"
+    ]
+   ]
+  },
+  {
+   "name": "output_pin stepper_z_current",
+   "options": [
+    [
+     "pin",
+     "PL4"
+    ],
+    [
+     "pwm",
+     "True"
+    ],
+    [
+     "scale",
+     "2.0"
+    ],
+    [
+     "cycle_time",
+     ".000030"
+    ],
+    [
+     "hardware_pwm",
+     "True"
+    ],
+    [
+     "value",
+     "1.3"
+    ]
+   ]
+  },
+  {
+   "name": "output_pin stepper_e_current",
+   "options": [
+    [
+     "pin",
+     "PL5"
+    ],
+    [
+     "pwm",
+     "True"
+    ],
+    [
+     "scale",
+     "2.0"
+    ],
+    [
+     "cycle_time",
+     ".000030"
+    ],
+    [
+     "hardware_pwm",
+     "True"
+    ],
+    [
+     "value",
+     "1.25"
+    ]
+   ]
+  },
+  {
+   "name": "static_digital_output stepper_config",
+   "options": [
+    [
+     "pins",
+     "PG1, PG0,\nPK7, PG2,\nPK6, PK5,\nPK3, PK4"
+    ]
+   ]
+  },
+  {
+   "name": "static_digital_output yellow_led",
+   "options": [
+    [
+     "pins",
+     "!PB7"
+    ]
+   ]
+  }
+ ],
+ "aliases": "",
+ "tmc_types": []
+}

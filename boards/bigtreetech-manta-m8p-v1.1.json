@@ -1,0 +1,227 @@
+{
+ "schema": 1,
+ "id": "bigtreetech-manta-m8p-v1.1",
+ "name": "BIGTREETECH Manta M8P V1.1",
+ "vendor": "BIGTREETECH",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-bigtreetech-manta-m8p-v1.1.cfg",
+ "mcu": {
+  "family": "stm32",
+  "processors": [
+   "stm32g0b1"
+  ],
+  "bootloader": [
+   "8KiB"
+  ],
+  "crystal": [
+   "8MHz"
+  ],
+  "interfaces": [
+   "USB",
+   "CAN"
+  ]
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PE2",
+   "dir_pin": "PB4",
+   "enable_pin": "!PC11",
+   "endstop_pin": "^PF3",
+   "tmc": {
+    "uart_pin": "PC10",
+    "cs_pin": "PC10",
+    "spi_bus": "spi1"
+   }
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PF12",
+   "dir_pin": "PF11",
+   "enable_pin": "!PB3",
+   "endstop_pin": "^PF4",
+   "tmc": {
+    "uart_pin": "PF13",
+    "cs_pin": "PF13",
+    "spi_bus": "spi1"
+   }
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PD7",
+   "dir_pin": "!PD6",
+   "enable_pin": "!PF10",
+   "endstop_pin": "^PF5",
+   "tmc": {
+    "uart_pin": "PF9",
+    "cs_pin": "PF9",
+    "spi_bus": "spi1"
+   }
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC9",
+   "dir_pin": "PC8",
+   "enable_pin": "!PD1",
+   "tmc": {
+    "uart_pin": "PD0",
+    "cs_pin": "PD0",
+    "spi_bus": "spi1"
+   }
+  },
+  {
+   "slot": "stepper_",
+   "label": "",
+   "commented": true,
+   "step_pin": "PD3",
+   "dir_pin": "PD2",
+   "enable_pin": "!PD5",
+   "endstop_pin": "PC0",
+   "tmc": {
+    "uart_pin": "PD4",
+    "cs_pin": "PD4",
+    "spi_bus": "spi1"
+   }
+  },
+  {
+   "slot": "extruder1",
+   "label": "",
+   "commented": true,
+   "step_pin": "PA10",
+   "dir_pin": "PA14",
+   "enable_pin": "!PA15",
+   "tmc": {
+    "uart_pin": "PF8",
+    "cs_pin": "PF8",
+    "spi_bus": "spi1"
+   }
+  },
+  {
+   "slot": "extruder2",
+   "label": "",
+   "commented": true,
+   "step_pin": "PD11",
+   "dir_pin": "PD9",
+   "enable_pin": "!PD15",
+   "tmc": {
+    "uart_pin": "PD14",
+    "cs_pin": "PD14",
+    "spi_bus": "spi1"
+   }
+  },
+  {
+   "slot": "extruder3",
+   "label": "",
+   "commented": true,
+   "step_pin": "PD8",
+   "dir_pin": "PC6",
+   "enable_pin": "!PC7",
+   "tmc": {
+    "uart_pin": "PD10",
+    "cs_pin": "PD10",
+    "spi_bus": "spi1"
+   }
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PE3",
+   "sensor_pin": "PA1",
+   "label": "HE0"
+  },
+  "extruder1": {
+   "heater_pin": "PB5",
+   "sensor_pin": "PA2",
+   "label": "HE1"
+  },
+  "extruder2": {
+   "heater_pin": "PB6",
+   "sensor_pin": "PA3",
+   "label": "HE2"
+  },
+  "extruder3": {
+   "heater_pin": "PE1",
+   "sensor_pin": "PA4",
+   "label": "HE3"
+  },
+  "heater_bed": {
+   "heater_pin": "PB7",
+   "sensor_pin": "PA0",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "PE6",
+   "label": "",
+   "commented": false
+  },
+  {
+   "name": "heater_fan fan1",
+   "pin": "PE0",
+   "label": "",
+   "commented": true
+  },
+  {
+   "name": "heater_fan fan2",
+   "pin": "PC12",
+   "label": "",
+   "commented": true
+  },
+  {
+   "name": "heater_fan fan3",
+   "pin": "PE5",
+   "label": "",
+   "commented": true
+  },
+  {
+   "name": "heater_fan fan4",
+   "pin": "PE4",
+   "label": "",
+   "commented": true
+  },
+  {
+   "name": "heater_fan fan5",
+   "pin": "PB8",
+   "label": "",
+   "commented": true
+  },
+  {
+   "name": "heater_fan fan6",
+   "pin": "PB9",
+   "label": "",
+   "commented": true
+  },
+  {
+   "name": "heater_fan SoC_fan",
+   "pin": "RPI:gpio26",
+   "label": "",
+   "commented": true
+  }
+ ],
+ "probe": {
+  "bl_sensor": "PB2",
+  "bl_control": "PB1",
+  "pin": "PF6"
+ },
+ "neopixel": "PA9",
+ "filament_sensors": [
+  "PC1",
+  "PC2"
+ ],
+ "servo": "",
+ "extra_sections": [],
+ "aliases": "EXP1_1=PE9, EXP1_2=PE10,\nEXP1_3=PE11, EXP1_4=PE12,\nEXP1_5=PE13, EXP1_6=PE14,    # Slot in the socket on this side\nEXP1_7=PE15, EXP1_8=PB10,\nEXP1_9=<GND>, EXP1_10=<5V>,\nEXP2_1=PB14, EXP2_2=PB13,\nEXP2_3=PF7, EXP2_4=PB12,\nEXP2_5=PE7, EXP2_6=PB11,      # Slot in the socket on this side\nEXP2_7=PE8, EXP2_8=<RST>,\nEXP2_9=<GND>, EXP2_10=<NC>",
+ "tmc_types": [
+  "tmc2209",
+  "tmc2130"
+ ]
+}

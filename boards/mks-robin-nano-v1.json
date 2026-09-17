@@ -1,0 +1,102 @@
+{
+ "schema": 1,
+ "id": "mks-robin-nano-v1",
+ "name": "Makerbase Robin Nano V1",
+ "vendor": "Makerbase (MKS)",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-mks-robin-nano-v1.cfg",
+ "mcu": {
+  "family": "stm32",
+  "processors": [
+   "stm32f103"
+  ],
+  "bootloader": [
+   "28KiB"
+  ],
+  "crystal": [],
+  "interfaces": [
+   "UART"
+  ]
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PE3",
+   "dir_pin": "!PE2",
+   "enable_pin": "!PE4",
+   "endstop_pin": "!PA15",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PE0",
+   "dir_pin": "!PB9",
+   "enable_pin": "!PE1",
+   "endstop_pin": "!PA12",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB5",
+   "dir_pin": "PB4",
+   "enable_pin": "!PB8",
+   "endstop_pin": "!PA11",
+   "tmc": {}
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PD6",
+   "dir_pin": "!PD3",
+   "enable_pin": "!PB3",
+   "tmc": {}
+  },
+  {
+   "slot": "extruder1",
+   "label": "",
+   "commented": true,
+   "step_pin": "PA6",
+   "dir_pin": "!PA1",
+   "enable_pin": "!PA3",
+   "tmc": {}
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PC3",
+   "sensor_pin": "PC1",
+   "label": ""
+  },
+  "extruder1": {
+   "heater_pin": "PB0",
+   "sensor_pin": "PC2",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "PA0",
+   "sensor_pin": "PC0",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "PB1",
+   "label": "",
+   "commented": false
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [],
+ "aliases": "",
+ "tmc_types": []
+}

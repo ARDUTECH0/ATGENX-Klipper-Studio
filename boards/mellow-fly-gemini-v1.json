@@ -1,0 +1,111 @@
+{
+ "schema": 1,
+ "id": "mellow-fly-gemini-v1",
+ "name": "Mellow Fly Gemini V1",
+ "vendor": "Mellow",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-mellow-fly-gemini-v1.cfg",
+ "mcu": {
+  "family": "stm32",
+  "processors": [
+   "stm32f405"
+  ],
+  "bootloader": [
+   "32KiB"
+  ],
+  "crystal": [],
+  "interfaces": []
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC13",
+   "dir_pin": "PC1",
+   "enable_pin": "!PB2",
+   "endstop_pin": "^PA3",
+   "tmc": {
+    "uart_pin": "PB11",
+    "diag_pin": "PA3",
+    "cs_pin": "PB11",
+    "spi_bus": "spi1",
+    "diag1_pin": "PA3"
+   }
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC14",
+   "dir_pin": "!PC4",
+   "enable_pin": "!PB6",
+   "endstop_pin": "^PB1",
+   "tmc": {
+    "uart_pin": "PB9",
+    "diag_pin": "PB1",
+    "cs_pin": "PB9",
+    "spi_bus": "spi1",
+    "diag1_pin": "PB1"
+   }
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC15",
+   "dir_pin": "PC5",
+   "enable_pin": "!PB5",
+   "endstop_pin": "^PB10",
+   "tmc": {
+    "uart_pin": "PB8",
+    "diag_pin": "PB10",
+    "cs_pin": "PB8",
+    "spi_bus": "spi1",
+    "diag1_pin": "PB10"
+   }
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC3",
+   "dir_pin": "PC7",
+   "enable_pin": "!PB4",
+   "tmc": {
+    "uart_pin": "PB7",
+    "cs_pin": "PB7",
+    "spi_bus": "spi1"
+   }
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PA0",
+   "sensor_pin": "PC0",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "PA2",
+   "sensor_pin": "PC2",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "PC6",
+   "label": "",
+   "commented": false
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [],
+ "aliases": "EXP1_1=<NC>, EXP1_3=PA13,  EXP1_5=PA9,   EXP1_7=<NC>,  EXP1_9=<GND>,\nEXP1_2=PA4,  EXP1_4=PA10,  EXP1_6=PA8,   EXP1_8=<NC>,  EXP1_10=<5V>,\nEXP2_1=PB14, EXP2_3=PA15,  EXP2_5=PA14,  EXP2_7=PB3,   EXP2_9=<GND>,\nEXP2_2=PB13, EXP2_4=PB12,  EXP2_6=PB15,  EXP2_8=<RST>, EXP2_10=<NC>,",
+ "tmc_types": [
+  "tmc2209",
+  "tmc5160"
+ ]
+}

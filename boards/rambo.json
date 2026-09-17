@@ -1,0 +1,156 @@
+{
+ "schema": 1,
+ "id": "rambo",
+ "name": "Ultimachine Rambo",
+ "vendor": "Ultimachine",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-rambo.cfg",
+ "mcu": {
+  "family": "avr",
+  "processors": [
+   "atmega2560"
+  ],
+  "bootloader": [],
+  "crystal": [],
+  "interfaces": []
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC0",
+   "dir_pin": "PL1",
+   "enable_pin": "!PA7",
+   "endstop_pin": "^PB6",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC1",
+   "dir_pin": "!PL0",
+   "enable_pin": "!PA6",
+   "endstop_pin": "^PB5",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC2",
+   "dir_pin": "PL2",
+   "enable_pin": "!PA5",
+   "endstop_pin": "^PB4",
+   "tmc": {}
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC3",
+   "dir_pin": "PL6",
+   "enable_pin": "!PA4",
+   "tmc": {}
+  },
+  {
+   "slot": "extruder1",
+   "label": "",
+   "commented": true,
+   "step_pin": "PC4",
+   "dir_pin": "PL7",
+   "enable_pin": "!PA3",
+   "tmc": {}
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PH6",
+   "sensor_pin": "PF0",
+   "label": ""
+  },
+  "extruder1": {
+   "heater_pin": "PH4",
+   "sensor_pin": "PF1",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "PE5",
+   "sensor_pin": "PF2",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "PH5",
+   "label": "",
+   "commented": false
+  },
+  {
+   "name": "heater_fan heatbreak_cooling_fan",
+   "pin": "PH3",
+   "label": "",
+   "commented": true
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [
+  {
+   "name": "ad5206 stepper_digipot",
+   "options": [
+    [
+     "enable_pin",
+     "PD7"
+    ],
+    [
+     "scale",
+     "2.08"
+    ],
+    [
+     "channel_1",
+     "1.34"
+    ],
+    [
+     "channel_2",
+     "1.0"
+    ],
+    [
+     "channel_4",
+     "1.1"
+    ],
+    [
+     "channel_5",
+     "1.1"
+    ],
+    [
+     "channel_6",
+     "1.1"
+    ]
+   ]
+  },
+  {
+   "name": "static_digital_output stepper_config",
+   "options": [
+    [
+     "pins",
+     "PG1, PG0,\nPK7, PG2,\nPK6, PK5,\nPK3, PK4,\nPK1, PK2"
+    ]
+   ]
+  },
+  {
+   "name": "static_digital_output yellow_led",
+   "options": [
+    [
+     "pins",
+     "!PB7"
+    ]
+   ]
+  }
+ ],
+ "aliases": "EXP1_1=PE6, EXP1_3=PG3, EXP1_5=PJ2, EXP1_7=PJ7, EXP1_9=<GND>,\nEXP1_2=PE2, EXP1_4=PG4, EXP1_6=PJ3, EXP1_8=PJ4, EXP1_10=<5V>,\nEXP2_1=PB3, EXP2_3=PJ5, EXP2_5=PJ6, EXP2_7=PD4, EXP2_9=<GND>,\nEXP2_2=PB1, EXP2_4=PB0, EXP2_6=PB2, EXP2_8=PE7, EXP2_10=PH2",
+ "tmc_types": []
+}

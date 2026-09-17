@@ -1,0 +1,187 @@
+{
+ "schema": 1,
+ "id": "mks-monster8",
+ "name": "Makerbase Monster8",
+ "vendor": "Makerbase (MKS)",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-mks-monster8.cfg",
+ "mcu": {
+  "family": "stm32",
+  "processors": [
+   "stm32f407"
+  ],
+  "bootloader": [
+   "48KiB"
+  ],
+  "crystal": [],
+  "interfaces": [
+   "USB"
+  ]
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC14",
+   "dir_pin": "PC13",
+   "enable_pin": "!PC15",
+   "endstop_pin": "!PA14",
+   "tmc": {
+    "uart_pin": "PE6",
+    "cs_pin": "PE6",
+    "spi_bus": "spi4",
+    "diag1_pin": "PA14"
+   }
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PE5",
+   "dir_pin": "!PE4",
+   "enable_pin": "!PC15",
+   "endstop_pin": "!PA15",
+   "tmc": {
+    "uart_pin": "PE3",
+    "cs_pin": "PE3",
+    "spi_bus": "spi4",
+    "diag1_pin": "PA15"
+   }
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PE1",
+   "dir_pin": "PE0",
+   "enable_pin": "!PE2",
+   "endstop_pin": "!PB13",
+   "tmc": {
+    "uart_pin": "PB7",
+    "cs_pin": "PB7",
+    "spi_bus": "spi4",
+    "diag1_pin": "PB13"
+   }
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB5",
+   "dir_pin": "!PB4",
+   "enable_pin": "!PB6",
+   "tmc": {
+    "uart_pin": "PB3",
+    "cs_pin": "PB3",
+    "spi_bus": "spi4",
+    "diag1_pin": "PA13"
+   }
+  },
+  {
+   "slot": "extruder1",
+   "label": "",
+   "commented": true,
+   "step_pin": "PD6",
+   "dir_pin": "!PD5",
+   "enable_pin": "!PD7",
+   "tmc": {
+    "uart_pin": "PD4",
+    "cs_pin": "PD4",
+    "spi_bus": "spi4",
+    "diag1_pin": "PC5"
+   }
+  },
+  {
+   "slot": "extruder2",
+   "label": "",
+   "commented": true,
+   "step_pin": "PD2",
+   "dir_pin": "!PD1",
+   "enable_pin": "!PD3",
+   "tmc": {
+    "uart_pin": "PD0",
+    "cs_pin": "PD0",
+    "spi_bus": "spi4",
+    "diag1_pin": "PB12"
+   }
+  },
+  {
+   "slot": "extruder3",
+   "label": "",
+   "commented": true,
+   "step_pin": "PC7",
+   "dir_pin": "PC6",
+   "enable_pin": "!PC8",
+   "tmc": {
+    "uart_pin": "PD15",
+    "cs_pin": "PD15",
+    "spi_bus": "spi4"
+   }
+  },
+  {
+   "slot": "extruder4",
+   "label": "",
+   "commented": true,
+   "step_pin": "PD13",
+   "dir_pin": "!PD12",
+   "enable_pin": "!PD14",
+   "tmc": {
+    "uart_pin": "PD11",
+    "cs_pin": "PD11",
+    "spi_bus": "spi4"
+   }
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PB1",
+   "sensor_pin": "PC1",
+   "label": ""
+  },
+  "extruder1": {
+   "heater_pin": "PB0",
+   "sensor_pin": "PC2",
+   "label": ""
+  },
+  "extruder2": {
+   "heater_pin": "PA3",
+   "sensor_pin": "PC3",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "PB10",
+   "sensor_pin": "PC0",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "PA2",
+   "label": "",
+   "commented": false
+  },
+  {
+   "name": "heater_fan fan1",
+   "pin": "PA1",
+   "label": "",
+   "commented": false
+  },
+  {
+   "name": "heater_fan fan2",
+   "pin": "PA0",
+   "label": "",
+   "commented": false
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [],
+ "aliases": "EXP1_1=PB2,  EXP1_3=PE11, EXP1_5=PD9, EXP1_7=PE15, EXP1_9=<GND>,\nEXP1_2=PE10, EXP1_4=PD10, EXP1_6=PD8, EXP1_8=PE7,  EXP1_10=<5V>,\nEXP2_1=PA6, EXP2_3=PE9, EXP2_5=PE8, EXP2_7=PB11,  EXP2_9=<GND>,\nEXP2_2=PA5, EXP2_4=PA4, EXP2_6=PA7, EXP2_8=<RST>, EXP2_10=<3.3v>",
+ "tmc_types": [
+  "tmc2208",
+  "tmc2130"
+ ]
+}

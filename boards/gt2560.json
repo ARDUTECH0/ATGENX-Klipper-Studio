@@ -1,0 +1,84 @@
+{
+ "schema": 1,
+ "id": "gt2560",
+ "name": "Geeetech GT2560",
+ "vendor": "Geeetech GT2560",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-gt2560.cfg",
+ "mcu": {
+  "family": "avr",
+  "processors": [
+   "atmega2560"
+  ],
+  "bootloader": [],
+  "crystal": [],
+  "interfaces": []
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PA3",
+   "dir_pin": "PA1",
+   "enable_pin": "!PA5",
+   "endstop_pin": "^PA0",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC6",
+   "dir_pin": "PC4",
+   "enable_pin": "!PA7",
+   "endstop_pin": "^PA4",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC0",
+   "dir_pin": "!PG2",
+   "enable_pin": "!PC2",
+   "endstop_pin": "^PC7",
+   "tmc": {}
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PL6",
+   "dir_pin": "PL4",
+   "enable_pin": "!PG0",
+   "tmc": {}
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PE4",
+   "sensor_pin": "PK0",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "PG5",
+   "sensor_pin": "PK2",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "PH4",
+   "label": "",
+   "commented": false
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [],
+ "aliases": "",
+ "tmc_types": []
+}

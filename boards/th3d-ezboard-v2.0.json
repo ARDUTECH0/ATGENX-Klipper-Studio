@@ -1,0 +1,113 @@
+{
+ "schema": 1,
+ "id": "th3d-ezboard-v2.0",
+ "name": "TH3D Ezboard V2.0",
+ "vendor": "TH3D",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-th3d-ezboard-v2.0.cfg",
+ "mcu": {
+  "family": "stm32",
+  "processors": [
+   "stm32f405"
+  ],
+  "bootloader": [
+   "48KiB"
+  ],
+  "crystal": [
+   "12MHz"
+  ],
+  "interfaces": [
+   "USB"
+  ]
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB3",
+   "dir_pin": "PD2",
+   "enable_pin": "!PB5",
+   "endstop_pin": "^!PC1",
+   "tmc": {
+    "uart_pin": "PC11",
+    "tx_pin": "PC10",
+    "uart_address": "0"
+   }
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB8",
+   "dir_pin": "PC13",
+   "enable_pin": "!PC12",
+   "endstop_pin": "^!PC2",
+   "tmc": {
+    "uart_pin": "PC11",
+    "tx_pin": "PC10",
+    "uart_address": "1"
+   }
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PA3",
+   "dir_pin": "PB1",
+   "enable_pin": "!PC14",
+   "endstop_pin": "^!PC3",
+   "tmc": {
+    "uart_pin": "PC11",
+    "tx_pin": "PC10",
+    "uart_address": "2"
+   }
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PA15",
+   "dir_pin": "PB11",
+   "enable_pin": "!PB2",
+   "tmc": {
+    "uart_pin": "PC11",
+    "tx_pin": "PC10",
+    "uart_address": "3"
+   }
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PC8",
+   "sensor_pin": "PA1",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "PC9",
+   "sensor_pin": "PA0",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "PC6",
+   "label": "",
+   "commented": false
+  }
+ ],
+ "probe": {
+  "bl_sensor": "^PC3",
+  "bl_control": "PA2"
+ },
+ "neopixel": "",
+ "filament_sensors": [
+  "PC0"
+ ],
+ "servo": "",
+ "extra_sections": [],
+ "aliases": "EXP1_1=PA14, EXP1_3=PC4, EXP1_5=PC5, EXP1_7=PB12, EXP1_9=<GND>,\nEXP1_2=PB0, EXP1_4=<RST>, EXP1_6=PB13, EXP1_8=PB15, EXP1_10=<5V>",
+ "tmc_types": [
+  "tmc2209"
+ ]
+}

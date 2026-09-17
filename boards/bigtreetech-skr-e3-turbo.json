@@ -1,0 +1,126 @@
+{
+ "schema": 1,
+ "id": "bigtreetech-skr-e3-turbo",
+ "name": "BIGTREETECH SKR E3 Turbo",
+ "vendor": "BIGTREETECH",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-bigtreetech-skr-e3-turbo.cfg",
+ "mcu": {
+  "family": "lpc176x",
+  "processors": [
+   "lpc1769"
+  ],
+  "bootloader": [],
+  "crystal": [],
+  "interfaces": []
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "P1.4",
+   "dir_pin": "!P1.8",
+   "enable_pin": "!P1.0",
+   "endstop_pin": "^P1.29",
+   "tmc": {
+    "uart_pin": "P1.1"
+   }
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "P1.14",
+   "dir_pin": "!P1.15",
+   "enable_pin": "!P1.9",
+   "endstop_pin": "^P1.28",
+   "tmc": {
+    "uart_pin": "P1.10"
+   }
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "P4.29",
+   "dir_pin": "P4.28",
+   "enable_pin": "!P1.16",
+   "endstop_pin": "^P1.27",
+   "tmc": {
+    "uart_pin": "P1.17"
+   }
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "P2.6",
+   "dir_pin": "!P2.7",
+   "enable_pin": "!P0.4",
+   "tmc": {
+    "uart_pin": "P0.5"
+   }
+  },
+  {
+   "slot": "extruder1",
+   "label": "",
+   "commented": true,
+   "step_pin": "P2.11",
+   "dir_pin": "P2.12",
+   "enable_pin": "!P0.21",
+   "tmc": {
+    "uart_pin": "P0.22"
+   }
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "P2.3",
+   "sensor_pin": "P0.24",
+   "label": ""
+  },
+  "extruder1": {
+   "heater_pin": "P2.4",
+   "sensor_pin": "P0.23",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "P2.5",
+   "sensor_pin": "P0.25",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "P2.1",
+   "label": "",
+   "commented": false
+  },
+  {
+   "name": "heater_fan heatbreak_cooling_fan",
+   "pin": "P2.2",
+   "label": "",
+   "commented": false
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [
+  {
+   "name": "static_digital_output tmc_standby_pins",
+   "options": [
+    [
+     "pins",
+     "!P3.26, !P3.25, !P1.18, !P1.19, !P2.13"
+    ]
+   ]
+  }
+ ],
+ "aliases": "EXP1_1=P2.8,  EXP1_3=P0.19, EXP1_5=P0.20, EXP1_7=P0.17, EXP1_9=<GND>,\nEXP1_2=P0.16, EXP1_4=<RST>, EXP1_6=P0.15, EXP1_8=P0.18, EXP1_10=<5V>",
+ "tmc_types": [
+  "tmc2209"
+ ]
+}

@@ -1,0 +1,136 @@
+{
+ "schema": 1,
+ "id": "archim2",
+ "name": "Ultimachine Archim2",
+ "vendor": "Ultimachine",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-archim2.cfg",
+ "mcu": {
+  "family": "atsam",
+  "processors": [
+   "sam3x8e"
+  ],
+  "bootloader": [],
+  "crystal": [],
+  "interfaces": []
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC6",
+   "dir_pin": "PC5",
+   "enable_pin": "!PC9",
+   "endstop_pin": "^PD4",
+   "tmc": {
+    "cs_pin": "PC7",
+    "spi_software_miso_pin": "PD1",
+    "spi_software_mosi_pin": "PD3",
+    "spi_software_sclk_pin": "PD2",
+    "diag1_pin": "!PA4"
+   }
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC12",
+   "dir_pin": "PC11",
+   "enable_pin": "!PC14",
+   "endstop_pin": "^PD6",
+   "tmc": {
+    "cs_pin": "PC13",
+    "spi_software_miso_pin": "PD1",
+    "spi_software_mosi_pin": "PD3",
+    "spi_software_sclk_pin": "PD2",
+    "diag1_pin": "!PC15"
+   }
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC17",
+   "dir_pin": "PC16",
+   "enable_pin": "!PC19",
+   "endstop_pin": "^PA7",
+   "tmc": {
+    "cs_pin": "PC18",
+    "spi_software_miso_pin": "PD1",
+    "spi_software_mosi_pin": "PD3",
+    "spi_software_sclk_pin": "PD2",
+    "diag1_pin": "PC4"
+   }
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB10",
+   "dir_pin": "PC10",
+   "enable_pin": "!PB22",
+   "tmc": {
+    "cs_pin": "PC20",
+    "spi_software_miso_pin": "PD1",
+    "spi_software_mosi_pin": "PD3",
+    "spi_software_sclk_pin": "PD2",
+    "diag1_pin": "!PB23"
+   }
+  },
+  {
+   "slot": "extruder1",
+   "label": "",
+   "commented": true,
+   "step_pin": "PB26",
+   "dir_pin": "PB24",
+   "enable_pin": "!PA11",
+   "tmc": {
+    "cs_pin": "PA10",
+    "spi_software_miso_pin": "PD1",
+    "spi_software_mosi_pin": "PD3",
+    "spi_software_sclk_pin": "PD2",
+    "diag1_pin": "PD0"
+   }
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PC24",
+   "sensor_pin": "PB19",
+   "label": ""
+  },
+  "extruder1": {
+   "heater_pin": "PC23",
+   "sensor_pin": "PB18",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "PC21",
+   "sensor_pin": "PB20",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "PC26",
+   "label": "",
+   "commented": false
+  },
+  {
+   "name": "heater_fan heatbreak_cooling_fan",
+   "pin": "PC25",
+   "label": "",
+   "commented": false
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [],
+ "aliases": "EXP1_1=PA14, EXP1_3=PA15, EXP1_5=PA0,  EXP1_7=PA1, EXP1_9=<GND>,\nEXP1_2=PA13, EXP1_4=PA12, EXP1_6=PA16, EXP1_8=PC2, EXP1_10=<5V>,\nEXP2_1=PA25, EXP2_3=PB27, EXP2_5=PA3,  EXP2_7=PB25,  EXP2_9=<GND>,\nEXP2_2=PA27, EXP2_4=PA29, EXP2_6=PA26, EXP2_8=<RST>, EXP2_10=<3.3V>",
+ "tmc_types": [
+  "tmc2130"
+ ]
+}

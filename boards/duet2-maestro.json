@@ -1,0 +1,150 @@
+{
+ "schema": 1,
+ "id": "duet2-maestro",
+ "name": "Duet3D Duet2 Maestro",
+ "vendor": "Duet3D",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-duet2-maestro.cfg",
+ "mcu": {
+  "family": "atsam",
+  "processors": [
+   "sam4s8c"
+  ],
+  "bootloader": [],
+  "crystal": [],
+  "interfaces": []
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC20",
+   "dir_pin": "PC18",
+   "enable_pin": "!PA1",
+   "endstop_pin": "^PA24",
+   "tmc": {
+    "uart_pin": "PA9",
+    "tx_pin": "PA10"
+   }
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC2",
+   "dir_pin": "PA8",
+   "enable_pin": "!PA1",
+   "endstop_pin": "^PB6",
+   "tmc": {
+    "uart_pin": "PA9",
+    "tx_pin": "PA10"
+   }
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC28",
+   "dir_pin": "PB4",
+   "enable_pin": "!PA1",
+   "endstop_pin": "^PC10",
+   "tmc": {
+    "uart_pin": "PA9",
+    "tx_pin": "PA10"
+   }
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC4",
+   "dir_pin": "PB7",
+   "enable_pin": "!PA1",
+   "tmc": {
+    "uart_pin": "PA9",
+    "tx_pin": "PA10"
+   }
+  },
+  {
+   "slot": "extruder1",
+   "label": "",
+   "commented": true,
+   "step_pin": "PC5",
+   "dir_pin": "PC6",
+   "enable_pin": "!PA1",
+   "tmc": {}
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "!PC1",
+   "sensor_pin": "vref_scaled:PB0",
+   "label": ""
+  },
+  "extruder1": {
+   "heater_pin": "!PA16",
+   "sensor_pin": "PC30",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "!PC0",
+   "sensor_pin": "vref_scaled:PA20",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "PC23",
+   "label": "FAN0",
+   "commented": false
+  },
+  {
+   "name": "heater_fan heatbreak_cooling_fan",
+   "pin": "PC22",
+   "label": "FAN1",
+   "commented": true
+  },
+  {
+   "name": "heater_fan board_cooling_fan",
+   "pin": "PC29",
+   "label": "FAN2",
+   "commented": true
+  }
+ ],
+ "probe": {
+  "bl_sensor": "PC15",
+  "bl_control": "PC26"
+ },
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [
+  {
+   "name": "adc_scaled vref_scaled",
+   "options": [
+    [
+     "vref_pin",
+     "PA17"
+    ],
+    [
+     "vssa_pin",
+     "PA19"
+    ]
+   ]
+  },
+  {
+   "name": "static_digital_output led",
+   "options": [
+    [
+     "pins",
+     "!PC26"
+    ]
+   ]
+  }
+ ],
+ "aliases": "EXP1_1=PA15, EXP1_3=PA6, EXP1_5=PA2,  EXP1_7=<NC>, EXP1_9=<GND>,\nEXP1_2=PA7,  EXP1_4=PC9, EXP1_6=<NC>, EXP1_8=<NC>, EXP1_10=<5V>,\nEXP2_1=PA5, EXP2_3=PC3,  EXP2_5=PB5, EXP2_7=<NC>,  EXP2_9=<GND>,\nEXP2_2=PA2, EXP2_4=PB13, EXP2_6=PA6, EXP2_8=<RST>, EXP2_10=<NC>",
+ "tmc_types": [
+  "tmc2208"
+ ]
+}

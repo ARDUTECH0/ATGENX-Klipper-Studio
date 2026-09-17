@@ -1,0 +1,137 @@
+{
+ "schema": 1,
+ "id": "einsy-rambo",
+ "name": "Prusa Einsy Rambo",
+ "vendor": "Prusa",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-einsy-rambo.cfg",
+ "mcu": {
+  "family": "avr",
+  "processors": [
+   "atmega2560"
+  ],
+  "bootloader": [],
+  "crystal": [],
+  "interfaces": [
+   "USB"
+  ]
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC0",
+   "dir_pin": "PL0",
+   "enable_pin": "!PA7",
+   "endstop_pin": "^PB6",
+   "tmc": {
+    "cs_pin": "PG0",
+    "diag1_pin": "!PK2"
+   }
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC1",
+   "dir_pin": "!PL1",
+   "enable_pin": "!PA6",
+   "endstop_pin": "^PB5",
+   "tmc": {
+    "cs_pin": "PG2",
+    "diag1_pin": "!PK7"
+   }
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC2",
+   "dir_pin": "PL2",
+   "enable_pin": "!PA5",
+   "endstop_pin": "^PB4",
+   "tmc": {
+    "cs_pin": "PK5",
+    "diag1_pin": "!PK6"
+   }
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC3",
+   "dir_pin": "PL6",
+   "enable_pin": "!PA4",
+   "tmc": {
+    "cs_pin": "PK4",
+    "diag1_pin": "!PK3"
+   }
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PE5",
+   "sensor_pin": "PF0",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "PG5",
+   "sensor_pin": "PF2",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "PH5",
+   "label": "",
+   "commented": false
+  },
+  {
+   "name": "heater_fan heatbreak_cooling_fan",
+   "pin": "PH3",
+   "label": "",
+   "commented": true
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [
+  {
+   "name": "temperature_sensor board_sensor",
+   "options": [
+    [
+     "sensor_pin",
+     "PF6"
+    ],
+    [
+     "sensor_type",
+     "TDK NTCG104LH104JT1"
+    ],
+    [
+     "min_temp",
+     "0"
+    ],
+    [
+     "max_temp",
+     "50"
+    ]
+   ]
+  },
+  {
+   "name": "static_digital_output yellow_led",
+   "options": [
+    [
+     "pins",
+     "!PB7"
+    ]
+   ]
+  }
+ ],
+ "aliases": "",
+ "tmc_types": [
+  "tmc2130"
+ ]
+}

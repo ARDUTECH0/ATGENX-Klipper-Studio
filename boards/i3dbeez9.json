@@ -1,0 +1,167 @@
+{
+ "schema": 1,
+ "id": "i3dbeez9",
+ "name": "I3DBEEZ9",
+ "vendor": "I3DBEEZ",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-I3DBEEZ9.cfg",
+ "mcu": {
+  "family": "stm32",
+  "processors": [
+   "stm32f407"
+  ],
+  "bootloader": [
+   "32KiB"
+  ],
+  "crystal": [],
+  "interfaces": []
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PE9",
+   "dir_pin": "PF1",
+   "enable_pin": "!PF2",
+   "endstop_pin": "PB10",
+   "tmc": {
+    "uart_pin": "PA15",
+    "cs_pin": "PA15",
+    "spi_bus": "spi3a"
+   }
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PE11",
+   "dir_pin": "PE1",
+   "enable_pin": "!PD7",
+   "endstop_pin": "PE12",
+   "tmc": {
+    "uart_pin": "PB8",
+    "cs_pin": "PB8",
+    "spi_bus": "spi3a"
+   }
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PE13",
+   "dir_pin": "PC2",
+   "enable_pin": "!PC0",
+   "endstop_pin": "PG8",
+   "tmc": {
+    "uart_pin": "PB9",
+    "cs_pin": "PB9",
+    "spi_bus": "spi3a"
+   }
+  },
+  {
+   "slot": "stepper_z1",
+   "label": "",
+   "commented": true,
+   "step_pin": "PE4",
+   "dir_pin": "PE3",
+   "enable_pin": "!PC13",
+   "endstop_pin": "PD0",
+   "tmc": {
+    "uart_pin": "PE2",
+    "cs_pin": "PE2",
+    "spi_bus": "spi3a"
+   }
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PE14",
+   "dir_pin": "PA0",
+   "enable_pin": "!PC3",
+   "tmc": {
+    "uart_pin": "PB3",
+    "cs_pin": "PB3",
+    "spi_bus": "spi3a"
+   }
+  },
+  {
+   "slot": "extruder1",
+   "label": "",
+   "commented": true,
+   "step_pin": "PD15",
+   "dir_pin": "PE7",
+   "enable_pin": "!PA3",
+   "tmc": {
+    "uart_pin": "PG15",
+    "cs_pin": "PG15",
+    "spi_bus": "spi3a"
+   }
+  },
+  {
+   "slot": "extruder2",
+   "label": "",
+   "commented": true,
+   "step_pin": "PD13",
+   "dir_pin": "PG9",
+   "enable_pin": "!PF0",
+   "tmc": {
+    "uart_pin": "PG12",
+    "cs_pin": "PG12",
+    "spi_bus": "spi3a"
+   }
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PB1",
+   "sensor_pin": "PF4",
+   "label": "Heat0"
+  },
+  "extruder1": {
+   "heater_pin": "PD14",
+   "sensor_pin": "PF5",
+   "label": "Heat1"
+  },
+  "extruder2": {
+   "heater_pin": "PB0",
+   "sensor_pin": "PF6",
+   "label": "Heat2"
+  },
+  "heater_bed": {
+   "heater_pin": "PD12",
+   "sensor_pin": "PF3",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "PC8",
+   "label": "",
+   "commented": false
+  },
+  {
+   "name": "heater_fan fan1",
+   "pin": "PE5",
+   "label": "",
+   "commented": false
+  },
+  {
+   "name": "heater_fan fan2",
+   "pin": "PE6",
+   "label": "",
+   "commented": true
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [],
+ "aliases": "EXP1_1=PG4, EXP1_3=PD11, EXP1_5=PG2, EXP1_7=PG6, EXP1_9=<GND>,\nEXP1_2=PA8, EXP1_4=PD10, EXP1_6=PG3, EXP1_8=PG7, EXP1_10=<5V>,\nEXP2_1=PB14, EXP2_3=PG10, EXP2_5=PF11, EXP2_7=PF12,  EXP2_9=<GND>,\nEXP2_2=PB13, EXP2_4=PB12, EXP2_6=PB15, EXP2_8=<RST>, EXP2_10=PF13",
+ "tmc_types": [
+  "tmc2208",
+  "tmc2130"
+ ]
+}

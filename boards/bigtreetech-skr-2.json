@@ -1,0 +1,165 @@
+{
+ "schema": 1,
+ "id": "bigtreetech-skr-2",
+ "name": "BIGTREETECH SKR 2",
+ "vendor": "BIGTREETECH",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-bigtreetech-skr-2.cfg",
+ "mcu": {
+  "family": "stm32",
+  "processors": [
+   "stm32f407",
+   "stm32f429"
+  ],
+  "bootloader": [
+   "32KiB"
+  ],
+  "crystal": [],
+  "interfaces": []
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PE2",
+   "dir_pin": "PE1",
+   "enable_pin": "!PE3",
+   "endstop_pin": "^PC1",
+   "tmc": {
+    "uart_pin": "PE0",
+    "cs_pin": "PE0",
+    "spi_software_miso_pin": "PA14",
+    "spi_software_mosi_pin": "PE14",
+    "spi_software_sclk_pin": "PE15",
+    "diag1_pin": "PC1"
+   }
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PD5",
+   "dir_pin": "!PD4",
+   "enable_pin": "!PD6",
+   "endstop_pin": "^PC3",
+   "tmc": {
+    "uart_pin": "PD3",
+    "cs_pin": "PD3",
+    "spi_software_miso_pin": "PA14",
+    "spi_software_mosi_pin": "PE14",
+    "spi_software_sclk_pin": "PE15",
+    "diag1_pin": "PC3"
+   }
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PA15",
+   "dir_pin": "PA8",
+   "enable_pin": "!PD1",
+   "endstop_pin": "^PC0",
+   "tmc": {
+    "uart_pin": "PD0",
+    "cs_pin": "PD0",
+    "spi_software_miso_pin": "PA14",
+    "spi_software_mosi_pin": "PE14",
+    "spi_software_sclk_pin": "PE15",
+    "diag1_pin": "PC0"
+   }
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PD15",
+   "dir_pin": "PD14",
+   "enable_pin": "!PC7",
+   "tmc": {
+    "uart_pin": "PC6",
+    "cs_pin": "PC6",
+    "spi_software_miso_pin": "PA14",
+    "spi_software_mosi_pin": "PE14",
+    "spi_software_sclk_pin": "PE15",
+    "diag1_pin": "PC2"
+   }
+  },
+  {
+   "slot": "extruder1",
+   "label": "",
+   "commented": true,
+   "step_pin": "PD11",
+   "dir_pin": "PD10",
+   "enable_pin": "!PD13",
+   "tmc": {
+    "uart_pin": "PD12",
+    "cs_pin": "PD12",
+    "spi_software_miso_pin": "PA14",
+    "spi_software_mosi_pin": "PE14",
+    "spi_software_sclk_pin": "PE15",
+    "diag1_pin": "PA0"
+   }
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PB3",
+   "sensor_pin": "PA2",
+   "label": ""
+  },
+  "extruder1": {
+   "heater_pin": "PB4",
+   "sensor_pin": "PA3",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "PD7",
+   "sensor_pin": "PA1",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "PB7",
+   "label": "",
+   "commented": false
+  },
+  {
+   "name": "heater_fan fan1",
+   "pin": "PB6",
+   "label": "",
+   "commented": true
+  },
+  {
+   "name": "heater_fan fan2",
+   "pin": "PB5",
+   "label": "",
+   "commented": true
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [
+  {
+   "name": "output_pin motor_power",
+   "options": [
+    [
+     "pin",
+     "PC13"
+    ],
+    [
+     "value",
+     "1"
+    ]
+   ]
+  }
+ ],
+ "aliases": "EXP1_1=PC5, EXP1_3=PB1, EXP1_5=PE10, EXP1_7=PE12, EXP1_9=<GND>,\nEXP1_2=PB0, EXP1_4=PE9, EXP1_6=PE11, EXP1_8=PE13, EXP1_10=<5V>,\nEXP2_1=PA6, EXP2_3=PE7, EXP2_5=PB2, EXP2_7=PC4,   EXP2_9=<GND>,\nEXP2_2=PA5, EXP2_4=PA4, EXP2_6=PA7, EXP2_8=<RST>, EXP2_10=<NC>",
+ "tmc_types": [
+  "tmc2209",
+  "tmc2130"
+ ]
+}

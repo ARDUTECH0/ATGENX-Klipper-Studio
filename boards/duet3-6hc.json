@@ -1,0 +1,121 @@
+{
+ "schema": 1,
+ "id": "duet3-6hc",
+ "name": "Duet3D Duet3 6hc",
+ "vendor": "Duet3D",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-duet3-6hc.cfg",
+ "mcu": {
+  "family": "atsam",
+  "processors": [
+   "same70q20b"
+  ],
+  "bootloader": [],
+  "crystal": [],
+  "interfaces": []
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC18",
+   "dir_pin": "PB5",
+   "enable_pin": "!PA9",
+   "endstop_pin": "PD25",
+   "tmc": {
+    "cs_pin": "PD17",
+    "spi_bus": "usart1"
+   }
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC16",
+   "dir_pin": "PD10",
+   "enable_pin": "!PA9",
+   "endstop_pin": "PD15",
+   "tmc": {
+    "cs_pin": "PD17"
+   }
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC28",
+   "dir_pin": "PA4",
+   "enable_pin": "!PA9",
+   "endstop_pin": "PD28",
+   "tmc": {
+    "cs_pin": "PD17"
+   }
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC1",
+   "dir_pin": "PA22",
+   "enable_pin": "!PA9",
+   "tmc": {
+    "cs_pin": "PD17"
+   }
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PA24",
+   "sensor_pin": "vref_scaled:PC29",
+   "label": "Out1"
+  },
+  "heater_bed": {
+   "heater_pin": "PA7",
+   "sensor_pin": "vref_scaled:PC15",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "heater_fan heatbreak_fan",
+   "pin": "PC8",
+   "label": "Out8",
+   "commented": false
+  },
+  {
+   "name": "heater_fan heatbreak_fan",
+   "pin": "PA15",
+   "label": "Out4",
+   "commented": false
+  },
+  {
+   "name": "fan",
+   "pin": "PC5",
+   "label": "Out5",
+   "commented": false
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [
+  {
+   "name": "adc_scaled vref_scaled",
+   "options": [
+    [
+     "vref_pin",
+     "PC0"
+    ],
+    [
+     "vssa_pin",
+     "PC13"
+    ]
+   ]
+  }
+ ],
+ "aliases": "",
+ "tmc_types": [
+  "tmc5160"
+ ]
+}

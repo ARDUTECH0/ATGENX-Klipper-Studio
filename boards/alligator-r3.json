@@ -1,0 +1,142 @@
+{
+ "schema": 1,
+ "id": "alligator-r3",
+ "name": "Alligator R3",
+ "vendor": "Alligator",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-alligator-r3.cfg",
+ "mcu": {
+  "family": "atsam",
+  "processors": [
+   "sam3x8e"
+  ],
+  "bootloader": [],
+  "crystal": [],
+  "interfaces": []
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB24",
+   "dir_pin": "!PB25",
+   "enable_pin": "!PA15",
+   "endstop_pin": "^!PC5",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB22",
+   "dir_pin": "!PB23",
+   "enable_pin": "!PC28",
+   "endstop_pin": "^!PC3",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB20",
+   "dir_pin": "PB21",
+   "enable_pin": "!PA29",
+   "endstop_pin": "^!PC2",
+   "tmc": {}
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB18",
+   "dir_pin": "PB19",
+   "enable_pin": "!PC27",
+   "tmc": {}
+  },
+  {
+   "slot": "extruder1",
+   "label": "",
+   "commented": true,
+   "step_pin": "PB17",
+   "dir_pin": "!PB14",
+   "enable_pin": "!PD6",
+   "tmc": {}
+  },
+  {
+   "slot": "extruder2",
+   "label": "",
+   "commented": true,
+   "step_pin": "PB12",
+   "dir_pin": "!PB13",
+   "enable_pin": "!PD8",
+   "tmc": {}
+  },
+  {
+   "slot": "extruder3",
+   "label": "",
+   "commented": true,
+   "step_pin": "PB15",
+   "dir_pin": "!PB16",
+   "enable_pin": "!PD9",
+   "tmc": {}
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PA19",
+   "sensor_pin": "PC25",
+   "label": ""
+  },
+  "extruder1": {
+   "heater_pin": "PC22",
+   "sensor_pin": "PA29",
+   "label": ""
+  },
+  "extruder2": {
+   "heater_pin": "PC21",
+   "sensor_pin": "PC28",
+   "label": ""
+  },
+  "extruder3": {
+   "heater_pin": "PA29",
+   "sensor_pin": "PB25",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "PA0",
+   "sensor_pin": "PA8",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "PA7",
+   "label": "",
+   "commented": false
+  },
+  {
+   "name": "heater_fan fan1",
+   "pin": "PA5",
+   "label": "",
+   "commented": true
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [
+  {
+   "name": "static_digital_output DRV8825_microstepping",
+   "options": [
+    [
+     "pins",
+     "PC18"
+    ]
+   ]
+  }
+ ],
+ "aliases": "",
+ "tmc_types": []
+}

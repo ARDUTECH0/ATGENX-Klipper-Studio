@@ -1,0 +1,84 @@
+{
+ "schema": 1,
+ "id": "melzi",
+ "name": "Melzi",
+ "vendor": "Melzi",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-melzi.cfg",
+ "mcu": {
+  "family": "avr",
+  "processors": [
+   "atmega1284p"
+  ],
+  "bootloader": [],
+  "crystal": [],
+  "interfaces": []
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PD7",
+   "dir_pin": "PC5",
+   "enable_pin": "!PD6",
+   "endstop_pin": "^!PC2",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC6",
+   "dir_pin": "PC7",
+   "enable_pin": "!PD6",
+   "endstop_pin": "^!PC3",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB3",
+   "dir_pin": "!PB2",
+   "enable_pin": "!PA5",
+   "endstop_pin": "^!PC4",
+   "tmc": {}
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB1",
+   "dir_pin": "PB0",
+   "enable_pin": "!PD6",
+   "tmc": {}
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PD5",
+   "sensor_pin": "PA7",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "PD2",
+   "sensor_pin": "PA6",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "PB4",
+   "label": "",
+   "commented": false
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [],
+ "aliases": "",
+ "tmc_types": []
+}

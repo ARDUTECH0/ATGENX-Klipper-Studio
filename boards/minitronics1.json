@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "id": "minitronics1",
+ "name": "Minitronics 1.0",
+ "vendor": "Minitronics 1.0",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-minitronics1.cfg",
+ "mcu": {
+  "family": "avr",
+  "processors": [
+   "atmega1280",
+   "atmega1281"
+  ],
+  "bootloader": [],
+  "crystal": [],
+  "interfaces": []
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PF2",
+   "dir_pin": "PF1",
+   "enable_pin": "!PF3",
+   "endstop_pin": "^!PE3",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PA1",
+   "dir_pin": "PA2",
+   "enable_pin": "!PA0",
+   "endstop_pin": "^!PE4",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PA4",
+   "dir_pin": "!PA5",
+   "enable_pin": "!PA3",
+   "endstop_pin": "^!PB4",
+   "tmc": {}
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PA7",
+   "dir_pin": "PA6",
+   "enable_pin": "!PG2",
+   "tmc": {}
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PB5",
+   "sensor_pin": "PF7",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "PE5",
+   "sensor_pin": "PF6",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "PB7",
+   "label": "",
+   "commented": false
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [
+  {
+   "name": "static_digital_output yellow_led",
+   "options": [
+    [
+     "pins",
+     "PF0"
+    ]
+   ]
+  }
+ ],
+ "aliases": "",
+ "tmc_types": []
+}

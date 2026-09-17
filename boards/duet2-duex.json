@@ -1,0 +1,382 @@
+{
+ "schema": 1,
+ "id": "duet2-duex",
+ "name": "Duet3D Duet2 Duex",
+ "vendor": "Duet3D",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-duet2-duex.cfg",
+ "mcu": {
+  "family": "atsam",
+  "processors": [
+   "sam4e8e"
+  ],
+  "bootloader": [],
+  "crystal": [],
+  "interfaces": []
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PD6",
+   "dir_pin": "PD11",
+   "enable_pin": "!PC6",
+   "endstop_pin": "^PC14",
+   "tmc": {
+    "cs_pin": "PD14",
+    "spi_bus": "usart1"
+   }
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PD7",
+   "dir_pin": "!PD12",
+   "enable_pin": "!PC6",
+   "endstop_pin": "^PA2",
+   "tmc": {
+    "cs_pin": "PC9",
+    "spi_bus": "usart1"
+   }
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PD8",
+   "dir_pin": "PD13",
+   "enable_pin": "!PC6",
+   "endstop_pin": "^PD29",
+   "tmc": {
+    "cs_pin": "PC10",
+    "spi_bus": "usart1"
+   }
+  },
+  {
+   "slot": "stepper_z1",
+   "label": "On drive E4",
+   "commented": false,
+   "step_pin": "PD0",
+   "dir_pin": "PD16",
+   "enable_pin": "!PC6",
+   "tmc": {
+    "cs_pin": "PD25",
+    "spi_bus": "usart1"
+   }
+  },
+  {
+   "slot": "stepper_z2",
+   "label": "On drive E5",
+   "commented": false,
+   "step_pin": "PD3",
+   "dir_pin": "!PD17",
+   "enable_pin": "!PC6",
+   "tmc": {
+    "cs_pin": "PD26",
+    "spi_bus": "usart1"
+   }
+  },
+  {
+   "slot": "stepper_z3",
+   "label": "On drive E6",
+   "commented": false,
+   "step_pin": "PD27",
+   "dir_pin": "!PC0",
+   "enable_pin": "!PC6",
+   "tmc": {
+    "cs_pin": "PB14",
+    "spi_bus": "usart1"
+   }
+  },
+  {
+   "slot": "extruder",
+   "label": "On drive E0",
+   "commented": false,
+   "step_pin": "PD5",
+   "dir_pin": "PA1",
+   "enable_pin": "!PC6",
+   "tmc": {
+    "cs_pin": "PC17",
+    "spi_bus": "usart1"
+   }
+  },
+  {
+   "slot": "extruder1",
+   "label": "On drive E1",
+   "commented": false,
+   "step_pin": "PD4",
+   "dir_pin": "PD9",
+   "enable_pin": "!PC6",
+   "tmc": {
+    "cs_pin": "PC25",
+    "spi_bus": "usart1"
+   }
+  },
+  {
+   "slot": "extruder2",
+   "label": "On drive E2",
+   "commented": false,
+   "step_pin": "PD2",
+   "dir_pin": "!PD28",
+   "enable_pin": "!PC6",
+   "tmc": {
+    "cs_pin": "PD23",
+    "spi_bus": "usart1"
+   }
+  },
+  {
+   "slot": "extruder3",
+   "label": "On drive E3",
+   "commented": false,
+   "step_pin": "PD1",
+   "dir_pin": "!PD22",
+   "enable_pin": "!PC6",
+   "tmc": {
+    "cs_pin": "PD24",
+    "spi_bus": "usart1"
+   }
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "!PA20",
+   "sensor_pin": "PC15",
+   "label": ""
+  },
+  "extruder1": {
+   "heater_pin": "!PA16",
+   "sensor_pin": "PC12",
+   "label": ""
+  },
+  "extruder2": {
+   "heater_pin": "!PC3",
+   "sensor_pin": "PC29",
+   "label": ""
+  },
+  "extruder3": {
+   "heater_pin": "!PC5",
+   "sensor_pin": "PC30",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "!PA19",
+   "sensor_pin": "PC13",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "PC23",
+   "label": "",
+   "commented": false
+  },
+  {
+   "name": "heater_fan heatbreak_cooling_fan",
+   "pin": "PC26",
+   "label": "",
+   "commented": false
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [
+  {
+   "name": "temperature_fan chamber_fan",
+   "options": [
+    [
+     "pin",
+     "PA0"
+    ],
+    [
+     "max_power",
+     "1"
+    ],
+    [
+     "shutdown_speed",
+     "1"
+    ],
+    [
+     "cycle_time",
+     "0.01"
+    ],
+    [
+     "min_temp",
+     "40"
+    ],
+    [
+     "max_temp",
+     "120"
+    ],
+    [
+     "sensor_type",
+     "EPCOS 100K B57560G104F"
+    ],
+    [
+     "sensor_pin",
+     "PC27"
+    ],
+    [
+     "control",
+     "pid"
+    ],
+    [
+     "pid_kp",
+     "22.2"
+    ],
+    [
+     "pid_ki",
+     "1.08"
+    ],
+    [
+     "pid_kd",
+     "114"
+    ]
+   ]
+  },
+  {
+   "name": "sx1509 duex",
+   "options": [
+    [
+     "i2c_address",
+     "62"
+    ]
+   ]
+  },
+  {
+   "name": "static_digital_output onboard_led",
+   "options": [
+    [
+     "pins",
+     "!PC2"
+    ]
+   ]
+  },
+  {
+   "name": "output_pin FAN3",
+   "options": [
+    [
+     "pin",
+     "sx1509_duex:PIN_12"
+    ],
+    [
+     "pwm",
+     "True"
+    ],
+    [
+     "hardware_pwm",
+     "True"
+    ]
+   ]
+  },
+  {
+   "name": "output_pin FAN4",
+   "options": [
+    [
+     "pin",
+     "sx1509_duex:PIN_7"
+    ],
+    [
+     "pwm",
+     "True"
+    ],
+    [
+     "hardware_pwm",
+     "True"
+    ]
+   ]
+  },
+  {
+   "name": "output_pin FAN5",
+   "options": [
+    [
+     "pin",
+     "sx1509_duex:PIN_6"
+    ],
+    [
+     "pwm",
+     "True"
+    ],
+    [
+     "hardware_pwm",
+     "True"
+    ]
+   ]
+  },
+  {
+   "name": "output_pin FAN6",
+   "options": [
+    [
+     "pin",
+     "sx1509_duex:PIN_5"
+    ],
+    [
+     "pwm",
+     "True"
+    ],
+    [
+     "hardware_pwm",
+     "True"
+    ]
+   ]
+  },
+  {
+   "name": "output_pin FAN7",
+   "options": [
+    [
+     "pin",
+     "sx1509_duex:PIN_4"
+    ],
+    [
+     "pwm",
+     "True"
+    ],
+    [
+     "hardware_pwm",
+     "True"
+    ]
+   ]
+  },
+  {
+   "name": "output_pin FAN8",
+   "options": [
+    [
+     "pin",
+     "sx1509_duex:PIN_15"
+    ],
+    [
+     "pwm",
+     "True"
+    ],
+    [
+     "hardware_pwm",
+     "True"
+    ]
+   ]
+  },
+  {
+   "name": "output_pin GPIO1",
+   "options": [
+    [
+     "pin",
+     "sx1509_duex:PIN_11"
+    ],
+    [
+     "pwm",
+     "False"
+    ],
+    [
+     "value",
+     "1"
+    ]
+   ]
+  }
+ ],
+ "aliases": "",
+ "tmc_types": [
+  "tmc2660"
+ ]
+}

@@ -1,0 +1,103 @@
+{
+ "schema": 1,
+ "id": "mks-robin-e3",
+ "name": "Makerbase Robin E3",
+ "vendor": "Makerbase (MKS)",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-mks-robin-e3.cfg",
+ "mcu": {
+  "family": "stm32",
+  "processors": [
+   "stm32f103"
+  ],
+  "bootloader": [
+   "20KiB"
+  ],
+  "crystal": [],
+  "interfaces": [
+   "UART"
+  ]
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC0",
+   "dir_pin": "PB2",
+   "enable_pin": "!PC13",
+   "endstop_pin": "^PA12",
+   "tmc": {
+    "uart_pin": "PC7"
+   }
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC2",
+   "dir_pin": "PB9",
+   "enable_pin": "!PB12",
+   "endstop_pin": "^PA11",
+   "tmc": {
+    "uart_pin": "PD2"
+   }
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB7",
+   "dir_pin": "!PB6",
+   "enable_pin": "!PB8",
+   "endstop_pin": "^PC6",
+   "tmc": {
+    "uart_pin": "PC12"
+   }
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB4",
+   "dir_pin": "PB3",
+   "enable_pin": "!PB5",
+   "tmc": {
+    "uart_pin": "PC11"
+   }
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PC9",
+   "sensor_pin": "PA0",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "PC8",
+   "sensor_pin": "PA1",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "PA8",
+   "label": "",
+   "commented": false
+  }
+ ],
+ "probe": {
+  "bl_sensor": "^PC6",
+  "bl_control": "PA3"
+ },
+ "neopixel": "",
+ "filament_sensors": [
+  "PB10"
+ ],
+ "servo": "",
+ "extra_sections": [],
+ "aliases": "EXP1_1=PC3, EXP1_3=PA4, EXP1_5=PA6, EXP1_7=PC4, EXP1_9=<GND>,\nEXP1_2=PC1, EXP1_4=PA5, EXP1_6=PA7, EXP1_8=PC5, EXP1_10=<5V>,\nEXP2_1=PB14, EXP2_3=PB11, EXP2_5=PB0,  EXP2_7=PC10,  EXP2_9=<GND>,\nEXP2_2=PB13, EXP2_4=PA15, EXP2_6=PB15, EXP2_8=<RST>, EXP2_10=<NC>,\nCR_EXP3_10=<5V>, CR_EXP3_8=PA4, CR_EXP3_6=PA6, CR_EXP3_4=<RST>, CR_EXP3_2=PC3,\nCR_EXP3_9=<GND>, CR_EXP3_7=PA5, CR_EXP3_5=PB0, CR_EXP3_3=PB11,  CR_EXP3_1=PC1",
+ "tmc_types": [
+  "tmc2209"
+ ]
+}

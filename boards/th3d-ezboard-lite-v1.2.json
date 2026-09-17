@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "id": "th3d-ezboard-lite-v1.2",
+ "name": "TH3D Ezboard Lite V1.2",
+ "vendor": "TH3D",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-th3d-ezboard-lite-v1.2.cfg",
+ "mcu": {
+  "family": "lpc176x",
+  "processors": [
+   "lpc1769"
+  ],
+  "bootloader": [],
+  "crystal": [],
+  "interfaces": [
+   "USB"
+  ]
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "P2.0",
+   "dir_pin": "P1.16",
+   "enable_pin": "!P1.17",
+   "endstop_pin": "^P1.24",
+   "tmc": {
+    "uart_pin": "P0.5",
+    "tx_pin": "P0.4"
+   }
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "P2.1",
+   "dir_pin": "P1.10",
+   "enable_pin": "!P1.9",
+   "endstop_pin": "^P1.25",
+   "tmc": {
+    "uart_pin": "P0.11",
+    "tx_pin": "P0.10"
+   }
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "P2.2",
+   "dir_pin": "P1.15",
+   "enable_pin": "!P1.14",
+   "endstop_pin": "^P1.26",
+   "tmc": {
+    "uart_pin": "P0.20",
+    "tx_pin": "P0.19"
+   }
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "P2.3",
+   "dir_pin": "P1.4",
+   "enable_pin": "!P1.8",
+   "tmc": {
+    "uart_pin": "P0.21",
+    "tx_pin": "P0.22"
+   }
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "P2.7",
+   "sensor_pin": "P0.23",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "P2.5",
+   "sensor_pin": "P0.24",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "P2.6",
+   "label": "",
+   "commented": false
+  }
+ ],
+ "probe": {
+  "bl_sensor": "P1.26",
+  "bl_control": "P2.4"
+ },
+ "neopixel": "",
+ "filament_sensors": [
+  "P1.27"
+ ],
+ "servo": "",
+ "extra_sections": [],
+ "aliases": "EXP1_1=P1.31, EXP1_3=P3.26, EXP1_5=P3.25, EXP1_7=P0.16, EXP1_9=<GND>,\nEXP1_2=P1.30, EXP1_4=<RST>, EXP1_6=P0.15, EXP1_8=P0.18, EXP1_10=<5V>",
+ "tmc_types": [
+  "tmc2208"
+ ]
+}

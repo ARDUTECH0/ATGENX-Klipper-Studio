@@ -1,0 +1,236 @@
+{
+ "schema": 1,
+ "id": "mellow-super-infinty-hv",
+ "name": "Mellow Super Infinty HV",
+ "vendor": "Mellow",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-mellow-super-infinty-hv.cfg",
+ "mcu": {
+  "family": "stm32",
+  "processors": [
+   "stm32f407"
+  ],
+  "bootloader": [
+   "32KiB"
+  ],
+  "crystal": [],
+  "interfaces": [
+   "USB"
+  ]
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PE2",
+   "dir_pin": "PC5",
+   "enable_pin": "!PF11",
+   "endstop_pin": "PG12",
+   "tmc": {
+    "uart_pin": "PC4",
+    "cs_pin": "PC4",
+    "spi_bus": "spi3"
+   }
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PE3",
+   "dir_pin": "PF13",
+   "enable_pin": "!PF14",
+   "endstop_pin": "PG11",
+   "tmc": {
+    "uart_pin": "PF12",
+    "cs_pin": "PF12",
+    "spi_bus": "spi3"
+   }
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PE4",
+   "dir_pin": "PG0",
+   "enable_pin": "!PG1",
+   "endstop_pin": "PG10",
+   "tmc": {
+    "uart_pin": "PF15",
+    "cs_pin": "PF15",
+    "spi_bus": "spi3"
+   }
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PE14",
+   "dir_pin": "PE8",
+   "enable_pin": "!PE9",
+   "tmc": {
+    "uart_pin": "PE7",
+    "cs_pin": "PE7",
+    "spi_bus": "spi3"
+   }
+  },
+  {
+   "slot": "extruder1",
+   "label": "",
+   "commented": true,
+   "step_pin": "PE15",
+   "dir_pin": "PE11",
+   "enable_pin": "!PF2",
+   "tmc": {
+    "uart_pin": "PE10",
+    "cs_pin": "PE10",
+    "spi_bus": "spi3"
+   }
+  },
+  {
+   "slot": "extruder2",
+   "label": "",
+   "commented": true,
+   "step_pin": "PE1",
+   "dir_pin": "PF0",
+   "enable_pin": "!PC15",
+   "tmc": {
+    "uart_pin": "PF1",
+    "cs_pin": "PF1",
+    "spi_bus": "spi3"
+   }
+  },
+  {
+   "slot": "extruder3",
+   "label": "",
+   "commented": true,
+   "step_pin": "PE0",
+   "dir_pin": "PG3",
+   "enable_pin": "!PG4",
+   "tmc": {
+    "uart_pin": "PG2",
+    "cs_pin": "PG2",
+    "spi_bus": "spi3"
+   }
+  },
+  {
+   "slot": "extruder4",
+   "label": "",
+   "commented": true,
+   "step_pin": "PE6",
+   "dir_pin": "PG6",
+   "enable_pin": "!PG7",
+   "tmc": {
+    "uart_pin": "PG5",
+    "cs_pin": "PG5",
+    "spi_bus": "spi3"
+   }
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PB0",
+   "sensor_pin": "PF4",
+   "label": "Heat0"
+  },
+  "extruder1": {
+   "heater_pin": "PB1",
+   "sensor_pin": "PF5",
+   "label": "Heat1"
+  },
+  "extruder2": {
+   "heater_pin": "PC7",
+   "sensor_pin": "PF9",
+   "label": "Heat2"
+  },
+  "extruder3": {
+   "heater_pin": "PF7",
+   "sensor_pin": "PF10",
+   "label": "Heat3"
+  },
+  "extruder4": {
+   "heater_pin": "PF6",
+   "sensor_pin": "PC0",
+   "label": "Heat4"
+  },
+  "heater_bed": {
+   "heater_pin": "PE5",
+   "sensor_pin": "PC1",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "PA0",
+   "label": "Fan0",
+   "commented": false
+  },
+  {
+   "name": "heater_fan fan1",
+   "pin": "PA1",
+   "label": "",
+   "commented": false
+  },
+  {
+   "name": "heater_fan fan2",
+   "pin": "PA2",
+   "label": "",
+   "commented": true
+  },
+  {
+   "name": "heater_fan fan3",
+   "pin": "PA3",
+   "label": "",
+   "commented": true
+  },
+  {
+   "name": "heater_fan fan4",
+   "pin": "PA15",
+   "label": "",
+   "commented": true
+  },
+  {
+   "name": "heater_fan fan5",
+   "pin": "PB11",
+   "label": "",
+   "commented": true
+  },
+  {
+   "name": "heater_fan fan6",
+   "pin": "PB10",
+   "label": "",
+   "commented": true
+  },
+  {
+   "name": "heater_fan fan7",
+   "pin": "PD12",
+   "label": "",
+   "commented": true
+  },
+  {
+   "name": "heater_fan fan8",
+   "pin": "PD14",
+   "label": "",
+   "commented": true
+  },
+  {
+   "name": "heater_fan fan9",
+   "pin": "PD15",
+   "label": "",
+   "commented": true
+  }
+ ],
+ "probe": {
+  "bl_sensor": "^PC3",
+  "bl_control": "PC6"
+ },
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [],
+ "aliases": "EXP1_1=PE12, EXP1_3=PB2, EXP1_5=PC14, EXP1_7=PG14, EXP1_9=<GND>,\nEXP1_2=PE13, EXP1_4=PG8, EXP1_6=PC13, EXP1_8=PG13, EXP1_10=<5V>,\nEXP2_1=PA6, EXP2_3=PB7, EXP2_5=PB6, EXP2_7=PG15,  EXP2_9=<GND>,\nEXP2_2=PA4, EXP2_4=PA4, EXP2_6=PA7, EXP2_8=<RST>, EXP2_10=<5V>",
+ "tmc_types": [
+  "tmc2208",
+  "tmc5160"
+ ]
+}

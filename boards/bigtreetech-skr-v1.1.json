@@ -1,0 +1,93 @@
+{
+ "schema": 1,
+ "id": "bigtreetech-skr-v1.1",
+ "name": "BIGTREETECH SKR V1.1",
+ "vendor": "BIGTREETECH",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-bigtreetech-skr-v1.1.cfg",
+ "mcu": {
+  "family": "lpc176x",
+  "processors": [
+   "lpc1768"
+  ],
+  "bootloader": [],
+  "crystal": [],
+  "interfaces": []
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "P0.4",
+   "dir_pin": "!P0.5",
+   "enable_pin": "!P4.28",
+   "endstop_pin": "P1.29",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "P2.1",
+   "dir_pin": "P2.2",
+   "enable_pin": "!P2.0",
+   "endstop_pin": "P1.27",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "P0.20",
+   "dir_pin": "P0.21",
+   "enable_pin": "!P0.19",
+   "endstop_pin": "!P1.25",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_z1",
+   "label": "",
+   "commented": true,
+   "step_pin": "P0.1",
+   "dir_pin": "P0.0",
+   "enable_pin": "!P0.10",
+   "tmc": {}
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "P0.11",
+   "dir_pin": "P2.13",
+   "enable_pin": "!P2.12",
+   "tmc": {}
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "P2.7",
+   "sensor_pin": "P0.24",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "P2.5",
+   "sensor_pin": "P0.23",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "P2.3",
+   "label": "",
+   "commented": false
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [],
+ "aliases": "EXP1_1=P1.30, EXP1_3=P0.18, EXP1_5=P0.15, EXP1_7=<NC>, EXP1_9=<GND>,\nEXP1_2=P2.11, EXP1_4=P0.16, EXP1_6=<NC>,  EXP1_8=<NC>, EXP1_10=<5V>,\nEXP2_1=P0.17, EXP2_3=P3.26, EXP2_5=P3.25, EXP2_7=P1.31, EXP2_9=<GND>,\nEXP2_2=P0.15, EXP2_4=P1.23, EXP2_6=P0.18, EXP2_8=<RST>, EXP2_10=<NC>",
+ "tmc_types": []
+}

@@ -1,0 +1,88 @@
+{
+ "schema": 1,
+ "id": "bigtreetech-skr-mini",
+ "name": "BIGTREETECH SKR Mini",
+ "vendor": "BIGTREETECH",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-bigtreetech-skr-mini.cfg",
+ "mcu": {
+  "family": "stm32",
+  "processors": [
+   "stm32f103"
+  ],
+  "bootloader": [
+   "28KiB"
+  ],
+  "crystal": [],
+  "interfaces": [
+   "USB"
+  ]
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC6",
+   "dir_pin": "PC7",
+   "enable_pin": "!PB15",
+   "endstop_pin": "PC2",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB13",
+   "dir_pin": "PB14",
+   "enable_pin": "!PB12",
+   "endstop_pin": "PC1",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB10",
+   "dir_pin": "PB11",
+   "enable_pin": "!PB2",
+   "endstop_pin": "PC0",
+   "tmc": {}
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC5",
+   "dir_pin": "PB0",
+   "enable_pin": "!PC4",
+   "tmc": {}
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PA8",
+   "sensor_pin": "PA0",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "PC9",
+   "sensor_pin": "PB1",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "PC8",
+   "label": "",
+   "commented": false
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [],
+ "aliases": "EXP1_1=PC10, EXP1_3=PB6,  EXP1_5=PC13, EXP1_7=PC15, EXP1_9=<GND>,\nEXP1_2=PC11, EXP1_4=PC12, EXP1_6=PB7,  EXP1_8=PC14, EXP1_10=<5V>,\nEXP2_1=PB4, EXP2_3=PD2,  EXP2_5=PB8, EXP2_7=PB9,   EXP2_9=<GND>,\nEXP2_2=PB3, EXP2_4=PA15, EXP2_6=PB5, EXP2_8=<RST>, EXP2_10=<NC>",
+ "tmc_types": []
+}

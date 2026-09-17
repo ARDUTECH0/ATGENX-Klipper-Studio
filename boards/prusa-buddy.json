@@ -1,0 +1,113 @@
+{
+ "schema": 1,
+ "id": "prusa-buddy",
+ "name": "Prusa Buddy",
+ "vendor": "Prusa",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-prusa-buddy.cfg",
+ "mcu": {
+  "family": "stm32",
+  "processors": [
+   "stm32f407"
+  ],
+  "bootloader": [],
+  "crystal": [],
+  "interfaces": [
+   "USB"
+  ]
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PD1",
+   "dir_pin": "PD0",
+   "enable_pin": "!PD3",
+   "endstop_pin": "tmc2209_stepper_x:virtual_endstop",
+   "tmc": {
+    "uart_pin": "PD5",
+    "uart_address": "1",
+    "diag_pin": "^PE2"
+   }
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PD13",
+   "dir_pin": "PD12",
+   "enable_pin": "!PD14",
+   "endstop_pin": "tmc2209_stepper_y:virtual_endstop",
+   "tmc": {
+    "uart_pin": "PD5",
+    "uart_address": "3",
+    "diag_pin": "^PE1"
+   }
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PD4",
+   "dir_pin": "!PD15",
+   "enable_pin": "!PD2",
+   "tmc": {
+    "uart_pin": "PD5",
+    "uart_address": "0",
+    "diag_pin": "^PE3"
+   }
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PD9",
+   "dir_pin": "!PD8",
+   "enable_pin": "!PD10",
+   "tmc": {
+    "uart_pin": "PD5",
+    "uart_address": "2",
+    "diag_pin": "^PA15"
+   }
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PB1",
+   "sensor_pin": "PC0",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "PB0",
+   "sensor_pin": "PA4",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "heater_fan hotend_fan",
+   "pin": "PE9",
+   "label": "",
+   "commented": false
+  },
+  {
+   "name": "fan",
+   "pin": "PE11",
+   "label": "",
+   "commented": false
+  }
+ ],
+ "probe": {
+  "pin": "PA8"
+ },
+ "neopixel": "",
+ "filament_sensors": [
+  "^PB4"
+ ],
+ "servo": "",
+ "extra_sections": [],
+ "aliases": "",
+ "tmc_types": [
+  "tmc2209"
+ ]
+}

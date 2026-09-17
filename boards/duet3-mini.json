@@ -1,0 +1,126 @@
+{
+ "schema": 1,
+ "id": "duet3-mini",
+ "name": "Duet3D Duet3 Mini",
+ "vendor": "Duet3D",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-duet3-mini.cfg",
+ "mcu": {
+  "family": "atsam",
+  "processors": [],
+  "bootloader": [
+   "16KiB"
+  ],
+  "crystal": [
+   "25MHz"
+  ],
+  "interfaces": [
+   "USB"
+  ]
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC26",
+   "dir_pin": "!PB3",
+   "enable_pin": "!PC28",
+   "endstop_pin": "^PC31",
+   "tmc": {
+    "uart_pin": "PA1",
+    "tx_pin": "PA0",
+    "uart_address": "0"
+   }
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC25",
+   "dir_pin": "PB29",
+   "enable_pin": "!PC28",
+   "endstop_pin": "^PC4",
+   "tmc": {
+    "uart_pin": "PA1",
+    "tx_pin": "PA0",
+    "uart_address": "1"
+   }
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC24",
+   "dir_pin": "PB28",
+   "enable_pin": "!PC28",
+   "endstop_pin": "PC5",
+   "tmc": {
+    "uart_pin": "PA1",
+    "tx_pin": "PA0",
+    "uart_address": "2"
+   }
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC19",
+   "dir_pin": "PD20",
+   "enable_pin": "!PC28",
+   "tmc": {
+    "uart_pin": "PA1",
+    "tx_pin": "PA0",
+    "uart_address": "3"
+   }
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PB13",
+   "sensor_pin": "vref_scaled:PC1",
+   "label": "out2"
+  },
+  "heater_bed": {
+   "heater_pin": "PB17",
+   "sensor_pin": "vref_scaled:PC0",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "heater_fan heatbreak_fan",
+   "pin": "PB11",
+   "label": "",
+   "commented": false
+  },
+  {
+   "name": "fan",
+   "pin": "PA11",
+   "label": "",
+   "commented": false
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [
+  {
+   "name": "adc_scaled vref_scaled",
+   "options": [
+    [
+     "vref_pin",
+     "PB5"
+    ],
+    [
+     "vssa_pin",
+     "PB4"
+    ]
+   ]
+  }
+ ],
+ "aliases": "EXP1_1=PA9, EXP1_3=PC6, EXP1_5=<LCD_RST>, EXP1_7=<NC>, EXP1_9=<GND>,\nEXP1_2=PB9, EXP1_4=PA2, EXP1_6=PB12,      EXP1_8=<NC>, EXP1_10=<5V>,\nEXP2_1=PC15,  EXP2_3=PD1,  EXP2_5=PC11, EXP2_7=PD12,        EXP2_9=<GND>,\nEXP2_2=PC13, EXP2_4=PC14, EXP2_6=PC12, EXP2_8=<RESET_EXT>, EXP2_10=<NC>",
+ "tmc_types": [
+  "tmc2209"
+ ]
+}

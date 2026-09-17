@@ -1,0 +1,102 @@
+{
+ "schema": 1,
+ "id": "bigtreetech-e3-rrf-v1.1",
+ "name": "BIGTREETECH E3 RRF V1.1",
+ "vendor": "BIGTREETECH",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-bigtreetech-e3-rrf-v1.1.cfg",
+ "mcu": {
+  "family": "stm32",
+  "processors": [
+   "stm32f407"
+  ],
+  "bootloader": [
+   "32KiB"
+  ],
+  "crystal": [],
+  "interfaces": []
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PD5",
+   "dir_pin": "!PD4",
+   "enable_pin": "!PD7",
+   "endstop_pin": "^PC0",
+   "tmc": {
+    "uart_pin": "PD6"
+   }
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PD0",
+   "dir_pin": "!PA15",
+   "enable_pin": "!PD3",
+   "endstop_pin": "^PC1",
+   "tmc": {
+    "uart_pin": "PD1"
+   }
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC6",
+   "dir_pin": "PC7",
+   "enable_pin": "!PD14",
+   "endstop_pin": "^PC2",
+   "tmc": {
+    "uart_pin": "PD15"
+   }
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PD12",
+   "dir_pin": "!PD13",
+   "enable_pin": "!PD10",
+   "tmc": {
+    "uart_pin": "PD11"
+   }
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PB3",
+   "sensor_pin": "PA0",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "PB4",
+   "sensor_pin": "PA1",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "heater_fan heatbreak_cooling_fan",
+   "pin": "PB6",
+   "label": "",
+   "commented": false
+  },
+  {
+   "name": "fan",
+   "pin": "PB5",
+   "label": "",
+   "commented": false
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [],
+ "aliases": "EXP1_1=PE8, EXP1_3=PE7,   EXP1_5=PB2,  EXP1_7=PB1,  EXP1_9=<GND>,\nEXP1_2=PE9, EXP1_4=<RST>, EXP1_6=PE10, EXP1_8=PE11, EXP1_10=<5V>",
+ "tmc_types": [
+  "tmc2209"
+ ]
+}

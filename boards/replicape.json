@@ -1,0 +1,142 @@
+{
+ "schema": 1,
+ "id": "replicape",
+ "name": "Replicape",
+ "vendor": "Replicape",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-replicape.cfg",
+ "mcu": {
+  "family": "pru",
+  "processors": [
+   "beaglebone",
+   "pru"
+  ],
+  "bootloader": [],
+  "crystal": [],
+  "interfaces": []
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "gpio0_27",
+   "dir_pin": "gpio1_29",
+   "enable_pin": "replicape:stepper_x_enable",
+   "endstop_pin": "^gpio3_21",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "gpio1_12",
+   "dir_pin": "gpio0_22",
+   "enable_pin": "replicape:stepper_y_enable",
+   "endstop_pin": "^gpio1_17",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "gpio0_23",
+   "dir_pin": "gpio0_26",
+   "enable_pin": "replicape:stepper_z_enable",
+   "endstop_pin": "^gpio0_31",
+   "tmc": {}
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "gpio1_28",
+   "dir_pin": "gpio1_15",
+   "enable_pin": "replicape:stepper_e_enable",
+   "tmc": {}
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "replicape:power_e",
+   "sensor_pin": "host:analog4",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "replicape:power_hotbed",
+   "sensor_pin": "host:analog6",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "replicape:power_fan0",
+   "label": "",
+   "commented": false
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [
+  "HOST_X2_STOP"
+ ],
+ "servo": "replicape:servo0",
+ "extra_sections": [
+  {
+   "name": "mcu host",
+   "options": [
+    [
+     "serial",
+     "/tmp/klipper_host_mcu"
+    ]
+   ]
+  },
+  {
+   "name": "replicape",
+   "options": [
+    [
+     "revision",
+     "B3"
+    ],
+    [
+     "host_mcu",
+     "host"
+    ],
+    [
+     "stepper_x_microstep_mode",
+     "spread16"
+    ],
+    [
+     "stepper_x_current",
+     "0.5"
+    ],
+    [
+     "stepper_y_microstep_mode",
+     "spread16"
+    ],
+    [
+     "stepper_y_current",
+     "0.5"
+    ],
+    [
+     "stepper_z_microstep_mode",
+     "spread16"
+    ],
+    [
+     "stepper_z_current",
+     "0.5"
+    ],
+    [
+     "stepper_e_microstep_mode",
+     "16"
+    ],
+    [
+     "stepper_e_current",
+     "0.5"
+    ]
+   ]
+  }
+ ],
+ "aliases": "X_DIR=gpio1_29, X_STEP=gpio0_27, Y_DIR=gpio0_22, Y_STEP=gpio1_12, Z_DIR=gpio0_26, Z_STEP=gpio0_23,\nE_DIR=gpio1_15, E_STEP=gpio1_28, H_DIR=gpio1_14, H_STEP=gpio1_13,\nFAULT_X=gpio2_4, FAULT_Y=gpio2_5, FAULT_Z=gpio0_15, FAULT_E=gpio2_1, FAULT_H=gpio2_3,\nSTOP_X1=gpio3_21, STOP_X2=gpio0_30, STOP_Y1=gpio1_17, STOP_Y2=gpio3_17, STOP_Z1=gpio0_31, STOP_Z2=gpio0_4,\nSTEPPER_ENABLE=gpio0_20,\nSERVO_0=gpio1_18, SERVO_1=gpio1_19,",
+ "tmc_types": []
+}

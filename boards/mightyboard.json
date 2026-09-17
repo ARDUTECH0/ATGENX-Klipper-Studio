@@ -1,0 +1,221 @@
+{
+ "schema": 1,
+ "id": "mightyboard",
+ "name": "MightyBoard",
+ "vendor": "MightyBoard",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-mightyboard.cfg",
+ "mcu": {
+  "family": "avr",
+  "processors": [
+   "atmega1280"
+  ],
+  "bootloader": [],
+  "crystal": [],
+  "interfaces": []
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PF1",
+   "dir_pin": "!PF0",
+   "enable_pin": "!PF2",
+   "endstop_pin": "^!PL1",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PF5",
+   "dir_pin": "!PF4",
+   "enable_pin": "!PF6",
+   "endstop_pin": "^!PL3",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PK1",
+   "dir_pin": "!PK0",
+   "enable_pin": "!PK2",
+   "endstop_pin": "!PL6",
+   "tmc": {}
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PA3",
+   "dir_pin": "!PA2",
+   "enable_pin": "!PA4",
+   "tmc": {}
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PH3",
+   "sensor_pin": "PE3",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "PL4",
+   "sensor_pin": "PK7",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "heater_fan extruder_fan",
+   "pin": "PH4",
+   "label": "",
+   "commented": false
+  },
+  {
+   "name": "fan",
+   "pin": "PL5",
+   "label": "",
+   "commented": false
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [
+  {
+   "name": "mcp4018 x_axis_pot",
+   "options": [
+    [
+     "i2c_software_scl_pin",
+     "PJ5"
+    ],
+    [
+     "i2c_software_sda_pin",
+     "PF3"
+    ],
+    [
+     "wiper",
+     "0.50"
+    ],
+    [
+     "scale",
+     "0.773"
+    ]
+   ]
+  },
+  {
+   "name": "mcp4018 y_axis_pot",
+   "options": [
+    [
+     "i2c_software_scl_pin",
+     "PJ5"
+    ],
+    [
+     "i2c_software_sda_pin",
+     "PF7"
+    ],
+    [
+     "wiper",
+     "0.50"
+    ],
+    [
+     "scale",
+     "0.773"
+    ]
+   ]
+  },
+  {
+   "name": "mcp4018 z_axis_pot",
+   "options": [
+    [
+     "i2c_software_scl_pin",
+     "PJ5"
+    ],
+    [
+     "i2c_software_sda_pin",
+     "PK3"
+    ],
+    [
+     "wiper",
+     "0.50"
+    ],
+    [
+     "scale",
+     "0.773"
+    ]
+   ]
+  },
+  {
+   "name": "mcp4018 a_axis_pot",
+   "options": [
+    [
+     "i2c_software_scl_pin",
+     "PJ5"
+    ],
+    [
+     "i2c_software_sda_pin",
+     "PA5"
+    ],
+    [
+     "wiper",
+     "0.50"
+    ],
+    [
+     "scale",
+     "0.773"
+    ]
+   ]
+  },
+  {
+   "name": "mcp4018 b_axis_pot",
+   "options": [
+    [
+     "i2c_software_scl_pin",
+     "PJ5"
+    ],
+    [
+     "i2c_software_sda_pin",
+     "PJ6"
+    ],
+    [
+     "wiper",
+     "0.50"
+    ],
+    [
+     "scale",
+     "0.773"
+    ]
+   ]
+  },
+  {
+   "name": "pca9533 led_strip",
+   "options": [
+    [
+     "i2c_bus",
+     "twi"
+    ],
+    [
+     "i2c_address",
+     "98"
+    ],
+    [
+     "initial_red",
+     "1"
+    ],
+    [
+     "initial_green",
+     "1"
+    ],
+    [
+     "initial_blue",
+     "1"
+    ]
+   ]
+  }
+ ],
+ "aliases": "",
+ "tmc_types": []
+}

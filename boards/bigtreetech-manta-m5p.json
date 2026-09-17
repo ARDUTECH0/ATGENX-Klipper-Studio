@@ -1,0 +1,154 @@
+{
+ "schema": 1,
+ "id": "bigtreetech-manta-m5p",
+ "name": "BIGTREETECH Manta M5P",
+ "vendor": "BIGTREETECH",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-bigtreetech-manta-m5p.cfg",
+ "mcu": {
+  "family": "stm32",
+  "processors": [
+   "stm32g0b1"
+  ],
+  "bootloader": [
+   "8KiB"
+  ],
+  "crystal": [
+   "8MHz"
+  ],
+  "interfaces": [
+   "USB",
+   "CAN"
+  ]
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC8",
+   "dir_pin": "!PC9",
+   "enable_pin": "!PA15",
+   "endstop_pin": "^PD3",
+   "tmc": {
+    "uart_pin": "PD9",
+    "diag_pin": "PD3",
+    "cs_pin": "PD9",
+    "spi_bus": "spi2",
+    "diag1_pin": "PD3"
+   }
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PA10",
+   "dir_pin": "!PA14",
+   "enable_pin": "!PA13",
+   "endstop_pin": "^PD2",
+   "tmc": {
+    "uart_pin": "PD8",
+    "diag_pin": "PD2",
+    "cs_pin": "PD8",
+    "spi_bus": "spi2",
+    "diag1_pin": "PD2"
+   }
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC6",
+   "dir_pin": "PC7",
+   "enable_pin": "!PA9",
+   "endstop_pin": "^PC3",
+   "tmc": {
+    "uart_pin": "PB10",
+    "diag_pin": "PC3",
+    "cs_pin": "PB10",
+    "spi_bus": "spi2",
+    "diag1_pin": "PC3"
+   }
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB12",
+   "dir_pin": "!PB11",
+   "enable_pin": "!PA8",
+   "tmc": {
+    "uart_pin": "PB2",
+    "diag_pin": "PC2",
+    "cs_pin": "PB2",
+    "spi_bus": "spi2",
+    "diag1_pin": "PC2"
+   }
+  },
+  {
+   "slot": "extruder1",
+   "label": "",
+   "commented": true,
+   "step_pin": "PB0",
+   "dir_pin": "PB1",
+   "enable_pin": "!PC4",
+   "tmc": {
+    "uart_pin": "PA6",
+    "cs_pin": "PA6",
+    "spi_bus": "spi2"
+   }
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PC5",
+   "sensor_pin": "PA1",
+   "label": ""
+  },
+  "extruder1": {
+   "heater_pin": "PA7",
+   "sensor_pin": "PA2",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "PA5",
+   "sensor_pin": "PA0",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "PA4",
+   "label": "",
+   "commented": false
+  },
+  {
+   "name": "heater_fan fan1",
+   "pin": "PA3",
+   "label": "",
+   "commented": true
+  },
+  {
+   "name": "heater_fan SoC_fan",
+   "pin": "RPI:gpio26",
+   "label": "",
+   "commented": true
+  }
+ ],
+ "probe": {
+  "bl_sensor": "PC13",
+  "bl_control": "PC15",
+  "pin": "PC15"
+ },
+ "neopixel": "PC11",
+ "filament_sensors": [
+  "PC2"
+ ],
+ "servo": "",
+ "extra_sections": [],
+ "aliases": "EXP1_1=PD5, EXP1_3=PB3, EXP1_5=PB5, EXP1_7=PB7, EXP1_9=<GND>,\nEXP1_2=PD4,  EXP1_4=PD6, EXP1_6=PB4, EXP1_8=PB6, EXP1_10=<5V>,\nEXP2_1=PB14, EXP2_3=PB8, EXP2_5=PC10, EXP2_7=PC12,  EXP2_9=<GND>,\nEXP2_2=PB13, EXP2_4=PB9, EXP2_6=PB15, EXP2_8=<RST>, EXP2_10=<NC>",
+ "tmc_types": [
+  "tmc2209",
+  "tmc2130"
+ ]
+}

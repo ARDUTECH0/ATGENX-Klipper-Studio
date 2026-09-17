@@ -1,0 +1,99 @@
+{
+ "schema": 1,
+ "id": "ruramps-v1.3",
+ "name": "Ruramps V1.3",
+ "vendor": "Other",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-ruramps-v1.3.cfg",
+ "mcu": {
+  "family": "atsam",
+  "processors": [
+   "sam3x8e"
+  ],
+  "bootloader": [],
+  "crystal": [],
+  "interfaces": []
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC5",
+   "dir_pin": "PC4",
+   "enable_pin": "!PA7",
+   "endstop_pin": "^PC7",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PD10",
+   "dir_pin": "PC3",
+   "enable_pin": "!PA7",
+   "endstop_pin": "^PC9",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PD9",
+   "dir_pin": "PB25",
+   "enable_pin": "!PA7",
+   "endstop_pin": "^PA20",
+   "tmc": {}
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PD6",
+   "dir_pin": "PD3",
+   "enable_pin": "!PC1",
+   "tmc": {}
+  },
+  {
+   "slot": "extruder1",
+   "label": "",
+   "commented": true,
+   "step_pin": "PB26",
+   "dir_pin": "PA15",
+   "enable_pin": "!PD1",
+   "tmc": {}
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PB27",
+   "sensor_pin": "PA16",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "PC23",
+   "sensor_pin": "PA6",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "PB18",
+   "label": "",
+   "commented": false
+  },
+  {
+   "name": "heater_fan extruder_cooler_fan",
+   "pin": "PB17",
+   "label": "",
+   "commented": true
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [],
+ "aliases": "",
+ "tmc_types": []
+}

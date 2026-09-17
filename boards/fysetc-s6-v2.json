@@ -1,0 +1,161 @@
+{
+ "schema": 1,
+ "id": "fysetc-s6-v2",
+ "name": "FYSETC S6 V2",
+ "vendor": "FYSETC",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-fysetc-s6-v2.cfg",
+ "mcu": {
+  "family": "stm32",
+  "processors": [
+   "stm32f446"
+  ],
+  "bootloader": [
+   "64KiB"
+  ],
+  "crystal": [
+   "12MHz"
+  ],
+  "interfaces": []
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PE11",
+   "dir_pin": "PE10",
+   "enable_pin": "!PE9",
+   "endstop_pin": "^PB14",
+   "tmc": {
+    "uart_pin": "PE8",
+    "cs_pin": "PE7",
+    "spi_bus": "spi4",
+    "diag1_pin": "PB14"
+   }
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PD8",
+   "dir_pin": "PB12",
+   "enable_pin": "!PD9",
+   "endstop_pin": "^PB13",
+   "tmc": {
+    "uart_pin": "PC4",
+    "cs_pin": "PE15",
+    "spi_bus": "spi4",
+    "diag1_pin": "PB13"
+   }
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PD14",
+   "dir_pin": "PD13",
+   "enable_pin": "!PD15",
+   "endstop_pin": "^PA0",
+   "tmc": {
+    "uart_pin": "PD12",
+    "cs_pin": "PD10",
+    "spi_bus": "spi4",
+    "diag1_pin": "PA0"
+   }
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PD5",
+   "dir_pin": "!PD6",
+   "enable_pin": "!PD4",
+   "tmc": {
+    "uart_pin": "PA15",
+    "cs_pin": "PD7",
+    "spi_bus": "spi4",
+    "diag1_pin": "PA3"
+   }
+  },
+  {
+   "slot": "extruder1",
+   "label": "",
+   "commented": true,
+   "step_pin": "PE6",
+   "dir_pin": "!PC13",
+   "enable_pin": "!PE5",
+   "tmc": {
+    "uart_pin": "PC5",
+    "cs_pin": "PC14",
+    "spi_bus": "spi4",
+    "diag1_pin": "PA2"
+   }
+  },
+  {
+   "slot": "extruder2",
+   "label": "",
+   "commented": true,
+   "step_pin": "PE2",
+   "dir_pin": "!PE4",
+   "enable_pin": "!PE3",
+   "tmc": {
+    "uart_pin": "PE0",
+    "cs_pin": "PC15",
+    "spi_bus": "spi4",
+    "diag1_pin": "PA1"
+   }
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PB3",
+   "sensor_pin": "PC0",
+   "label": ""
+  },
+  "extruder1": {
+   "heater_pin": "PB4",
+   "sensor_pin": "PC1",
+   "label": ""
+  },
+  "extruder2": {
+   "heater_pin": "PB15",
+   "sensor_pin": "PC2",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "PC8",
+   "sensor_pin": "PC3",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "PB0",
+   "label": "",
+   "commented": false
+  },
+  {
+   "name": "heater_fan heatbreak_cooling_fan",
+   "pin": "PB1",
+   "label": "",
+   "commented": true
+  },
+  {
+   "name": "heater_fan my_control_fan",
+   "pin": "PB2",
+   "label": "",
+   "commented": true
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [],
+ "aliases": "EXP1_1=PC9, EXP1_2=PA8,\nEXP1_3=PC11, EXP1_4=PD2,\nEXP1_5=PC10, EXP1_6=PC12,    # Slot in the socket on this side\nEXP1_7=PD0, EXP1_8=PD1,\nEXP1_9=<GND>, EXP1_10=<5V>,\nEXP2_1=PA6, EXP2_2=PA5,\nEXP2_3=PC6, EXP2_4=PA4,\nEXP2_5=PC7, EXP2_6=PA7,      # Slot in the socket on this side\nEXP2_7=PB10, EXP2_8=<RST>,\nEXP2_9=<GND>, EXP2_10=<5V>",
+ "tmc_types": [
+  "tmc2208",
+  "tmc2130"
+ ]
+}

@@ -1,0 +1,178 @@
+{
+ "schema": 1,
+ "id": "mellow-fly-e3-v2",
+ "name": "Mellow Fly E3 V2",
+ "vendor": "Mellow",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-mellow-fly-e3-v2.cfg",
+ "mcu": {
+  "family": "stm32",
+  "processors": [
+   "stm32f407"
+  ],
+  "bootloader": [
+   "32KiB"
+  ],
+  "crystal": [],
+  "interfaces": []
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PE5",
+   "dir_pin": "PC0",
+   "enable_pin": "!PC1",
+   "endstop_pin": "PE7",
+   "tmc": {
+    "uart_pin": "PC15"
+   }
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PE4",
+   "dir_pin": "!PC13",
+   "enable_pin": "!PC14",
+   "endstop_pin": "PE8",
+   "tmc": {
+    "uart_pin": "PB6"
+   }
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PE1",
+   "dir_pin": "!PB7",
+   "enable_pin": "!PE3",
+   "endstop_pin": "PE9",
+   "tmc": {
+    "uart_pin": "PD7"
+   }
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PE2",
+   "dir_pin": "PD5",
+   "enable_pin": "!PD6",
+   "tmc": {
+    "uart_pin": "PD4"
+   }
+  },
+  {
+   "slot": "extruder1",
+   "label": "",
+   "commented": true,
+   "step_pin": "PE0",
+   "dir_pin": "PD1",
+   "enable_pin": "!PD3",
+   "tmc": {
+    "uart_pin": "PD0"
+   }
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PC6",
+   "sensor_pin": "PC4",
+   "label": "E0"
+  },
+  "extruder1": {
+   "heater_pin": "PC7",
+   "sensor_pin": "PC5",
+   "label": "E1"
+  },
+  "heater_bed": {
+   "heater_pin": "PB0",
+   "sensor_pin": "PB1",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "heater_fan hotend_fan",
+   "pin": "PA1",
+   "label": "FAN1",
+   "commented": false
+  },
+  {
+   "name": "controller_fan controller_fan",
+   "pin": "PA0",
+   "label": "FAN0",
+   "commented": false
+  },
+  {
+   "name": "fan",
+   "pin": "PA3",
+   "label": "FAN3",
+   "commented": false
+  }
+ ],
+ "probe": {
+  "bl_sensor": "PC2",
+  "bl_control": "PE6"
+ },
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [
+  {
+   "name": "controller_fan controller_fan",
+   "options": [
+    [
+     "pin",
+     "PA0"
+    ],
+    [
+     "max_power",
+     "1.0"
+    ],
+    [
+     "kick_start_time",
+     "0.5"
+    ],
+    [
+     "heater",
+     "extruder"
+    ],
+    [
+     "stepper",
+     "stepper_x, stepper_y, stepper_z"
+    ],
+    [
+     "fan_speed",
+     "1.0"
+    ],
+    [
+     "idle_timeout",
+     "60"
+    ]
+   ]
+  },
+  {
+   "name": "temperature_sensor Mellow_Fly_E3_V2",
+   "options": [
+    [
+     "sensor_type",
+     "temperature_mcu"
+    ],
+    [
+     "min_temp",
+     "5"
+    ],
+    [
+     "max_temp",
+     "80"
+    ]
+   ]
+  }
+ ],
+ "aliases": "EXP1_1=PD10, EXP1_3=PA8,   EXP1_5=PE15,   EXP1_7=PA14,  EXP1_9=<GND>,\nEXP1_2=PA9,  EXP1_4=PA10,  EXP1_6=PE14,   EXP1_8=PA13,  EXP1_10=<5V>,\nEXP2_1=PA6, EXP2_3=PB11,  EXP2_5=PB10,  EXP2_7=PE13,   EXP2_9=<GND>,\nEXP2_2=PA5, EXP2_4=PA4,   EXP2_6=PA7,   EXP2_8=<RST>, EXP2_10=<NC>,",
+ "tmc_types": [
+  "tmc2209"
+ ]
+}

@@ -1,0 +1,20 @@
+name: Board request / board report
+description: Ask for a board, or tell us a board works (or doesn't)
+labels: [board]
+body:
+  - type: input
+    id: board
+    attributes: {label: Board name and version, placeholder: FYSETC Spider V3.0}
+    validations: {required: true}
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Type
+      options: [Add a missing board, Pins are wrong, Board works fine]
+    validations: {required: true}
+  - type: textarea
+    id: source
+    attributes: {label: Pinout / schematic / working printer.cfg link}
+  - type: textarea
+    id: notes
+    attributes: {label: Notes}

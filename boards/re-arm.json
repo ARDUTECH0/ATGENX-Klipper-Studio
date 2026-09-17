@@ -1,0 +1,98 @@
+{
+ "schema": 1,
+ "id": "re-arm",
+ "name": "Re-ARM",
+ "vendor": "Panucatt",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-re-arm.cfg",
+ "mcu": {
+  "family": "lpc176x",
+  "processors": [
+   "lpc1768"
+  ],
+  "bootloader": [],
+  "crystal": [],
+  "interfaces": []
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "P2.1",
+   "dir_pin": "P0.11",
+   "enable_pin": "!P0.10",
+   "endstop_pin": "^P1.24",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "P2.2",
+   "dir_pin": "P0.20",
+   "enable_pin": "!P0.19",
+   "endstop_pin": "^P1.26",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "P2.3",
+   "dir_pin": "P0.22",
+   "enable_pin": "!P0.21",
+   "endstop_pin": "^P1.29",
+   "tmc": {}
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "P2.0",
+   "dir_pin": "P0.5",
+   "enable_pin": "!P0.4",
+   "tmc": {}
+  },
+  {
+   "slot": "extruder1",
+   "label": "",
+   "commented": true,
+   "step_pin": "P2.8",
+   "dir_pin": "P2.13",
+   "enable_pin": "!P4.29",
+   "tmc": {}
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "P2.5",
+   "sensor_pin": "P0.23",
+   "label": ""
+  },
+  "extruder1": {
+   "heater_pin": "P2.4",
+   "sensor_pin": "P0.25",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "P2.7",
+   "sensor_pin": "P0.24",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "P2.4",
+   "label": "",
+   "commented": false
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [],
+ "aliases": "",
+ "tmc_types": []
+}

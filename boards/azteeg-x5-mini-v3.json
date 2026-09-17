@@ -1,0 +1,114 @@
+{
+ "schema": 1,
+ "id": "azteeg-x5-mini-v3",
+ "name": "Panucatt Azteeg X5 Mini V3",
+ "vendor": "Panucatt",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-azteeg-x5-mini-v3.cfg",
+ "mcu": {
+  "family": "lpc176x",
+  "processors": [
+   "lpc1769"
+  ],
+  "bootloader": [],
+  "crystal": [],
+  "interfaces": []
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "P2.1",
+   "dir_pin": "P0.11",
+   "enable_pin": "!P0.10",
+   "endstop_pin": "^P1.24",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "P2.2",
+   "dir_pin": "P0.20",
+   "enable_pin": "!P0.19",
+   "endstop_pin": "^P1.26",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "P2.3",
+   "dir_pin": "P0.22",
+   "enable_pin": "!P0.21",
+   "endstop_pin": "^P1.28",
+   "tmc": {}
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "P2.0",
+   "dir_pin": "P0.5",
+   "enable_pin": "!P0.4",
+   "tmc": {}
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "P2.5",
+   "sensor_pin": "P0.24",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "P2.7",
+   "sensor_pin": "P0.23",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "P0.26",
+   "label": "",
+   "commented": false
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [
+  {
+   "name": "mcp4451 stepper_digipot1",
+   "options": [
+    [
+     "i2c_address",
+     "44"
+    ],
+    [
+     "scale",
+     "2"
+    ],
+    [
+     "wiper_0",
+     "1.0"
+    ],
+    [
+     "wiper_1",
+     "1.0"
+    ],
+    [
+     "wiper_2",
+     "1.0"
+    ],
+    [
+     "wiper_3",
+     "1.0"
+    ]
+   ]
+  }
+ ],
+ "aliases": "",
+ "tmc_types": []
+}

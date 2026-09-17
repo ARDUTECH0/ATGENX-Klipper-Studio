@@ -1,0 +1,112 @@
+{
+ "schema": 1,
+ "id": "cramps",
+ "name": "CRAMPS",
+ "vendor": "CRAMPS",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-cramps.cfg",
+ "mcu": {
+  "family": "pru",
+  "processors": [
+   "beaglebone",
+   "pru"
+  ],
+  "bootloader": [],
+  "crystal": [],
+  "interfaces": []
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "gpio0_23",
+   "dir_pin": "gpio1_12",
+   "enable_pin": "!gpio1_18",
+   "endstop_pin": "^gpio2_3",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "gpio1_15",
+   "dir_pin": "gpio0_26",
+   "enable_pin": "!gpio1_18",
+   "endstop_pin": "^gpio2_4",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "gpio0_22",
+   "dir_pin": "gpio2_1",
+   "enable_pin": "!gpio1_18",
+   "endstop_pin": "^gpio0_31",
+   "tmc": {}
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "gpio1_19",
+   "dir_pin": "gpio1_28",
+   "enable_pin": "!gpio1_18",
+   "tmc": {}
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "gpio1_16",
+   "sensor_pin": "host:analog5",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "gpio1_13",
+   "sensor_pin": "host:analog4",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "gpio0_20",
+   "label": "",
+   "commented": false
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [
+  {
+   "name": "mcu host",
+   "options": [
+    [
+     "serial",
+     "/tmp/klipper_host_mcu"
+    ]
+   ]
+  },
+  {
+   "name": "output_pin machine_enable",
+   "options": [
+    [
+     "pin",
+     "gpio1_17"
+    ],
+    [
+     "value",
+     "1"
+    ],
+    [
+     "shutdown_value",
+     "0"
+    ]
+   ]
+  }
+ ],
+ "aliases": "",
+ "tmc_types": []
+}

@@ -1,0 +1,199 @@
+{
+ "schema": 1,
+ "id": "flyboard",
+ "name": "FlyBoard",
+ "vendor": "FlyBoard",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-flyboard.cfg",
+ "mcu": {
+  "family": "stm32",
+  "processors": [
+   "stm32f407"
+  ],
+  "bootloader": [
+   "32KiB"
+  ],
+  "crystal": [],
+  "interfaces": []
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB9",
+   "dir_pin": "PE0",
+   "enable_pin": "!PE1",
+   "endstop_pin": "PC3",
+   "tmc": {
+    "uart_pin": "PG13",
+    "cs_pin": "PG13"
+   }
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB8",
+   "dir_pin": "PG11",
+   "enable_pin": "!PG12",
+   "endstop_pin": "PF2",
+   "tmc": {
+    "uart_pin": "PG10",
+    "cs_pin": "PG10"
+   }
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PA8",
+   "dir_pin": "PD6",
+   "enable_pin": "!PD7",
+   "endstop_pin": "PF0",
+   "tmc": {
+    "uart_pin": "PD5",
+    "cs_pin": "PBD5"
+   }
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC7",
+   "dir_pin": "PD3",
+   "enable_pin": "!PD4",
+   "tmc": {
+    "uart_pin": "PD1",
+    "cs_pin": "PD1"
+   }
+  },
+  {
+   "slot": "extruder1",
+   "label": "",
+   "commented": true,
+   "step_pin": "PC6",
+   "dir_pin": "PA15",
+   "enable_pin": "!PD0",
+   "tmc": {
+    "uart_pin": "PA14",
+    "cs_pin": "PA14"
+   }
+  },
+  {
+   "slot": "extruder2",
+   "label": "",
+   "commented": true,
+   "step_pin": "PD15",
+   "dir_pin": "PG7",
+   "enable_pin": "!PG8",
+   "tmc": {
+    "uart_pin": "PG6",
+    "cs_pin": "PG6"
+   }
+  },
+  {
+   "slot": "extruder3",
+   "label": "",
+   "commented": true,
+   "step_pin": "PD14",
+   "dir_pin": "PG4",
+   "enable_pin": "!PG5",
+   "tmc": {
+    "uart_pin": "PG3",
+    "cs_pin": "PG3"
+   }
+  },
+  {
+   "slot": "extruder4",
+   "label": "",
+   "commented": true,
+   "step_pin": "PD12",
+   "dir_pin": "PD8",
+   "enable_pin": "!PD9",
+   "tmc": {
+    "uart_pin": "PD10",
+    "cs_pin": "PD10"
+   }
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PF7",
+   "sensor_pin": "PA0",
+   "label": "Heat0"
+  },
+  "extruder1": {
+   "heater_pin": "PF6",
+   "sensor_pin": "PC1",
+   "label": "Heat1"
+  },
+  "extruder2": {
+   "heater_pin": "PE6",
+   "sensor_pin": "PC0",
+   "label": "Heat2"
+  },
+  "extruder3": {
+   "heater_pin": "PE5",
+   "sensor_pin": "PF10",
+   "label": "Heat3"
+  },
+  "extruder4": {
+   "heater_pin": "PE3",
+   "sensor_pin": "PF4",
+   "label": "Heat5"
+  },
+  "heater_bed": {
+   "heater_pin": "PE2",
+   "sensor_pin": "PF3",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "PF8",
+   "label": "",
+   "commented": false
+  },
+  {
+   "name": "heater_fan fan1",
+   "pin": "PF9",
+   "label": "",
+   "commented": false
+  },
+  {
+   "name": "heater_fan fan2",
+   "pin": "PA2",
+   "label": "",
+   "commented": true
+  },
+  {
+   "name": "heater_fan fan3",
+   "pin": "PA1",
+   "label": "",
+   "commented": true
+  },
+  {
+   "name": "heater_fan fan4",
+   "pin": "PE13",
+   "label": "",
+   "commented": true
+  },
+  {
+   "name": "heater_fan fan5",
+   "pin": "PB11",
+   "label": "",
+   "commented": true
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [],
+ "aliases": "EXP1_1=PB10, EXP1_3=PE14, EXP1_5=PE10, EXP1_7=PE8, EXP1_9=<GND>,\nEXP1_2=PE15, EXP1_4=PE12, EXP1_6=PE9,  EXP1_8=PE7, EXP1_10=<5V>,\nEXP2_1=PB14, EXP2_3=PC5,  EXP2_5=PC4,  EXP2_7=PB2,   EXP2_9=<GND>,\nEXP2_2=PB13, EXP2_4=PF11, EXP2_6=PB15, EXP2_8=<RST>, EXP2_10=<GND>",
+ "tmc_types": [
+  "tmc2208",
+  "tmc2130"
+ ]
+}

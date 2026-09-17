@@ -1,0 +1,86 @@
+{
+ "schema": 1,
+ "id": "printrboard",
+ "name": "Printrbot Printrboard",
+ "vendor": "Printrbot",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-printrboard.cfg",
+ "mcu": {
+  "family": "avr",
+  "processors": [
+   "at90usb1286"
+  ],
+  "bootloader": [],
+  "crystal": [],
+  "interfaces": [
+   "USB"
+  ]
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PA0",
+   "dir_pin": "!PA1",
+   "enable_pin": "!PE7",
+   "endstop_pin": "^PE3",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PA2",
+   "dir_pin": "PA3",
+   "enable_pin": "!PE6",
+   "endstop_pin": "^PB0",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PA4",
+   "dir_pin": "!PA5",
+   "enable_pin": "!PC7",
+   "endstop_pin": "^PE4",
+   "tmc": {}
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PA6",
+   "dir_pin": "PA7",
+   "enable_pin": "!PC3",
+   "tmc": {}
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PC5",
+   "sensor_pin": "PF1",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "PC4",
+   "sensor_pin": "PF0",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "PC6",
+   "label": "",
+   "commented": false
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [],
+ "aliases": "",
+ "tmc_types": []
+}

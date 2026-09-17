@@ -1,0 +1,127 @@
+{
+ "schema": 1,
+ "id": "duet2",
+ "name": "Duet3D Duet2",
+ "vendor": "Duet3D",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-duet2.cfg",
+ "mcu": {
+  "family": "atsam",
+  "processors": [
+   "sam4e8e"
+  ],
+  "bootloader": [],
+  "crystal": [],
+  "interfaces": []
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PD6",
+   "dir_pin": "PD11",
+   "enable_pin": "!PC6",
+   "endstop_pin": "^PC14",
+   "tmc": {
+    "cs_pin": "PD14",
+    "spi_bus": "usart1"
+   }
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PD7",
+   "dir_pin": "!PD12",
+   "enable_pin": "!PC6",
+   "endstop_pin": "^PA2",
+   "tmc": {
+    "cs_pin": "PC9",
+    "spi_bus": "usart1"
+   }
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PD8",
+   "dir_pin": "PD13",
+   "enable_pin": "!PC6",
+   "endstop_pin": "^PD29",
+   "tmc": {
+    "cs_pin": "PC10",
+    "spi_bus": "usart1"
+   }
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PD5",
+   "dir_pin": "PA1",
+   "enable_pin": "!PC6",
+   "tmc": {
+    "cs_pin": "PC17",
+    "spi_bus": "usart1"
+   }
+  },
+  {
+   "slot": "extruder1",
+   "label": "",
+   "commented": true,
+   "step_pin": "PD4",
+   "dir_pin": "PD9",
+   "enable_pin": "!PC6",
+   "tmc": {
+    "cs_pin": "PC25",
+    "spi_bus": "usart1"
+   }
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "!PA20",
+   "sensor_pin": "PC15",
+   "label": ""
+  },
+  "extruder1": {
+   "heater_pin": "!PA16",
+   "sensor_pin": "PC12",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "!PA19",
+   "sensor_pin": "PC13",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "PC23",
+   "label": "FAN0",
+   "commented": false
+  },
+  {
+   "name": "heater_fan heatbreak_cooling_fan",
+   "pin": "PC26",
+   "label": "FAN1",
+   "commented": true
+  },
+  {
+   "name": "heater_fan board_cooling_fan",
+   "pin": "PA0",
+   "label": "FAN2",
+   "commented": true
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [],
+ "aliases": "",
+ "tmc_types": [
+  "tmc2660"
+ ]
+}

@@ -1,0 +1,259 @@
+{
+ "schema": 1,
+ "id": "printrboard-g2",
+ "name": "Printrbot Printrboard G2",
+ "vendor": "Printrbot",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-printrboard-g2.cfg",
+ "mcu": {
+  "family": "atsam",
+  "processors": [],
+  "bootloader": [],
+  "crystal": [],
+  "interfaces": []
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB15",
+   "dir_pin": "!PA16",
+   "enable_pin": "!PB16",
+   "endstop_pin": "^PA11",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PA29",
+   "dir_pin": "!PB1",
+   "enable_pin": "!PB0",
+   "endstop_pin": "^PB26",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PA21",
+   "dir_pin": "PA26",
+   "enable_pin": "!PA25",
+   "endstop_pin": "^!PA10",
+   "tmc": {}
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB14",
+   "dir_pin": "PB23",
+   "enable_pin": "!PB22",
+   "tmc": {}
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PA5",
+   "sensor_pin": "PA23",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "PB27",
+   "label": "",
+   "commented": false
+  },
+  {
+   "name": "heater_fan heatbreak_cooling_fan",
+   "pin": "PA6",
+   "label": "",
+   "commented": false
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [
+  {
+   "name": "output_pin motor_x_pwm",
+   "options": [
+    [
+     "pin",
+     "PB17"
+    ],
+    [
+     "pwm",
+     "True"
+    ],
+    [
+     "hardware_pwm",
+     "True"
+    ],
+    [
+     "scale",
+     "2.25"
+    ],
+    [
+     "cycle_time",
+     ".000004"
+    ],
+    [
+     "value",
+     "0.8"
+    ]
+   ]
+  },
+  {
+   "name": "output_pin motor_y_pwm",
+   "options": [
+    [
+     "pin",
+     "PB19"
+    ],
+    [
+     "pwm",
+     "True"
+    ],
+    [
+     "hardware_pwm",
+     "True"
+    ],
+    [
+     "scale",
+     "2.25"
+    ],
+    [
+     "cycle_time",
+     ".000004"
+    ],
+    [
+     "value",
+     "0.8"
+    ]
+   ]
+  },
+  {
+   "name": "output_pin motor_z_pwm",
+   "options": [
+    [
+     "pin",
+     "PB18"
+    ],
+    [
+     "pwm",
+     "True"
+    ],
+    [
+     "hardware_pwm",
+     "True"
+    ],
+    [
+     "scale",
+     "2.25"
+    ],
+    [
+     "cycle_time",
+     ".000004"
+    ],
+    [
+     "value",
+     "0.8"
+    ]
+   ]
+  },
+  {
+   "name": "output_pin motor_e_pwm",
+   "options": [
+    [
+     "pin",
+     "PA2"
+    ],
+    [
+     "pwm",
+     "True"
+    ],
+    [
+     "hardware_pwm",
+     "True"
+    ],
+    [
+     "scale",
+     "2.25"
+    ],
+    [
+     "cycle_time",
+     ".000004"
+    ],
+    [
+     "value",
+     "0.5"
+    ]
+   ]
+  },
+  {
+   "name": "output_pin heater_enable",
+   "options": [
+    [
+     "pin",
+     "PA7"
+    ],
+    [
+     "pwm",
+     "True"
+    ],
+    [
+     "cycle_time",
+     "0.050"
+    ],
+    [
+     "value",
+     "0.1"
+    ]
+   ]
+  },
+  {
+   "name": "thermistor G2",
+   "options": [
+    [
+     "temperature1",
+     "20"
+    ],
+    [
+     "resistance1",
+     "140000"
+    ],
+    [
+     "temperature2",
+     "195"
+    ],
+    [
+     "resistance2",
+     "593"
+    ],
+    [
+     "temperature3",
+     "255"
+    ],
+    [
+     "resistance3",
+     "189"
+    ]
+   ]
+  },
+  {
+   "name": "static_digital_output step_config",
+   "options": [
+    [
+     "pins",
+     "PA19, PB20, PA27, PB10"
+    ]
+   ]
+  }
+ ],
+ "aliases": "",
+ "tmc_types": []
+}

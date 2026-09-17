@@ -1,0 +1,131 @@
+{
+ "schema": 1,
+ "id": "bigtreetech-manta-m4p",
+ "name": "BIGTREETECH Manta M4P",
+ "vendor": "BIGTREETECH",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-bigtreetech-manta-m4p.cfg",
+ "mcu": {
+  "family": "stm32",
+  "processors": [
+   "stm32g0b1"
+  ],
+  "bootloader": [
+   "8KiB"
+  ],
+  "crystal": [],
+  "interfaces": [
+   "USB"
+  ]
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC6",
+   "dir_pin": "PA14",
+   "enable_pin": "!PC7",
+   "endstop_pin": "^PC0",
+   "tmc": {
+    "uart_pin": "PB12"
+   }
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB10",
+   "dir_pin": "!PB2",
+   "enable_pin": "!PB11",
+   "endstop_pin": "^PC1",
+   "tmc": {
+    "uart_pin": "PC10",
+    "cs_pin": "PC10",
+    "spi_bus": "spi1",
+    "diag1_pin": "PG9"
+   }
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB0",
+   "dir_pin": "!PC5",
+   "enable_pin": "!PB1",
+   "endstop_pin": "^PC2",
+   "tmc": {
+    "uart_pin": "PC9",
+    "cs_pin": "PC9",
+    "spi_bus": "spi1",
+    "diag1_pin": "PG10"
+   }
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB3",
+   "dir_pin": "PB4",
+   "enable_pin": "!PD5",
+   "tmc": {
+    "uart_pin": "PA13",
+    "cs_pin": "PA13",
+    "spi_bus": "spi1",
+    "diag1_pin": "PC15"
+   }
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PC8",
+   "sensor_pin": "PA0",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "PD8",
+   "sensor_pin": "PC4",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "PD2",
+   "label": "",
+   "commented": false
+  },
+  {
+   "name": "heater_fan fan1",
+   "pin": "PD3",
+   "label": "",
+   "commented": true
+  },
+  {
+   "name": "heater_fan fan2",
+   "pin": "PD4",
+   "label": "",
+   "commented": true
+  },
+  {
+   "name": "heater_fan SoC_fan",
+   "pin": "RPI:gpio26",
+   "label": "",
+   "commented": true
+  }
+ ],
+ "probe": {
+  "bl_sensor": "PC14",
+  "bl_control": "PA1"
+ },
+ "neopixel": "PD0",
+ "filament_sensors": [
+  "^!PC15"
+ ],
+ "servo": "",
+ "extra_sections": [],
+ "aliases": "EXP1_1=PD6,  EXP1_3=PB9,  EXP1_5=PA15, EXP1_7=PA9,   EXP1_9=<GND>,\nEXP1_2=PB8,  EXP1_4=PC3,  EXP1_6=PA10, EXP1_8=PB5,   EXP1_10=<5V>,\nEXP2_1=PB14, EXP2_3=PC11, EXP2_5=PC12, EXP2_7=PC13,  EXP2_9=<GND>,\nEXP2_2=PB13, EXP2_4=PA8,  EXP2_6=PB15, EXP2_8=<RST>, EXP2_10=<NC>",
+ "tmc_types": [
+  "tmc2209",
+  "tmc2130"
+ ]
+}

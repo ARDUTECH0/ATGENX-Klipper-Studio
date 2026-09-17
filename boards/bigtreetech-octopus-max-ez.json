@@ -1,0 +1,247 @@
+{
+ "schema": 1,
+ "id": "bigtreetech-octopus-max-ez",
+ "name": "BIGTREETECH Octopus Max EZ",
+ "vendor": "BIGTREETECH",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-bigtreetech-octopus-max-ez.cfg",
+ "mcu": {
+  "family": "stm32",
+  "processors": [
+   "stm32h723"
+  ],
+  "bootloader": [
+   "128KiB"
+  ],
+  "crystal": [
+   "25MHz"
+  ],
+  "interfaces": [
+   "USB",
+   "CAN"
+  ]
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PC13",
+   "dir_pin": "PC14",
+   "enable_pin": "!PE6",
+   "endstop_pin": "PF0",
+   "tmc": {
+    "uart_pin": "PG14",
+    "cs_pin": "PG14",
+    "spi_bus": "spi4"
+   }
+  },
+  {
+   "slot": "stepper_y",
+   "label": "Motor-2",
+   "commented": false,
+   "step_pin": "PE4",
+   "dir_pin": "PE5",
+   "enable_pin": "!PE3",
+   "endstop_pin": "PF2",
+   "tmc": {
+    "uart_pin": "PG13",
+    "cs_pin": "PG13",
+    "spi_bus": "spi4"
+   }
+  },
+  {
+   "slot": "stepper_z",
+   "label": "Motor-3",
+   "commented": false,
+   "step_pin": "PE1",
+   "dir_pin": "PE0",
+   "enable_pin": "!PE2",
+   "endstop_pin": "PF4",
+   "tmc": {
+    "uart_pin": "PG12",
+    "cs_pin": "PG12",
+    "spi_bus": "spi4"
+   }
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB5",
+   "dir_pin": "PB4",
+   "enable_pin": "!PB6",
+   "tmc": {
+    "uart_pin": "PG10",
+    "cs_pin": "PG10",
+    "spi_bus": "spi4"
+   }
+  },
+  {
+   "slot": "stepper_",
+   "label": "",
+   "commented": true,
+   "step_pin": "PB8",
+   "dir_pin": "PB9",
+   "enable_pin": "PB7",
+   "endstop_pin": "PF3",
+   "tmc": {
+    "uart_pin": "PG11",
+    "cs_pin": "PG11",
+    "spi_bus": "spi4"
+   }
+  },
+  {
+   "slot": "extruder1",
+   "label": "",
+   "commented": true,
+   "step_pin": "PG15",
+   "dir_pin": "PB3",
+   "enable_pin": "!PD5",
+   "tmc": {
+    "uart_pin": "PG9",
+    "cs_pin": "PG9",
+    "spi_bus": "spi4"
+   }
+  },
+  {
+   "slot": "extruder2",
+   "label": "",
+   "commented": true,
+   "step_pin": "PD3",
+   "dir_pin": "PD2",
+   "enable_pin": "!PD4",
+   "tmc": {
+    "uart_pin": "PD7",
+    "cs_pin": "PD7",
+    "spi_bus": "spi4"
+   }
+  },
+  {
+   "slot": "extruder3",
+   "label": "",
+   "commented": true,
+   "step_pin": "PA10",
+   "dir_pin": "PA9",
+   "enable_pin": "!PA15",
+   "tmc": {
+    "uart_pin": "PD6",
+    "cs_pin": "PD6",
+    "spi_bus": "spi4"
+   }
+  },
+  {
+   "slot": "extruder4",
+   "label": "",
+   "commented": true,
+   "step_pin": "PA8",
+   "dir_pin": "PC7",
+   "enable_pin": "!PC9",
+   "tmc": {
+    "uart_pin": "PG8",
+    "cs_pin": "PG8",
+    "spi_bus": "spi4"
+   }
+  },
+  {
+   "slot": "extruder5",
+   "label": "",
+   "commented": true,
+   "step_pin": "PG6",
+   "dir_pin": "PC6",
+   "enable_pin": "!PC8",
+   "tmc": {
+    "uart_pin": "PG7",
+    "cs_pin": "PG7",
+    "spi_bus": "spi4"
+   }
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PF6",
+   "sensor_pin": "PB0",
+   "label": "HE0"
+  },
+  "extruder1": {
+   "heater_pin": "PA0",
+   "sensor_pin": "PC5",
+   "label": "HE1"
+  },
+  "extruder2": {
+   "heater_pin": "PF9",
+   "sensor_pin": "PC4",
+   "label": "HE2"
+  },
+  "extruder3": {
+   "heater_pin": "PF7",
+   "sensor_pin": "PA7",
+   "label": "HE3"
+  },
+  "heater_bed": {
+   "heater_pin": "PF5",
+   "sensor_pin": "PB1",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "PA6",
+   "label": "",
+   "commented": false
+  },
+  {
+   "name": "heater_fan fan1",
+   "pin": "PA5",
+   "label": "",
+   "commented": true
+  },
+  {
+   "name": "heater_fan fan2",
+   "pin": "PA4",
+   "label": "",
+   "commented": true
+  },
+  {
+   "name": "heater_fan fan3",
+   "pin": "PA3",
+   "label": "",
+   "commented": true
+  },
+  {
+   "name": "heater_fan fan4",
+   "pin": "PA1",
+   "label": "",
+   "commented": true
+  },
+  {
+   "name": "heater_fan fan5",
+   "pin": "PF8",
+   "label": "",
+   "commented": true
+  },
+  {
+   "name": "heater_fan fan6",
+   "pin": "PA2",
+   "label": "",
+   "commented": true
+  }
+ ],
+ "probe": {
+  "bl_sensor": "^PB15",
+  "bl_control": "PB14",
+  "pin": "PF11"
+ },
+ "neopixel": "PE10",
+ "filament_sensors": [
+  "PF1",
+  "PC15"
+ ],
+ "servo": "",
+ "extra_sections": [],
+ "aliases": "EXP1_1=PG2, EXP1_2=PD15,\nEXP1_3=PD14, EXP1_4=PD13,\nEXP1_5=PD12, EXP1_6=PD11,\nEXP1_7=PD10, EXP1_8=PE15,\nEXP1_9=<GND>, EXP1_10=<5V>,\nEXP2_1=PE13, EXP2_2=PE12,\nEXP2_3=PG5, EXP2_4=PE11,\nEXP2_5=PG4, EXP2_6=PE14,\nEXP2_7=PG3, EXP2_8=<RST>,\nEXP2_9=<GND>, EXP2_10=<NC>",
+ "tmc_types": [
+  "tmc2209",
+  "tmc2130"
+ ]
+}

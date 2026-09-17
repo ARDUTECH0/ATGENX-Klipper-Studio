@@ -1,0 +1,118 @@
+{
+ "schema": 1,
+ "id": "remram",
+ "name": "RemRam",
+ "vendor": "RemRam",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-remram.cfg",
+ "mcu": {
+  "family": "stm32",
+  "processors": [
+   "stm32f765"
+  ],
+  "bootloader": [],
+  "crystal": [],
+  "interfaces": []
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PA15",
+   "dir_pin": "PC10",
+   "enable_pin": "!PC12",
+   "endstop_pin": "^!PB12",
+   "tmc": {
+    "cs_pin": "PB1",
+    "spi_bus": "spi1",
+    "diag1_pin": "^!PC11"
+   }
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB3",
+   "dir_pin": "!PD6",
+   "enable_pin": "!PD4",
+   "endstop_pin": "^!PB14",
+   "tmc": {
+    "cs_pin": "PB0",
+    "spi_bus": "spi1",
+    "diag1_pin": "^!PD5"
+   }
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB10",
+   "dir_pin": "PE13",
+   "enable_pin": "!PE15",
+   "endstop_pin": "^!PD8",
+   "tmc": {
+    "cs_pin": "PC5",
+    "spi_bus": "spi1",
+    "diag1_pin": "^!PE14"
+   }
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB11",
+   "dir_pin": "PE10",
+   "enable_pin": "!PE11",
+   "tmc": {
+    "cs_pin": "PC4",
+    "spi_bus": "spi1",
+    "diag1_pin": "^!PE12"
+   }
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PA3",
+   "sensor_pin": "PC1",
+   "label": "HEATER"
+  },
+  "heater_bed": {
+   "heater_pin": "PA1",
+   "sensor_pin": "PC0",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "heater_fan hotend_fan",
+   "pin": "PA2",
+   "label": "FAN2",
+   "commented": false
+  },
+  {
+   "name": "fan",
+   "pin": "PA0",
+   "label": "FAN1",
+   "commented": false
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [
+  {
+   "name": "static_digital_output yellow_led",
+   "options": [
+    [
+     "pins",
+     "!PD0"
+    ]
+   ]
+  }
+ ],
+ "aliases": "",
+ "tmc_types": [
+  "tmc2130"
+ ]
+}

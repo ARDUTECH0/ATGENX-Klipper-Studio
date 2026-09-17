@@ -1,0 +1,131 @@
+{
+ "schema": 1,
+ "id": "bigtreetech-skr-pico-v1.0",
+ "name": "BIGTREETECH SKR Pico V1.0",
+ "vendor": "BIGTREETECH",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-bigtreetech-skr-pico-v1.0.cfg",
+ "mcu": {
+  "family": "rp2040",
+  "processors": [
+   "rp2040"
+  ],
+  "bootloader": [],
+  "crystal": [],
+  "interfaces": [
+   "USB"
+  ]
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "gpio11",
+   "dir_pin": "!gpio10",
+   "enable_pin": "!gpio12",
+   "endstop_pin": "^gpio4",
+   "tmc": {
+    "uart_pin": "gpio9",
+    "tx_pin": "gpio8",
+    "uart_address": "0"
+   }
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "gpio6",
+   "dir_pin": "!gpio5",
+   "enable_pin": "!gpio7",
+   "endstop_pin": "^gpio3",
+   "tmc": {
+    "uart_pin": "gpio9",
+    "tx_pin": "gpio8",
+    "uart_address": "2"
+   }
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "gpio19",
+   "dir_pin": "gpio28",
+   "enable_pin": "!gpio2",
+   "endstop_pin": "^gpio25",
+   "tmc": {
+    "uart_pin": "gpio9",
+    "tx_pin": "gpio8",
+    "uart_address": "1"
+   }
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "gpio14",
+   "dir_pin": "!gpio13",
+   "enable_pin": "!gpio15",
+   "tmc": {
+    "uart_pin": "gpio9",
+    "tx_pin": "gpio8",
+    "uart_address": "3"
+   }
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "gpio23",
+   "sensor_pin": "gpio27",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "gpio21",
+   "sensor_pin": "gpio26",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "gpio17",
+   "label": "",
+   "commented": false
+  },
+  {
+   "name": "heater_fan heatbreak_cooling_fan",
+   "pin": "gpio18",
+   "label": "",
+   "commented": false
+  },
+  {
+   "name": "heater_fan controller_fan",
+   "pin": "gpio20",
+   "label": "",
+   "commented": false
+  }
+ ],
+ "probe": {
+  "bl_sensor": "gpio22",
+  "bl_control": "gpio29"
+ },
+ "neopixel": "gpio24",
+ "filament_sensors": [
+  "^gpio16"
+ ],
+ "servo": "",
+ "extra_sections": [
+  {
+   "name": "temperature_sensor pico",
+   "options": [
+    [
+     "sensor_type",
+     "temperature_mcu"
+    ]
+   ]
+  }
+ ],
+ "aliases": "",
+ "tmc_types": [
+  "tmc2209"
+ ]
+}

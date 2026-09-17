@@ -1,0 +1,108 @@
+{
+ "schema": 1,
+ "id": "bigtreetech-skr-mini-e3-v1.2",
+ "name": "BIGTREETECH SKR Mini E3 V1.2",
+ "vendor": "BIGTREETECH",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-bigtreetech-skr-mini-e3-v1.2.cfg",
+ "mcu": {
+  "family": "stm32",
+  "processors": [
+   "stm32f103"
+  ],
+  "bootloader": [
+   "28KiB"
+  ],
+  "crystal": [],
+  "interfaces": [
+   "USB"
+  ]
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB13",
+   "dir_pin": "!PB12",
+   "enable_pin": "!PB14",
+   "endstop_pin": "^PC0",
+   "tmc": {
+    "uart_pin": "PB15"
+   }
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB10",
+   "dir_pin": "!PB2",
+   "enable_pin": "!PB11",
+   "endstop_pin": "^PC1",
+   "tmc": {
+    "uart_pin": "PC6"
+   }
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB0",
+   "dir_pin": "PC5",
+   "enable_pin": "!PB1",
+   "endstop_pin": "^PC2",
+   "tmc": {
+    "uart_pin": "PC10"
+   }
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PB3",
+   "dir_pin": "!PB4",
+   "enable_pin": "!PD2",
+   "tmc": {
+    "uart_pin": "PC11"
+   }
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PC8",
+   "sensor_pin": "PA0",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "PC9",
+   "sensor_pin": "PC3",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "PA8",
+   "label": "",
+   "commented": false
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [
+  {
+   "name": "static_digital_output usb_pullup_enable",
+   "options": [
+    [
+     "pins",
+     "!PC13"
+    ]
+   ]
+  }
+ ],
+ "aliases": "EXP1_1=PB5, EXP1_3=PA9,   EXP1_5=PA10, EXP1_7=PB8, EXP1_9=<GND>,\nEXP1_2=PB6, EXP1_4=<RST>, EXP1_6=PB9,  EXP1_8=PB7, EXP1_10=<5V>",
+ "tmc_types": [
+  "tmc2209"
+ ]
+}

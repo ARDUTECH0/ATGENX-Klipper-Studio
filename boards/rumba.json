@@ -1,0 +1,118 @@
+{
+ "schema": 1,
+ "id": "rumba",
+ "name": "RUMBa",
+ "vendor": "RUMBa",
+ "source": "https://github.com/Klipper3d/klipper/blob/master/config/generic-rumba.cfg",
+ "mcu": {
+  "family": "avr",
+  "processors": [
+   "atmega2560"
+  ],
+  "bootloader": [],
+  "crystal": [],
+  "interfaces": []
+ },
+ "drivers": [
+  {
+   "slot": "stepper_x",
+   "label": "",
+   "commented": false,
+   "step_pin": "PH0",
+   "dir_pin": "PH1",
+   "enable_pin": "!PL1",
+   "endstop_pin": "^PC0",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_y",
+   "label": "",
+   "commented": false,
+   "step_pin": "PF0",
+   "dir_pin": "!PL2",
+   "enable_pin": "!PF1",
+   "endstop_pin": "^PC2",
+   "tmc": {}
+  },
+  {
+   "slot": "stepper_z",
+   "label": "",
+   "commented": false,
+   "step_pin": "PF3",
+   "dir_pin": "PF2",
+   "enable_pin": "!PK0",
+   "endstop_pin": "^PC4",
+   "tmc": {}
+  },
+  {
+   "slot": "extruder",
+   "label": "",
+   "commented": false,
+   "step_pin": "PA1",
+   "dir_pin": "PA0",
+   "enable_pin": "!PA2",
+   "tmc": {}
+  },
+  {
+   "slot": "extruder1",
+   "label": "",
+   "commented": true,
+   "step_pin": "PA4",
+   "dir_pin": "PA3",
+   "enable_pin": "!PA5",
+   "tmc": {}
+  },
+  {
+   "slot": "extruder2",
+   "label": "",
+   "commented": true,
+   "step_pin": "PA7",
+   "dir_pin": "PA6",
+   "enable_pin": "!PG2",
+   "tmc": {}
+  }
+ ],
+ "heaters": {
+  "extruder": {
+   "heater_pin": "PE4",
+   "sensor_pin": "PK7",
+   "label": ""
+  },
+  "extruder1": {
+   "heater_pin": "PE5",
+   "sensor_pin": "PK6",
+   "label": ""
+  },
+  "extruder2": {
+   "heater_pin": "PH3",
+   "sensor_pin": "PK5",
+   "label": ""
+  },
+  "heater_bed": {
+   "heater_pin": "PH6",
+   "sensor_pin": "PK3",
+   "label": ""
+  }
+ },
+ "fans": [
+  {
+   "name": "fan",
+   "pin": "PH4",
+   "label": "",
+   "commented": false
+  },
+  {
+   "name": "heater_fan fan1",
+   "pin": "PH5",
+   "label": "",
+   "commented": true
+  }
+ ],
+ "probe": {},
+ "neopixel": "",
+ "filament_sensors": [],
+ "servo": "",
+ "extra_sections": [],
+ "aliases": "",
+ "tmc_types": []
+}
