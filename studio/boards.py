@@ -7,11 +7,18 @@ import re
 from collections import OrderedDict
 
 from . import BOARDS_DIR
-from .model import AXIS_SECTION, SERIAL_PLACEHOLDER, SPI_KEYS, UART_KEYS
+from .model import (DRIVER_INFO, MOTOR_IDS, MOTOR_SECTION, REQUIRED_MOTORS, SERIAL_PLACEHOLDER, SPI_KEYS,
+                    UART_KEYS)
 
 _cache = None
 
-Z1_SLOT_ORDER = ("stepper_z1", "stepper_", "extruder1", "stepper_z2", "extruder2", "extruder3", "extruder4")
+# preferred sockets for extra motors, in order
+EXTRA_SLOT_ORDER = ("stepper_z1", "stepper_z2", "stepper_z3", "stepper_x1", "stepper_y1", "stepper_",
+                    "extruder1", "extruder2", "extruder3", "extruder4", "extruder5", "extruder6", "extruder7")
+PRIMARY_SLOT = {"x": "stepper_x", "y": "stepper_y", "z": "stepper_z", "e": "extruder"}
+
+# MCU families with a built-in temperature sensor usable by [temperature_sensor] sensor_type: temperature_mcu
+MCU_TEMP_FAMILIES = {"stm32", "rp2040", "atsam", "hc32f460"}
 
 
 def board_dirs():
@@ -59,49 +66,83 @@ def slots(board):
     return OrderedDict((d["slot"], d) for d in board["drivers"])
 
 
-def default_z1_slot(board):
-    s = slots(board)
-    for name in Z1_SLOT_ORDER:
-        if name in s:
-            return name
-    used = set(AXIS_SECTION.values())
-    for name in s:
-        if name not in used:
-            return name
-    return ""
+def slot_label(slot):
+    """stepper_ -> 'spare', extruder1 -> 'extruder1'."""
+    return "spare driver" if slot == "stepper_" else slot
 
 
 def strip_mods(pin):
     return re.sub(r"^[\^~!\s]+", "", (pin or "").strip())
 
 
-def apply_board(P, board, z1_slot=None, keep_inversion=True):
-    """Fills P['pins'] / P['tmc'] from a board. Returns a list of (i18n key, kwargs) notes."""
+def mcu_temp_supported(board):
+    if not board:
+        return None
+    return board.get("mcu", {}).get("family") in MCU_TEMP_FAMILIES
+
+
+def assign_slot(P, mid, board, slot, keep_inversion=True):
+    """Puts motor `mid` on driver socket `slot` of `board` (pins, bus, diag pin)."""
+    m = P["motors"][mid]
+    m["slot"] = slot
+    d = slots(board).get(slot) if board else None
+    if not d:
+        return False
+    m["step_pin"] = d.get("step_pin", "")
+    dir_pin = d.get("dir_pin", "")
+    m["dir_pin"] = dir_pin.lstrip("!")
+    if not keep_inversion:
+        m["invert"] = dir_pin.startswith("!")
+    m["enable_pin"] = d.get("enable_pin", "")
+    if mid in ("x", "y", "z"):
+        m["endstop_pin"] = d.get("endstop_pin", "")
+    tmc = d.get("tmc", {})
+    m["bus"] = OrderedDict((k, v) for k, v in tmc.items() if k in UART_KEYS + SPI_KEYS)
+    diag = tmc.get("diag_pin") or tmc.get("diag1_pin") or ""
+    if not diag and d.get("endstop_pin"):
+        diag = d["endstop_pin"]  # on most boards the DIAG jumper connects to the endstop header
+    m["diag_pin"] = "^" + strip_mods(diag) if diag else ""
+    return True
+
+
+def free_slots(P, board, exclude_motor=None):
+    used = {P["motors"][mid]["slot"] for mid in MOTOR_IDS
+            if mid != exclude_motor and P["motors"][mid]["enabled"] and P["motors"][mid]["slot"]}
+    return [s for s in slots(board) if s not in used]
+
+
+def suggest_slot(P, mid, board):
+    """Best free socket for a motor: its own name, then the usual order, then anything free."""
+    free = free_slots(P, board, exclude_motor=mid)
+    if mid in PRIMARY_SLOT and PRIMARY_SLOT[mid] in free:
+        return PRIMARY_SLOT[mid]
+    own = MOTOR_SECTION.get(mid)
+    if own in free:
+        return own
+    for s in EXTRA_SLOT_ORDER:
+        if s in free:
+            return s
+    return free[0] if free else ""
+
+
+def apply_board(P, board, keep_inversion=True):
+    """Fills motors and pins from a board. Returns a list of (i18n key, kwargs) notes."""
     notes = []
-    s = slots(board)
-    pins, tmc = P["pins"], P["tmc"]
-    z1_slot = z1_slot or default_z1_slot(board)
-    mapping = {"x": "stepper_x", "y": "stepper_y", "z": "stepper_z", "e": "extruder", "z1": z1_slot}
-
-    for ax, slot in mapping.items():
-        d = s.get(slot)
-        if not d:
-            if ax == "z1":
-                notes.append(("note.no_z1_slot", {}))
-            for suffix in ("_step", "_dir", "_en"):
-                pins[ax + suffix] = ""
-            tmc[ax] = OrderedDict()
+    for mid in MOTOR_IDS:
+        P["motors"][mid]["slot"] = ""
+    order = list(REQUIRED_MOTORS) + [m for m in MOTOR_IDS if m not in REQUIRED_MOTORS]
+    for mid in order:
+        m = P["motors"][mid]
+        if not m["enabled"]:
             continue
-        pins[ax + "_step"] = d.get("step_pin", "")
-        dir_pin = d.get("dir_pin", "")
-        pins[ax + "_dir"] = dir_pin.lstrip("!")
-        if not keep_inversion and ax != "z1":
-            P["inv_" + ax] = dir_pin.startswith("!")
-        pins[ax + "_en"] = d.get("enable_pin", "")
-        if ax in ("x", "y", "z"):
-            pins[ax + "_stop"] = d.get("endstop_pin", "")
-        tmc[ax] = OrderedDict((k, v) for k, v in d.get("tmc", {}).items() if k in UART_KEYS + SPI_KEYS)
+        slot = suggest_slot(P, mid, board)
+        if slot:
+            assign_slot(P, mid, board, slot, keep_inversion)
+        else:
+            notes.append(("note.no_free_slot", {"motor": mid.upper()}))
 
+    pins = P["pins"]
+    s = slots(board)
     heaters = board.get("heaters", {})
     ext = heaters.get("extruder", {})
     bed = heaters.get("heater_bed", {})
@@ -130,8 +171,8 @@ def apply_board(P, board, z1_slot=None, keep_inversion=True):
 
     fil = (board.get("filament_sensors") or [""])[0]
     if not fil:
-        e_diag = s.get("extruder", {}).get("tmc", {})
-        diag = e_diag.get("diag1_pin") or e_diag.get("diag_pin") or ""
+        e_tmc = s.get("extruder", {}).get("tmc", {})
+        diag = e_tmc.get("diag1_pin") or e_tmc.get("diag_pin") or ""
         if diag:
             fil = "^" + strip_mods(diag)
             notes.append(("note.fil_sensor_guess", {"pin": fil}))
@@ -144,19 +185,27 @@ def apply_board(P, board, z1_slot=None, keep_inversion=True):
     return notes
 
 
+def match_slots(P, board):
+    """Sets each motor's `slot` from its step pin (after importing a config)."""
+    by_step = {strip_mods(d.get("step_pin", "")): name for name, d in slots(board).items()}
+    for mid in MOTOR_IDS:
+        m = P["motors"][mid]
+        m["slot"] = by_step.get(strip_mods(m["step_pin"]), "") if m["enabled"] else ""
+
+
 def match_score(P, board):
     """How many step/dir/enable/heater pins of P match this board."""
     s = slots(board)
-    pins = P["pins"]
     score = 0
-    for ax, slot in (("x", "stepper_x"), ("y", "stepper_y"), ("z", "stepper_z"), ("e", "extruder")):
+    for mid, slot in PRIMARY_SLOT.items():
         d = s.get(slot, {})
-        for suffix, key in (("_step", "step_pin"), ("_dir", "dir_pin"), ("_en", "enable_pin")):
-            if pins.get(ax + suffix) and strip_mods(pins[ax + suffix]) == strip_mods(d.get(key, "")):
+        m = P["motors"][mid]
+        for key in ("step_pin", "dir_pin", "enable_pin"):
+            if m[key] and strip_mods(m[key]) == strip_mods(d.get(key, "")):
                 score += 1
     h = board.get("heaters", {})
     for role, sec in (("e_heater", "extruder"), ("bed_heater", "heater_bed")):
-        if pins.get(role) and strip_mods(pins[role]) == strip_mods(h.get(sec, {}).get("heater_pin", "")):
+        if P["pins"].get(role) and strip_mods(P["pins"][role]) == strip_mods(h.get(sec, {}).get("heater_pin", "")):
             score += 1
     return score
 
@@ -205,3 +254,7 @@ def build_hint(board):
     if m.get("interfaces"):
         parts.append(("Communication", " / ".join(m["interfaces"])))
     return parts
+
+
+def driver_caps(driver):
+    return DRIVER_INFO.get(driver, DRIVER_INFO["none"])

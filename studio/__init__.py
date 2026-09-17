@@ -4,7 +4,7 @@ import os
 import sys
 
 APP_NAME = "ATGENX Klipper Studio"
-__version__ = "1.0.0-beta.1"
+__version__ = "1.0.0-beta.2"
 LICENSE_NAME = "PolyForm Noncommercial 1.0.0"
 REPO_URL = "https://github.com/ARDUTECH0/ATGENX-Klipper-Studio"
 SUPPORT_URL = REPO_URL + "#support"

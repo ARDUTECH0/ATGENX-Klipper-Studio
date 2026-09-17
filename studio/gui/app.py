@@ -14,15 +14,17 @@ from .. import APP_NAME, LICENSE_NAME, REPO_URL, SUPPORT_URL, __version__
 from .. import i18n
 from ..appdata import load_settings, save_settings
 from ..i18n import tr
-from ..model import AXIS_SECTION, PIN_ROLES, SPI_KEYS, UART_KEYS, driver_bus, new_params
+from ..model import MOTOR_LABEL, PIN_ROLES, bus_keys, enabled_motors, new_params
 from .actions import ActionsMixin
+from .doctor_page import DoctorMixin
 from .files_page import FilesMixin
+from .motors_page import MotorsMixin
 from .pages import PagesMixin
 from .style import STYLE
 from .widgets import Bridge
 
 
-class Studio(PagesMixin, FilesMixin, ActionsMixin, QMainWindow):
+class Studio(PagesMixin, MotorsMixin, FilesMixin, DoctorMixin, ActionsMixin, QMainWindow):
     def __init__(self, P=None, current_text=None, current_src=None):
         super().__init__()
         self.P = P or new_params()
@@ -180,21 +182,36 @@ class Studio(PagesMixin, FilesMixin, ActionsMixin, QMainWindow):
             if key in self.P:
                 setter(self.P[key])
         self._fill_pins()
+        self._fill_motors()
+
+    def page_index(self, builder):
+        return [b for _, b in self.PAGES].index(builder)
+
+    def goto_page(self, builder):
+        self.nav.setCurrentRow(self.page_index(builder))
 
     # ---------- pin table ----------
     def _pin_rows(self):
-        rows = [(("pin", role), tr(label)) for role, label in PIN_ROLES.items()]
-        if self.P["driver"] != "none":
-            axes = [ax for ax in AXIS_SECTION if ax != "z1" or self.P["dual_z"]]
-            for ax in axes:
-                opts = self.P["tmc"].get(ax) or {}
-                bus = driver_bus(self.P["driver"], opts)
-                keys = UART_KEYS if bus == "uart" else SPI_KEYS
-                if self.P["driver"] == "tmc2208":
-                    keys = ("uart_pin", "tx_pin")
-                for k in keys:
-                    rows.append((("tmc", ax, k), "%s  ·  %s" % (ax.upper(), k)))
+        rows = []
+        for mid in enabled_motors(self.P):
+            m = self.P["motors"][mid]
+            lab = MOTOR_LABEL[mid]
+            keys = ["step_pin", "dir_pin", "enable_pin"]
+            if mid in ("x", "y", "z"):
+                keys.append("endstop_pin")
+            if m["sensorless"] or m["keep_diag"]:
+                keys.append("diag_pin")
+            rows += [(("motor", mid, k), "%s  ·  %s" % (lab, k)) for k in keys]
+            rows += [(("bus", mid, k), "%s  ·  %s" % (lab, k)) for k in bus_keys(m["driver"], m["bus"])]
+        rows += [(("pin", role), tr(label)) for role, label in PIN_ROLES.items()]
         return rows
+
+    def _pin_value(self, data):
+        if data[0] == "pin":
+            return self.P["pins"].get(data[1], "")
+        if data[0] == "motor":
+            return self.P["motors"][data[1]][data[2]]
+        return self.P["motors"][data[1]]["bus"].get(data[2], "")
 
     def _fill_pins(self):
         if not hasattr(self, "pin_table"):
@@ -207,25 +224,27 @@ class Studio(PagesMixin, FilesMixin, ActionsMixin, QMainWindow):
             it.setData(Qt.UserRole, data)
             it.setFlags(it.flags() & ~Qt.ItemIsEditable)
             self.pin_table.setItem(r, 0, it)
-            val = self.P["pins"].get(data[1], "") if data[0] == "pin" else (self.P["tmc"].get(data[1]) or {}).get(data[2], "")
-            pv = QTableWidgetItem(val)
+            pv = QTableWidgetItem(self._pin_value(data))
             pv.setTextAlignment(Qt.AlignLeft | Qt.AlignVCenter)
             self.pin_table.setItem(r, 1, pv)
 
     def _collect_pins(self):
-        if not hasattr(self, "pin_table"):
+        # only while the pins page is open - other pages edit pins directly
+        if not hasattr(self, "pin_table") or self.stack.currentIndex() != self.page_index("page_pins"):
             return
         for r in range(self.pin_table.rowCount()):
             data = self.pin_table.item(r, 0).data(Qt.UserRole)
             val = self.pin_table.item(r, 1).text().strip()
             if data[0] == "pin":
                 self.P["pins"][data[1]] = val
+            elif data[0] == "motor":
+                if data[2] == "dir_pin":
+                    val = val.lstrip("!")
+                self.P["motors"][data[1]][data[2]] = val
+            elif val:
+                self.P["motors"][data[1]]["bus"][data[2]] = val
             else:
-                opts = self.P["tmc"].setdefault(data[1], {})
-                if val:
-                    opts[data[2]] = val
-                else:
-                    opts.pop(data[2], None)
+                self.P["motors"][data[1]]["bus"].pop(data[2], None)
 
     def _go(self, idx):
         self.collect()
@@ -235,6 +254,8 @@ class Studio(PagesMixin, FilesMixin, ActionsMixin, QMainWindow):
         key = self.PAGES[idx][1]
         if key == "page_pins":
             self._fill_pins()
+        if key == "page_motors":
+            self._fill_motors()
         if key in ("page_probe", "page_preview"):
             self.do_generate()
 

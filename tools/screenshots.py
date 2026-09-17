@@ -37,18 +37,41 @@ def main(lang="en"):
     win.show()
     out = os.path.join(ROOT, "docs", "screenshots")
     os.makedirs(out, exist_ok=True)
-    shots = {"page_board": "board", "page_motors": "motors", "page_probe": "probe",
-             "page_preview": "review", "page_files": "files"}
-    for i, (_, builder) in enumerate(win.PAGES):
-        if builder not in shots:
-            continue
-        win.nav.setCurrentRow(i)
+    shots = {"page_board": "board", "page_probe": "probe", "page_preview": "review", "page_files": "files"}
+
+    def shot(builder, name):
+        win.goto_page(builder)
         if builder == "page_preview":
             win.tabs.setCurrentIndex(1)
         app.processEvents()
-        path = os.path.join(out, "%s-%s.png" % (shots[builder], lang))
+        path = os.path.join(out, "%s-%s.png" % (name, lang))
         win.grab().save(path)
         print(path)
+
+    for builder, name in shots.items():
+        shot(builder, name)
+
+    # a Voron 2.4 style machine for the motors page: 4 Z, sensorless X/Y, TMC Autotune
+    from studio.boards import apply_board, get_board
+    P = win.P
+    board = get_board("bigtreetech-octopus-v1.1")
+    P["kinematics"], P["bed_x"], P["bed_y"], P["probe"], P["z_leveling"] = "corexy", 350.0, 350.0, "inductive", "quad_gantry_level"
+    for mid in ("z1", "z2", "z3"):
+        P["motors"][mid]["enabled"] = True
+    apply_board(P, board, keep_inversion=False)
+    for mid in ("x", "y"):
+        m = P["motors"][mid]
+        m.update(run_current=1.4, microsteps=32, sensorless=True, sg=80, autotune="ldo-42sth48-2504ac")
+    for mid in ("z", "z1", "z2", "z3"):
+        P["motors"][mid].update(run_current=0.8, rotation_distance=40.0, autotune="ldo-42sth48-2004ac")
+    P["motors"]["e"].update(run_current=0.5, rotation_distance=22.679, stealthchop=999999)
+    win.sel_motor = "x"
+    win.refresh()
+    shot("page_motors", "motors")
+
+    win._doctor_show("MCU 'mcu' shutdown: Timer too close\n"
+                     "Unable to read tmc uart 'stepper_x' register IFCNT", "klippy.log")
+    shot("page_doctor", "doctor")
     win.close()
 
 
