@@ -5,7 +5,7 @@ import json
 import os
 from collections import OrderedDict
 
-from . import __version__
+from . import DATA_DIR, __version__
 
 THERMISTORS = [
     "EPCOS 100K B57560G104F", "Generic 3950", "ATC Semitec 104GT-2", "ATC Semitec 104NT-4-R025H42G",
@@ -118,6 +118,7 @@ def new_params():
     p = OrderedDict((k, v) for k, v in DEFAULTS.items())
     p["pins"] = OrderedDict((k, "") for k in PIN_ROLES)
     p["motors"] = OrderedDict((m, new_motor(m)) for m in MOTOR_IDS)
+    p["map_positions"] = {}        # where the user dragged devices on the wiring map
     p["custom_sections"] = []      # [{"id", "text", "enabled"}] added from the feature catalog
     p["disabled_sections"] = []    # sections of the current file to comment out
     p["enabled_sections"] = []     # commented-out sections of the current file to switch back on
@@ -150,7 +151,7 @@ def bus_keys(driver, bus_opts):
 
 
 def autotune_motors():
-    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "autotune_motors.txt")
+    path = os.path.join(DATA_DIR, "autotune_motors.txt")
     try:
         with io.open(path, encoding="utf-8") as f:
             return [ln.strip() for ln in f if ln.strip()]
@@ -199,6 +200,8 @@ def project_from_dict(data):
     for key in ("custom_sections", "disabled_sections", "enabled_sections"):
         if isinstance(data.get(key), list):
             P[key] = data[key]
+    if isinstance(data.get("map_positions"), dict):
+        P["map_positions"] = {k: list(v) for k, v in data["map_positions"].items() if isinstance(v, (list, tuple))}
     if isinstance(data.get("motors"), dict):
         for mid, m in data["motors"].items():
             if mid in P["motors"] and isinstance(m, dict):
