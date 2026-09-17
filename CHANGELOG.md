@@ -6,7 +6,13 @@
 - `python tools/build_exe.py --test` builds a single-file **KlipperStudio.exe** (~48 MB) with the 83 board files,
   icons and the TMC motor list bundled, then checks that it starts, finds the boards and can import / merge /
   validate a config. Windows users need neither Python nor Git.
-- [RELEASING.md](RELEASING.md) documents the steps for every version.
+- The file carries proper Windows properties - app name, version, author, licence and the project link - so it is
+  not an anonymous binary in Properties -> Details or in the SmartScreen dialog. A `.sha256` is written next to it
+  so a download can be verified, and `--version` answers with the version.
+- `python tools/release.py` runs a whole release in one command: tests, end-to-end test, build, exe self-test and,
+  with `--publish`, the GitHub release with the exe and its checksum attached. It refuses on a failed check, an
+  uncommitted change, a branch other than main, or a tag that already exists.
+- [RELEASING.md](RELEASING.md) documents the steps for every version. **Every version ships an executable.**
 
 ### Wiring map (new page)
 - Your board in the middle and every connected device around it - motors with their driver sockets, heaters,
