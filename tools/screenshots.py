@@ -79,6 +79,10 @@ def main(lang="en"):
     win.sel_motor = "x"
     win.refresh()
     shot("page_motors", "motors")
+    win.P["probe"], win.P["leds"], win.P["fil_sensor"] = "inductive", True, True
+    win.P["pins"].update(probe="^PB7", neopixel="PB0", fil_sensor="^PG12")
+    win.refresh()
+    shot("page_map", "map")
 
     win._doctor_show("MCU 'mcu' shutdown: Timer too close\n"
                      "Unable to read tmc uart 'stepper_x' register IFCNT", "klippy.log")

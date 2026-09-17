@@ -20,6 +20,7 @@ from .actions import ActionsMixin
 from .doctor_page import DoctorMixin
 from .features_page import FeaturesMixin
 from .files_page import FilesMixin
+from .map_page import MapMixin
 from .help_panel import HelpMixin
 from .motors_page import MotorsMixin
 from .pages import PagesMixin
@@ -27,7 +28,7 @@ from .style import STYLE
 from .widgets import Bridge
 
 
-class Studio(PagesMixin, FeaturesMixin, MotorsMixin, FilesMixin, DoctorMixin, HelpMixin, ActionsMixin, QMainWindow):
+class Studio(PagesMixin, FeaturesMixin, MotorsMixin, MapMixin, FilesMixin, DoctorMixin, HelpMixin, ActionsMixin, QMainWindow):
     def __init__(self, P=None, current_text=None, current_src=None):
         super().__init__()
         self.P = P or new_params()
@@ -208,6 +209,7 @@ class Studio(PagesMixin, FeaturesMixin, MotorsMixin, FilesMixin, DoctorMixin, He
         self._fill_pins()
         self._fill_motors()
         self._fill_features()
+        self._fill_map()
 
     def page_index(self, builder):
         return [b for _, b in self.PAGES].index(builder)
@@ -283,6 +285,8 @@ class Studio(PagesMixin, FeaturesMixin, MotorsMixin, FilesMixin, DoctorMixin, He
             self._fill_motors()
         if key == "page_features":
             self._fill_features()
+        if key == "page_map":
+            self._fill_map()
         self.do_generate()  # keeps checks and the sidebar badges up to date
         self.show_page_help(idx)
 

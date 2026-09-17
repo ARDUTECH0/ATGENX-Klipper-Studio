@@ -63,6 +63,10 @@ checks the common mistakes, and uploads it through Moonraker with a backup.
 - **Features you switch on and off.** A switch per feature (dependencies are switched on with it), a switch for
   every section of your own file (off = commented out with `#`, never deleted), and a catalog of 22 more sections
   and plugins to add - ADXL345, Shake&Tune, Mainsail macros, skew correction, chamber fan, case light and more.
+- **Wiring map.** Your board in the middle and every device around it, each line labelled with its pin: motors and
+  their driver sockets, heaters, thermistors, fans, probe, LEDs, plus sections you added and any second board
+  (Pico, toolhead). Red marks empty pins, pins used twice, or pins on a board that is switched off. Click a device
+  to edit its pins, and export the whole diagram as a PNG.
 - **It explains itself.** A help panel shows what every setting does, typical values and where it lands in
   printer.cfg; the generated file gets a heading per group and an explanation per section; and there is a full
   [user guide](docs/GUIDE.md).
@@ -76,8 +80,10 @@ checks the common mistakes, and uploads it through Moonraker with a backup.
 | <img src="docs/screenshots/board-en.png" width="440"> | <img src="docs/screenshots/files-en.png" width="440"> |
 | **Motors & drivers** | **Troubleshooter (Arabic UI)** |
 | <img src="docs/screenshots/motors-en.png" width="440"> | <img src="docs/screenshots/doctor-ar.png" width="440"> |
-| **Features** | **Switch any section of your file** |
-| <img src="docs/screenshots/features-en.png" width="440"> | <img src="docs/screenshots/features-file-en.png" width="440"> |
+| **Wiring map** | **Features** |
+| <img src="docs/screenshots/map-en.png" width="440"> | <img src="docs/screenshots/features-en.png" width="440"> |
+| **Switch any section of your file** | **All config files** |
+| <img src="docs/screenshots/features-file-en.png" width="440"> | <img src="docs/screenshots/files-en.png" width="440"> |
 
 ## Install
 

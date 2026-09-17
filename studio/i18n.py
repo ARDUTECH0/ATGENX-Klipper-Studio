@@ -995,3 +995,37 @@ STRINGS.update({
 STRINGS.update({
     "tb.support": _t("Support", "ادعم المشروع"),
 })
+
+# ---------- wiring map ----------
+STRINGS.update({
+    "nav.map": _t("🗺️   Wiring map", "🗺️   خريطة التوصيلات"),
+    "map.title": _t("Wiring map", "خريطة التوصيلات"),
+    "map.hint": _t("Everything that is connected to your board, and the pin each device uses. Click a device to edit its pins, drag to arrange, scroll to zoom.",
+                   "كل اللي متوصل ببوردتك، والرجل اللي كل جهاز مستخدمها. اضغط على الجهاز تعدّل أرجله، واسحب عشان ترتب، وعجلة الماوس للتكبير."),
+    "map.add": _t("Add device", "إضافة جهاز"),
+    "map.fit": _t("Fit to window", "ملء الشاشة"),
+    "map.export": _t("Export image", "تصدير صورة"),
+    "map.exported": _t("Diagram saved: {path}", "اتحفظ الرسم: {path}"),
+    "map.more_features": _t("More in Features...", "المزيد في المميزات..."),
+    "map.status": _t("{devices} devices  ·  {boards} board(s)  ·  {problems} with problems",
+                     "{devices} جهاز  ·  {boards} بورده  ·  {problems} فيهم مشكلة"),
+    "map.no_selection": _t("Click a device on the map", "اضغط على جهاز في الخريطة"),
+    "map.open_page": _t("Open its settings page", "افتح صفحة إعداداته"),
+    "map.open_files": _t("Edit in All config files", "عدّله من كل ملفات الإعداد"),
+    "map.custom_board": _t("Your board", "بوردتك"),
+    "map.off": _t("switched off", "مقفول"),
+    "map.side_motors": _t("drivers", "الدرايفرات"),
+    "map.side_heat": _t("heaters / sensors", "السخانات / الحساسات"),
+    "map.side_fans": _t("fans / lights", "المراوح / الإضاءة"),
+    "map.side_sensors": _t("endstops / probe", "الليميتات / المسبار"),
+    "map.group_motors": _t("Motors", "المحركات"),
+    "map.group_heat": _t("Heating", "التسخين"),
+    "map.group_fans": _t("Fans", "المراوح"),
+    "map.group_sensors": _t("Sensors", "الحساسات"),
+    "map.group_lights": _t("Lights", "الإضاءة"),
+    "map.group_other": _t("Added sections", "أقسام مضافة"),
+    "map.issue_empty": _t("pin is empty", "الرجل فاضية"),
+    "map.issue_conflict": _t("same pin as: {other}", "نفس رجل: {other}"),
+    "map.issue_conflict_full": _t("Pin {pin} is used by {a} and {b}", "الرجل {pin} مستخدمة لـ {a} و {b}"),
+    "map.issue_board_off": _t("[mcu {board}] is switched off", "[mcu {board}] مقفول"),
+})

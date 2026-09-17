@@ -20,7 +20,7 @@ class PagesMixin:
     PAGES = [("nav.start", "page_start"), ("nav.connection", "page_connection"), ("nav.board", "page_board"), ("nav.features", "page_features"),
              ("nav.machine", "page_machine"), ("nav.motors", "page_motors"),
              ("nav.thermal", "page_thermal"), ("nav.probe", "page_probe"),
-             ("nav.extras", "page_extras"), ("nav.pins", "page_pins"),
+             ("nav.extras", "page_extras"), ("nav.pins", "page_pins"), ("nav.map", "page_map"),
              ("nav.preview", "page_preview"), ("nav.files", "page_files"), ("nav.doctor", "page_doctor")]
 
     def page_start(self):

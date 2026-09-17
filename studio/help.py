@@ -39,6 +39,19 @@ PAGE_GUIDE = OrderedDict([
     ("page_extras", (
         "Optional features. Each one adds its own section to printer.cfg and can be switched off later - the app removes the section again.",
         "مميزات اختيارية. كل ميزة بتضيف القسم بتاعها في printer.cfg، ولو قفلتها بعدين البرنامج بيشيل القسم تاني.")),
+    ("page_map", (
+        "The wiring map: your board in the middle and every device around it, each line labelled with the pin it uses.\n\n"
+        "Click a device to see and edit its pins. Red = a problem (empty pin, the same pin used twice, or a pin on a "
+        "second board that is switched off).\n"
+        "Drag devices to arrange them, scroll to zoom, and Export image saves the diagram as a PNG - handy for "
+        "documenting your printer or asking for help.\n\n"
+        "Add device adds a motor, a feature or a section from the catalog.",
+        "خريطة التوصيلات: البورده في النص وكل الأجهزة حواليها، وكل خط مكتوب عليه الرجل اللي مستخدمة.\n\n"
+        "اضغط على أي جهاز تشوف أرجله وتعدّلها. الأحمر = فيه مشكلة (رجل فاضية، أو رجل مستخدمة مرتين، أو رجل على "
+        "بورده تانية مقفولة).\n"
+        "اسحب الأجهزة عشان ترتبها، واستخدم عجلة الماوس للتصغير والتكبير، و«تصدير صورة» بيحفظ الرسم PNG - مفيد "
+        "لتوثيق طابعتك أو لما تسأل حد.\n\n"
+        "«إضافة جهاز» بيضيف محرك أو ميزة أو قسم من الكتالوج.")),
     ("page_pins", (
         "Every pin in one table: motor pins, driver bus pins, heaters, fans, probe, LEDs. Filled from the board page - edit only if your wiring differs.\n^ = pull-up, ~ = pull-down, ! = inverted.",
         "كل الأرجل في جدول واحد: أرجل المحركات، أرجل اتصال الدرايفرات، السخانات، المراوح، المسبار، الإضاءة. بتتملى من صفحة البورده - عدّل بس لو توصيلك مختلف.\n^ = pull-up و ~ = pull-down و ! = عكس.")),
