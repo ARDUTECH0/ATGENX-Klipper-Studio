@@ -20,7 +20,7 @@ from .cfgtools import split_save
 from .i18n import tr
 from .importer import import_config
 from .merge import build
-from .model import load_project
+from .model import MOTOR_LABEL, enabled_motors, load_project
 from .validate import validate
 
 ICONS = {"error": "✖", "warn": "▲", "ok": "✔"}
@@ -69,9 +69,14 @@ def cmd_check(a):
         P["board"] = a.board
     board = get_board(P["board"])
     print("== import ==")
-    for k in ("board", "driver", "dual_z", "probe", "probe_z", "pid_e_kp", "pid_b_kp", "pa",
+    for k in ("board", "kinematics", "probe", "probe_z", "z_leveling", "pid_e_kp", "pid_b_kp", "pa",
               "shaper_x", "shaper_y", "shaper_z", "leds", "led_effects", "fil_sensor", "max_accel", "max_z_accel"):
         print("  %-12s %s" % (k, P[k]))
+    for mid in enabled_motors(P):
+        m = P["motors"][mid]
+        print("  motor %-3s slot=%-11s %-8s %sA ms=%s rd=%s%s%s" % (
+            MOTOR_LABEL[mid], m["slot"] or "-", m["driver"], m["run_current"], m["microsteps"], m["rotation_distance"],
+            " sensorless" if m["sensorless"] else "", " z=" + m["z_position"] if m["z_position"] else ""))
     for key, kw in notes:
         print("  • " + tr(key, **kw))
     errors = 0
@@ -103,6 +108,20 @@ def cmd_generate(a):
     return 1 if errors else 0
 
 
+def cmd_doctor(a):
+    from .doctor import card, diagnose, last_session
+    with io.open(a.file, encoding="utf-8", errors="replace") as f:
+        text = f.read()
+    hits = diagnose(last_session(text) if a.file.endswith(".log") else text)
+    if not hits:
+        print(tr("doctor.nothing"))
+        return 0
+    for rid, line, _page in hits:
+        title, cause, fix = card(rid)
+        print("\n## %s\n   > %s\n   %s\n   %s" % (title, line, cause, fix.replace("\n", "\n   ")))
+    return 0
+
+
 def main(argv=None):
     _utf8()
     argv = sys.argv[1:] if argv is None else argv
@@ -116,6 +135,8 @@ def main(argv=None):
     c.add_argument("file")
     c.add_argument("--board", default="")
     c.add_argument("--out", default="")
+    d = sub.add_parser("doctor", help="explain Klipper errors from klippy.log or a pasted message file")
+    d.add_argument("file")
     g = sub.add_parser("generate", help="generate printer.cfg from a project file")
     g.add_argument("project")
     g.add_argument("-o", "--output", default="printer.cfg")
@@ -128,6 +149,8 @@ def main(argv=None):
         return cmd_boards(a)
     if a.cmd == "check":
         return cmd_check(a)
+    if a.cmd == "doctor":
+        return cmd_doctor(a)
     if a.cmd == "generate":
         return cmd_generate(a)
     try:

@@ -2,32 +2,39 @@
 """Checks that catch the mistakes that stop Klipper from starting (or ruin prints)."""
 import re
 
-from .boards import strip_mods
+from .boards import mcu_temp_supported, strip_mods
 from .cfgtools import cfg_parser, fmt as n, save_as_cfg, split_save
 from .generator import mesh_bounds
 from .i18n import tr
-from .model import driver_bus
+from .model import DRIVER_INFO, MOTOR_LABEL, PRIMARY, bus_keys, driver_bus, enabled_motors, z_motors
 
 
 def active_pins(P):
-    """[(role, pin)] of every pin the generated config will use."""
+    """[(label, pin)] of every pin the generated config will use."""
+    out = []
+    for mid in enabled_motors(P):
+        m = P["motors"][mid]
+        lab = MOTOR_LABEL[mid]
+        out += [(lab + " step", m["step_pin"]), (lab + " dir", m["dir_pin"]), (lab + " enable", m["enable_pin"])]
+        if mid in ("x", "y"):
+            if m["sensorless"]:
+                out.append((lab + " diag", m["diag_pin"]))
+            else:
+                out.append((lab + " endstop", m["endstop_pin"]))
+        if mid == "z" and P["probe"] == "none":
+            out.append((lab + " endstop", m["endstop_pin"]))
     p = P["pins"]
-    roles = ["x_step", "x_dir", "x_en", "x_stop", "y_step", "y_dir", "y_en", "y_stop",
-             "z_step", "z_dir", "z_en", "e_step", "e_dir", "e_en",
-             "e_heater", "e_sensor", "bed_heater", "bed_sensor", "fan", "hotend_fan"]
-    if P["probe"] == "none":
-        roles.append("z_stop")
-    elif P["probe"] == "bltouch":
+    roles = ["e_heater", "e_sensor"] + (["bed_heater", "bed_sensor"] if p.get("bed_heater") else [])
+    roles += [r for r in ("fan", "hotend_fan") if p.get(r)]
+    if P["probe"] == "bltouch":
         roles += ["bl_sensor", "bl_control"]
-    else:
+    elif P["probe"] == "inductive":
         roles.append("probe")
-    if P["dual_z"]:
-        roles += ["z1_step", "z1_dir", "z1_en"]
     if P["leds"]:
         roles.append("neopixel")
     if P["fil_sensor"]:
         roles.append("fil_sensor")
-    return [(r, p.get(r, "")) for r in roles]
+    return out + [(tr("pin." + r), p.get(r, "")) for r in roles]
 
 
 def validate(P, text, board=None, elsewhere=None, klipper_warnings=None):
@@ -52,7 +59,7 @@ def validate(P, text, board=None, elsewhere=None, klipper_warnings=None):
     names = re.findall(r"^\[([^\]\n]+)\]", main, re.M)
     dup = sorted({x for x in names if names.count(x) > 1})
     if dup:
-        E("val.duplicates", names=", ".join(dup))
+        W("val.duplicates", names=", ".join(dup))
     else:
         O("val.no_duplicates")
 
@@ -65,46 +72,89 @@ def validate(P, text, board=None, elsewhere=None, klipper_warnings=None):
         if procs and chip and not any(chip.startswith(p) or p.startswith(chip.replace("xx", "")) for p in procs):
             W("val.serial_board_mismatch", chip=chip, board=board["name"])
 
-    # pins
-    empty = [tr("pin." + r) for r, v in active_pins(P) if not v.strip()]
+    # ---------------- pins
+    pins = active_pins(P)
+    empty = [lab for lab, v in pins if not (v or "").strip()]
     if empty:
         E("val.pins_empty", pins=" / ".join(empty))
     seen = {}
-    for role, pin in active_pins(P):
+    for lab, pin in pins:
         base = strip_mods(pin)
-        if not base or role.endswith("_en"):  # several boards share one enable pin between drivers
+        if not base or lab.endswith(" enable"):  # several boards share one enable pin between drivers
             continue
-        if base in seen and not {seen[base], role} <= {"z_stop", "probe", "bl_sensor"}:
-            E("val.pin_conflict", pin=base, a=tr("pin." + seen[base]), b=tr("pin." + role))
-        seen.setdefault(base, role)
+        pair = {seen.get(base, ""), lab}
+        probe_share = any("Z endstop" in x for x in pair) and any(x in (tr("pin.probe"), tr("pin.bl_sensor")) for x in pair)
+        if base in seen and not probe_share:
+            E("val.pin_conflict", pin=base, a=seen[base], b=lab)
+        seen.setdefault(base, lab)
 
-    # drivers
-    if P["driver"] != "none":
-        axes = ["x", "y", "z", "e"] + (["z1"] if P["dual_z"] else [])
-        for ax in axes:
-            opts = P["tmc"].get(ax) or {}
-            bus = driver_bus(P["driver"], opts)
-            if bus == "uart" and not opts.get("uart_pin"):
-                E("val.tmc_missing", axis=ax.upper(), key="uart_pin")
-            if bus == "spi" and not opts.get("cs_pin"):
-                E("val.tmc_missing", axis=ax.upper(), key="cs_pin")
-            if P["driver"] == "tmc2208" and opts.get("uart_address"):
-                E("val.tmc2208_shared_uart")
-                break
-    if P["driver"] == "tmc2208" and max(P["cur_xy"], P["cur_z"], P["cur_e"]) > 1.2:
-        W("val.current_high", limit="1.2")
-    if P["driver"] in ("tmc2209", "tmc2130") and max(P["cur_xy"], P["cur_z"], P["cur_e"]) > 1.7:
-        W("val.current_high", limit="1.7")
+    # ---------------- motors & drivers
+    slots_used = {}
+    for mid in enabled_motors(P):
+        m = P["motors"][mid]
+        lab = MOTOR_LABEL[mid]
+        info = DRIVER_INFO.get(m["driver"], DRIVER_INFO["none"])
+        if m["slot"]:
+            if m["slot"] in slots_used:
+                E("val.slot_conflict", slot=m["slot"], a=slots_used[m["slot"]], b=lab)
+            slots_used.setdefault(m["slot"], lab)
+        elif board:
+            W("val.no_slot", motor=lab)
+        bus = driver_bus(m["driver"], m["bus"])
+        if bus == "uart" and not m["bus"].get("uart_pin"):
+            E("val.tmc_missing", axis=lab, key="uart_pin")
+        if bus == "spi" and not m["bus"].get("cs_pin"):
+            E("val.tmc_missing", axis=lab, key="cs_pin")
+        if m["driver"] == "tmc2660" and m["sense_resistor"] <= 0:
+            E("val.tmc_missing", axis=lab, key="sense_resistor")
+        if m["driver"] == "tmc2208" and m["bus"].get("uart_address", "0").strip() not in ("", "0"):
+            E("val.tmc2208_shared_uart", motor=lab)
+        if info["max_current"] and m["run_current"] > info["max_current"]:
+            W("val.current_high", motor=lab, current=n(m["run_current"]), limit=n(info["max_current"]),
+              driver=m["driver"].upper())
+        if m["hold_current"] > m["run_current"]:
+            W("val.hold_above_run", motor=lab)
+        if m["microsteps"] & (m["microsteps"] - 1):
+            E("val.microsteps", motor=lab)
+        if m["microsteps"] > 64:
+            W("val.microsteps_high", motor=lab)
+        if m["sensorless"]:
+            if mid not in ("x", "y"):
+                E("val.sensorless_axis", motor=lab)
+            elif not info["sg_key"]:
+                E("val.sensorless_driver", motor=lab, driver=m["driver"].upper())
+            else:
+                if not m["diag_pin"]:
+                    E("val.sensorless_diag", motor=lab)
+                elif bus == "spi" and "!" not in m["diag_pin"]:
+                    W("val.diag_polarity", motor=lab)
+                if m["hold_current"] > 0:
+                    W("val.sensorless_hold", motor=lab)
+                if m["autotune"] and P["homing_speed"] <= m["rotation_distance"]:
+                    W("val.sensorless_autotune_speed", motor=lab)
+                sg = m["sg"] if m["sg"] is not None else info["sg_default"]
+                lo, hi = info["sg_range"]
+                if not lo <= sg <= hi:
+                    E("val.sg_range", motor=lab, lo=lo, hi=hi)
+        if m["autotune"] and m["driver"] not in ("tmc2209", "tmc2240", "tmc5160", "tmc2130", "tmc2208"):
+            W("val.autotune_driver", motor=lab)
+        prim = PRIMARY.get(mid)
+        if prim and P["motors"][prim]["enabled"]:
+            pm = P["motors"][prim]
+            if abs(pm["rotation_distance"] - m["rotation_distance"]) > 1e-6 or pm["microsteps"] != m["microsteps"] \
+                    or pm["full_steps"] != m["full_steps"]:
+                W("val.mechanics_differ", motor=lab, primary=MOTOR_LABEL[prim])
+    if any(P["motors"][mid]["autotune"] for mid in enabled_motors(P)):
+        O("val.autotune_plugin")
 
-    # motion
+    # ---------------- motion
     if P["max_z_accel"] > P["max_accel"]:
         E("val.z_accel", z=P["max_z_accel"], xy=P["max_accel"])
-    if P["microsteps"] & (P["microsteps"] - 1):
-        E("val.microsteps")
     if P["kinematics"] not in ("cartesian", "corexy"):
-        W("val.kinematics", kin=P["kinematics"])
+        E("val.kinematics", kin=P["kinematics"])
 
-    # probe / mesh
+    # ---------------- probe / leveling
+    zs = z_motors(P)
     if P["probe"] != "none":
         x0, y0, x1, y1 = mesh_bounds(P)
         if x0 >= x1 or y0 >= y1:
@@ -113,10 +163,14 @@ def validate(P, text, board=None, elsewhere=None, klipper_warnings=None):
             O("val.mesh_area", x0=n(x0), x1=n(x1), y0=n(y0), y1=n(y1))
         if abs(P["probe_z"]) < 0.001:
             W("val.probe_z_zero")
-    elif P["dual_z"]:
-        W("val.dual_z_no_probe")
+        if P["z_leveling"] == "quad_gantry_level" and len(zs) >= 2 and len(zs) != 4:
+            E("val.qgl_needs_4", count=len(zs))
+        if P["z_leveling"] == "quad_gantry_level" and len(zs) == 4 and P["kinematics"] == "cartesian":
+            W("val.qgl_bed_slinger")
+    elif len(zs) >= 2:
+        W("val.multi_z_no_probe")
 
-    # tuning
+    # ---------------- tuning & add-ons
     if P["pa"] <= 0:
         W("val.pa_zero")
     elif P["bowden"] and P["pa"] < 0.12:
@@ -129,24 +183,35 @@ def validate(P, text, board=None, elsewhere=None, klipper_warnings=None):
         W("val.fan_low")
     if P["leds"] and P["led_effects"]:
         O("val.led_plugin")
+    if P["mcu_temp"] and mcu_temp_supported(board) is False:
+        E("val.mcu_temp_unsupported", family=board.get("mcu", {}).get("family"))
+    if P["print_macros"]:
+        if P["probe"] != "none" and P["adaptive_mesh"] and not P["exclude_object"]:
+            W("val.adaptive_needs_exclude")
+        O("val.slicer_start", cmd="START_PRINT BED=[first_layer_bed_temperature] EXTRUDER=[first_layer_temperature]")
+    if P["retraction"]:
+        O("val.retraction_slicer")
 
-    # references from the user's own macros
-    body = re.sub(r"^\[[^\]\n]+\].*$", "", main, flags=re.M)
+    # ---------------- references from the user's own macros
+    body = re.sub(r"^\s*(\[[^\]\n]+\]|[#;]).*$", "", main, flags=re.M)  # ignore headers and comments
     refs = [
         (not P["leds"] and "case_leds" in body, "val.ref_leds"),
         (P["leds"] and not P["led_effects"] and "SET_LED_EFFECT" in body, "val.ref_led_effects"),
-        (not P["dual_z"] and ("Z_TILT_ADJUST" in body or "stepper_z1" in body), "val.ref_z_tilt"),
+        (len(zs) < 2 and ("Z_TILT_ADJUST" in body or "stepper_z1" in body), "val.ref_z_tilt"),
+        (not (len(zs) == 4 and P["z_leveling"] == "quad_gantry_level") and "QUAD_GANTRY_LEVEL" in body, "val.ref_qgl"),
         (P["probe"] == "none" and ("BED_MESH_CALIBRATE" in body or "PROBE_CALIBRATE" in body), "val.ref_probe"),
         (not P["fil_sensor"] and "filament_switch_sensor" in body, "val.ref_fil_sensor"),
+        (not P["retraction"] and re.search(r"^\s*(G10|G11|SET_RETRACTION)\b", body, re.M), "val.ref_retraction"),
     ]
     for cond, key in refs:
         if cond:
             E(key)
-    # modular configs: a generated section that also lives in an included file
+
+    # ---------------- modular configs
     if elsewhere:
         from .merge import is_managed
         for name in sorted(set(names)):
-            if name in elsewhere and is_managed(name):
+            if name in elsewhere and is_managed(name, P):
                 W("val.section_elsewhere", section=name, file=elsewhere[name])
     for w in klipper_warnings or []:
         W("val.klipper_warning", msg=w.get("message", str(w)) if isinstance(w, dict) else str(w))

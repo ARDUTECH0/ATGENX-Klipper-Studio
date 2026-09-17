@@ -10,7 +10,7 @@ from PySide6.QtWidgets import QFileDialog, QListWidgetItem, QMessageBox
 
 from .. import APP_NAME
 from ..appdata import write_backup
-from ..boards import (apply_board, board_label, boards_for_mcu, build_hint, default_z1_slot, get_board,
+from ..boards import (apply_board, board_label, boards_for_mcu, build_hint, get_board,
                       load_boards, slots)
 from ..cfgtools import fmt as n
 from ..configset import ConfigSet
@@ -40,15 +40,9 @@ class ActionsMixin:
         i = self.board_cb.currentIndex()
         bid = self.board_ids[i] if 0 <= i < len(self.board_ids) else ""
         b = get_board(bid)
-        self.z1_slot_cb.clear()
         if not b:
             self.board_info.setText(tr("board.custom_info"))
             return
-        self.z1_slot_cb.addItem("-")
-        for s in slots(b):
-            if s not in ("stepper_x", "stepper_y", "stepper_z", "extruder"):
-                self.z1_slot_cb.addItem(s)
-        self.z1_slot_cb.setCurrentText(default_z1_slot(b) or "-")
         rows = "".join("<tr><td style='color:#8b949e;padding-right:14px'>%s</td><td>%s</td></tr>" % (k, v)
                        for k, v in build_hint(b))
         extras = ", ".join(e["name"] for e in b.get("extra_sections", [])) or "-"
@@ -280,8 +274,7 @@ class ActionsMixin:
         if not b:
             QMessageBox.information(self, APP_NAME, tr("msg.choose_board"))
             return
-        z1 = self.z1_slot_cb.currentText()
-        notes = apply_board(self.P, b, "" if z1 == "-" else z1, self.keep_inv.isChecked())
+        notes = apply_board(self.P, b, self.keep_inv.isChecked())
         self.refresh()
         self._log(tr("msg.board_applied", name=b["name"]))
         self._notes(notes)

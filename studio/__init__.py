@@ -4,7 +4,7 @@ import os
 import sys
 
 APP_NAME = "ATGENX Klipper Studio"
-__version__ = "1.0.0-beta.1"
+__version__ = "1.0.0-beta.2"
 LICENSE_NAME = "PolyForm Noncommercial 1.0.0"
 REPO_URL = "https://github.com/ARDUTECH0/ATGENX-Klipper-Studio"
 SUPPORT_URL = REPO_URL + "#support"
@@ -15,3 +15,4 @@ else:
     ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 BOARDS_DIR = os.path.join(ROOT, "boards")
+ASSETS_DIR = os.path.join(ROOT, "studio", "assets")

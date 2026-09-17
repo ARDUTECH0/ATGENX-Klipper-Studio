@@ -37,6 +37,19 @@ For a board Klipper doesn't ship, copy a similar JSON file and edit it:
 
 Please include **where the pins come from**: the vendor's pinout PDF, schematic, or a config you tested on a real board.
 
+## Testing
+
+```bash
+python -m unittest discover -s tests                   # core tests (no Qt, no network)
+python tools/corpus_check.py /path/to/klipper/config   # every Klipper example config must pass
+QT_QPA_PLATFORM=offscreen python tools/gui_e2e.py      # the real app window against a fake Moonraker
+```
+
+## Adding a troubleshooter rule
+
+Rules live in `studio/doctor.py` (id, regular expression, page to open). Add `doc.<id>.title`, `doc.<id>.cause` and
+`doc.<id>.fix` to `studio/i18n.py` in every language, and a sample message to `TestDoctor` in `tests/test_core.py`.
+
 ## Translations
 
 UI strings live in `studio/i18n.py`. Every entry has an `en` and an `ar` text; keep `{placeholders}` identical.

@@ -1,22 +1,85 @@
 # -*- coding: utf-8 -*-
 """Wizard pages."""
+import os
+
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import (QCheckBox, QComboBox, QHBoxLayout, QHeaderView, QLabel, QLineEdit,
+from PySide6.QtGui import QIcon
+from PySide6.QtWidgets import (QCheckBox, QComboBox, QGridLayout, QGroupBox, QHBoxLayout, QHeaderView, QLabel,
+                               QLineEdit, QVBoxLayout, QWidget,
                                QListWidget, QPlainTextEdit, QPushButton, QRadioButton, QTabWidget,
                                QTableWidget)
 
+from .. import ASSETS_DIR
 from ..boards import board_label, load_boards
 from ..i18n import tr
-from ..model import DRIVERS, KINEMATICS, LED_ORDERS, PROBES, SHAPERS, THERMISTORS
+from ..model import KINEMATICS, LED_ORDERS, PROBES, SHAPERS, THERMISTORS
 from .widgets import CfgHighlighter, SearchCombo
 
 
 class PagesMixin:
-    PAGES = [("nav.connection", "page_connection"), ("nav.board", "page_board"),
+    PAGES = [("nav.start", "page_start"), ("nav.connection", "page_connection"), ("nav.board", "page_board"),
              ("nav.machine", "page_machine"), ("nav.motors", "page_motors"),
              ("nav.thermal", "page_thermal"), ("nav.probe", "page_probe"),
              ("nav.extras", "page_extras"), ("nav.pins", "page_pins"),
-             ("nav.preview", "page_preview"), ("nav.files", "page_files")]
+             ("nav.preview", "page_preview"), ("nav.files", "page_files"), ("nav.doctor", "page_doctor")]
+
+    def page_start(self):
+        w = QWidget(objectName="page")
+        v = QVBoxLayout(w)
+        v.setContentsMargins(0, 10, 8, 0)
+        v.setSpacing(14)
+        head = QHBoxLayout()
+        logo = QLabel()
+        logo.setPixmap(QIcon(os.path.join(ASSETS_DIR, "icon.svg")).pixmap(96, 96))
+        head.addWidget(logo)
+        titles = QVBoxLayout()
+        t = QLabel(tr("start.title"), objectName="title")
+        t.setStyleSheet("font-size:26px;")
+        titles.addWidget(t)
+        s = QLabel(tr("start.subtitle"), objectName="hint")
+        s.setWordWrap(True)
+        s.setStyleSheet("font-size:14px;")
+        titles.addWidget(s)
+        head.addLayout(titles, 1)
+        v.addLayout(head)
+
+        grid = QGridLayout()
+        grid.setSpacing(12)
+        cards = [("🔌", "start.printer", lambda: (self.goto_page("page_connection"), self.binds_by_key["host"].setFocus())),
+                 ("🆕", "start.new", lambda: self.goto_page("page_board")),
+                 ("📂", "start.open", self.act_open_cfg),
+                 ("🩺", "start.doctor", lambda: self.goto_page("page_doctor"))]
+        for i, (icon, key, fn) in enumerate(cards):
+            b = QPushButton(objectName="card")
+            b.setCursor(Qt.PointingHandCursor)
+            b.setMinimumHeight(104)
+            lay = QVBoxLayout(b)
+            lay.setContentsMargins(18, 14, 18, 14)
+            ttl = QLabel("%s   %s" % (icon, tr(key + "_title")))
+            ttl.setStyleSheet("font-size:16px; font-weight:600; background:transparent;")
+            dsc = QLabel(tr(key + "_desc"), objectName="hint")
+            dsc.setWordWrap(True)
+            dsc.setStyleSheet("background:transparent;")
+            for lab in (ttl, dsc):
+                lab.setAttribute(Qt.WA_TransparentForMouseEvents)
+                lay.addWidget(lab)
+            b.clicked.connect(lambda _=False, f=fn: f())
+            grid.addWidget(b, i // 2, i % 2)
+        v.addLayout(grid)
+
+        steps = QGroupBox(tr("start.steps_title"))
+        sl = QHBoxLayout(steps)
+        for n in range(1, 5):
+            lab = QLabel("<span style='font-size:22px;color:#3b8eea;font-weight:700'>%d</span><br>%s" % (n, tr("start.step%d" % n)))
+            lab.setWordWrap(True)
+            lab.setAlignment(Qt.AlignTop | Qt.AlignHCenter)
+            sl.addWidget(lab, 1)
+        v.addWidget(steps)
+        safe = QLabel("🛡️  " + tr("start.safe"), objectName="hint")
+        safe.setWordWrap(True)
+        v.addWidget(safe)
+        v.addStretch(1)
+        return w
 
     def page_connection(self):
         w, v = self._page(tr("connection.title"), tr("connection.hint"))
@@ -70,9 +133,6 @@ class PagesMixin:
         self._bind("board", self.board_cb, set_board, get_board)
         self.board_cb.currentIndexChanged.connect(lambda _=None: self._board_changed())
         f.addRow(tr("board.board"), self.board_cb)
-        self.z1_slot_cb = QComboBox()
-        self.z1_slot_cb.setMinimumWidth(240)
-        f.addRow(tr("board.z1_slot"), self.z1_slot_cb)
         self.keep_inv = QCheckBox(tr("board.keep_inversion"))
         self.keep_inv.setChecked(True)
         f.addRow("", self.keep_inv)
@@ -131,35 +191,9 @@ class PagesMixin:
         v.addStretch(1)
         return w
 
-    def page_motors(self):
-        w, v = self._page(tr("motors.title"), tr("motors.hint"))
-        f = self._group(v, tr("motors.mechanics"))
-        f.addRow(tr("motors.microsteps"), self.combo("microsteps", [8, 16, 32, 64, 128]))
-        f.addRow(tr("motors.rd_xy"), self.spin("rd_xy", 1, 200, 3, 0.1, "mm"))
-        f.addRow(tr("motors.rd_z"), self.spin("rd_z", 0.5, 50, 3, 0.1, "mm"))
-        f.addRow("", self.check("inv_x", tr("motors.inv_x")))
-        f.addRow("", self.check("inv_y", tr("motors.inv_y")))
-        f.addRow("", self.check("inv_z", tr("motors.inv_z")))
-        f.addRow("", self.check("inv_e", tr("motors.inv_e")))
-        f2 = self._group(v, tr("motors.dual_z"))
-        f2.addRow("", self.check("dual_z", tr("motors.dual_z_on")))
-        f2.addRow("", self.check("z_tilt_swap", tr("motors.z_tilt_swap")))
-        f3 = self._group(v, tr("motors.drivers"))
-        f3.addRow(tr("motors.driver"), self.combo("driver", [(d, tr("driver.none") if d == "none" else lab) for d, lab in DRIVERS]))
-        f3.addRow(tr("motors.cur_xy"), self.spin("cur_xy", 0.1, 3.0, 3, 0.05, "A"))
-        f3.addRow(tr("motors.cur_z"), self.spin("cur_z", 0.1, 3.0, 3, 0.05, "A"))
-        f3.addRow(tr("motors.cur_e"), self.spin("cur_e", 0.1, 3.0, 3, 0.05, "A"))
-        f3.addRow(tr("motors.hold_ratio"), self.spin("hold_ratio", 0.1, 1.0, 2, 0.05))
-        f3.addRow(tr("motors.stealth_xy"), self.spin("stealth_xy", 0, 999999, 0, 5, "mm/s"))
-        f3.addRow(tr("motors.stealth_z"), self.spin("stealth_z", 0, 999999, 0, 1, "mm/s"))
-        f3.addRow(tr("motors.stealth_e"), self.spin("stealth_e", 0, 999999, 0, 1, "mm/s"))
-        v.addStretch(1)
-        return w
-
     def page_thermal(self):
         w, v = self._page(tr("thermal.title"), tr("thermal.hint"))
         f = self._group(v, tr("thermal.extruder"))
-        f.addRow(tr("thermal.rd_e"), self.spin("rd_e", 1, 100, 3, 0.1, "mm"))
         f.addRow(tr("thermal.nozzle"), self.spin("nozzle", 0.1, 2.0, 2, 0.05, "mm"))
         f.addRow(tr("thermal.filament"), self.spin("filament", 1.0, 3.5, 2, 0.05, "mm"))
         f.addRow("", self.check("bowden", tr("thermal.bowden")))
@@ -221,6 +255,26 @@ class PagesMixin:
         f3.addRow("", self.check("fil_sensor", tr("extras.fil_sensor")))
         f3.addRow("", self.check("arcs", tr("extras.arcs")))
         f3.addRow("", self.check("exclude_object", tr("extras.exclude_object")))
+        f3.addRow("", self.check("host_temp", tr("extras.host_temp")))
+        f3.addRow("", self.check("mcu_temp", tr("extras.mcu_temp")))
+        f3.addRow(tr("extras.idle_timeout"), self.spin("idle_timeout_min", 0, 1440, 0, 5, tr("extras.minutes")))
+        f4 = self._group(v, tr("extras.retraction"))
+        f4.addRow("", self.check("retraction", tr("extras.retraction_on")))
+        f4.addRow(tr("extras.retract_length"), self.spin("retract_length", 0, 15, 2, 0.1, "mm"))
+        f4.addRow(tr("extras.retract_speed"), self.spin("retract_speed", 1, 150, 0, 5, "mm/s"))
+        f4.addRow(tr("extras.unretract_speed"), self.spin("unretract_speed", 1, 150, 0, 5, "mm/s"))
+        f5 = self._group(v, tr("extras.macros"))
+        f5.addRow("", self.check("print_macros", tr("extras.macros_on")))
+        f5.addRow("", self.check("adaptive_mesh", tr("extras.adaptive_mesh")))
+        f5.addRow("", self.check("purge_line", tr("extras.purge_line")))
+        slicer = QLineEdit("START_PRINT BED=[first_layer_bed_temperature] EXTRUDER=[first_layer_temperature]")
+        slicer.setReadOnly(True)
+        slicer.setLayoutDirection(Qt.LeftToRight)
+        f5.addRow(tr("extras.slicer_start"), slicer)
+        f5.addRow(tr("extras.slicer_end"), QLabel("END_PRINT"))
+        hint = QLabel(tr("extras.macros_hint"), objectName="hint")
+        hint.setWordWrap(True)
+        f5.addRow(hint)
         v.addStretch(1)
         return w
 

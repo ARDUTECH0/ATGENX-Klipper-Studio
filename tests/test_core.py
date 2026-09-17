@@ -14,7 +14,9 @@ sys.path.insert(0, os.path.dirname(HERE))
 os.environ.setdefault("ATGENX_STUDIO_HOME", os.path.join(HERE, ".studio_home"))
 
 from studio import i18n  # noqa: E402
-from studio.boards import apply_board, detect_board, load_boards  # noqa: E402
+from studio.boards import apply_board, assign_slot, load_boards, slots  # noqa: E402
+from studio.doctor import RULES, diagnose, last_session  # noqa: E402
+from studio.model import enabled_motors, project_from_dict  # noqa: E402
 from studio.cfgtools import cfg_parser, split_save, values_equal  # noqa: E402
 from studio.configset import ConfigSet, restart_kind  # noqa: E402
 from studio.importer import import_config  # noqa: E402
@@ -71,15 +73,29 @@ class TestBoards(unittest.TestCase):
     def test_detect_board_from_imported_pins(self):
         P, _ = import_config(read("simple_printer.cfg"), self.boards)
         self.assertEqual(P["board"], "bigtreetech-skr-mini-e3-v3.0")
-        self.assertEqual(P["tmc"]["y"]["uart_address"], "2")
+        self.assertEqual(P["motors"]["y"]["bus"]["uart_address"], "2")
+        self.assertEqual(P["motors"]["y"]["slot"], "stepper_y")
 
     def test_apply_keeps_inversion(self):
         P = new_params()
-        P["inv_z"] = True
+        P["motors"]["z"]["invert"] = True
+        P["motors"]["z1"]["enabled"] = True
         apply_board(P, self.boards["bigtreetech-skr-v1.4"], keep_inversion=True)
-        self.assertTrue(P["inv_z"])
-        self.assertEqual(P["pins"]["z1_step"], "P1.15")  # extruder1 slot
-        self.assertEqual(P["tmc"]["x"]["uart_pin"], "P1.10")
+        self.assertTrue(P["motors"]["z"]["invert"])
+        self.assertEqual(P["motors"]["z1"]["slot"], "extruder1")
+        self.assertEqual(P["motors"]["z1"]["step_pin"], "P1.15")
+        self.assertEqual(P["motors"]["x"]["bus"]["uart_pin"], "P1.10")
+
+    def test_any_motor_on_any_socket(self):
+        b = self.boards["bigtreetech-octopus-v1.1"]
+        P = new_params()
+        for mid in ("z1", "z2", "z3"):
+            P["motors"][mid]["enabled"] = True
+        apply_board(P, b)
+        used = [P["motors"][m]["slot"] for m in enabled_motors(P)]
+        self.assertEqual(len(used), len(set(used)))  # 7 motors on 7 different sockets
+        assign_slot(P, "e", b, "extruder3")
+        self.assertEqual(P["motors"]["e"]["step_pin"], slots(b)["extruder3"]["step_pin"])
 
 
 class TestMerge(unittest.TestCase):
@@ -91,7 +107,7 @@ class TestMerge(unittest.TestCase):
     def test_import_reads_save_config(self):
         self.assertAlmostEqual(self.P["pid_e_kp"], 21.527)
         self.assertAlmostEqual(self.P["pa"], 0.045)
-        self.assertEqual(self.P["driver"], "tmc2209")
+        self.assertEqual(self.P["motors"]["x"]["driver"], "tmc2209")
 
     def test_merge_keeps_user_lines(self):
         out = build(self.P, self.text, "merge")
@@ -146,6 +162,141 @@ class TestMerge(unittest.TestCase):
         self.assertIn("PC9", msgs)
 
 
+class TestMotorsAndDrivers(unittest.TestCase):
+    def setUp(self):
+        i18n.set_lang("en")
+        self.board = load_boards()["bigtreetech-octopus-v1.1"]
+        P = new_params()
+        P["probe"], P["probe_z"], P["pa"] = "inductive", 1.0, 0.04
+        P["mcu_serial"] = "/dev/serial/by-id/usb-Klipper_stm32f446xx_TEST-if00"
+        for mid in ("z1", "z2", "z3"):
+            P["motors"][mid]["enabled"] = True
+        apply_board(P, self.board)
+        P["pins"]["probe"] = "^PB7"
+        self.P = P
+
+    def gen(self):
+        return build(self.P, None, board=self.board)
+
+    def test_quad_z_generates_z_tilt_with_4_positions(self):
+        out = self.gen()
+        for sec in ("stepper_z1", "stepper_z2", "stepper_z3", "tmc2209 stepper_z3"):
+            self.assertIn("[%s]" % sec, out)
+        z_tilt = out.split("[z_tilt]")[1].split("\n[")[0]
+        self.assertEqual(z_tilt.split("points:")[0].count(","), 4)
+        self.assertEqual(errors(validate(self.P, out, self.board)), [])
+
+    def test_quad_gantry_level(self):
+        self.P["kinematics"], self.P["z_leveling"] = "corexy", "quad_gantry_level"
+        out = self.gen()
+        self.assertIn("[quad_gantry_level]", out)
+        self.assertNotIn("[z_tilt]", out)
+        self.P["motors"]["z3"]["enabled"] = False
+        self.assertTrue(any("exactly 4" in m for m in errors(validate(self.P, self.gen(), self.board))))
+
+    def test_sensorless_homing(self):
+        m = self.P["motors"]["x"]
+        m["sensorless"], m["sg"], m["hold_current"] = True, 90, 0.0
+        out = self.gen()
+        self.assertIn("endstop_pin: tmc2209_stepper_x:virtual_endstop", out)
+        self.assertIn("homing_retract_dist: 0", out)
+        tmc = out.split("[tmc2209 stepper_x]")[1].split("\n[")[0]
+        self.assertIn("diag_pin: ^", tmc)
+        self.assertIn("driver_SGTHRS: 90", tmc)
+        P2, _ = import_config(out)
+        self.assertTrue(P2["motors"]["x"]["sensorless"])
+        self.assertEqual(P2["motors"]["x"]["sg"], 90)
+        m["driver"] = "tmc2208"
+        self.assertTrue(any("StallGuard" in e for e in errors(validate(self.P, self.gen(), self.board))))
+
+    def test_mixed_drivers_and_features(self):
+        x = self.P["motors"]["x"]
+        x["driver"], x["bus"] = "tmc5160", {"cs_pin": "PC4", "spi_bus": "spi1"}
+        x["sense_resistor"], x["interpolate"], x["full_steps"] = 0.075, False, 400
+        x["autotune"], x["tuning_goal"] = "ldo-42sth48-2504ac", "performance"
+        out = self.gen()
+        tmc = out.split("[tmc5160 stepper_x]")[1].split("\n[")[0]
+        for line in ("cs_pin: PC4", "spi_bus: spi1", "sense_resistor: 0.075", "interpolate: False"):
+            self.assertIn(line, tmc)
+        self.assertIn("full_steps_per_rotation: 400", out)
+        self.assertIn("[autotune_tmc stepper_x]\nmotor: ldo-42sth48-2504ac\ntuning_goal: performance", out)
+        self.assertIn("[tmc2209 stepper_y]", out)
+        P2, _ = import_config(out)
+        self.assertEqual(P2["motors"]["x"]["driver"], "tmc5160")
+        self.assertEqual(P2["motors"]["x"]["full_steps"], 400)
+        self.assertEqual(P2["motors"]["x"]["autotune"], "ldo-42sth48-2504ac")
+
+    def test_socket_conflict_is_an_error(self):
+        self.P["motors"]["z3"]["slot"] = self.P["motors"]["z"]["slot"]
+        self.assertTrue(any("is used by both" in e for e in errors(validate(self.P, self.gen(), self.board))))
+
+    def test_addons_and_macros(self):
+        P = self.P
+        P["retraction"], P["idle_timeout_min"], P["host_temp"], P["mcu_temp"] = True, 30, True, True
+        P["print_macros"] = True
+        out = self.gen()
+        for s in ("[firmware_retraction]", "timeout: 1800", "sensor_type: temperature_host",
+                  "sensor_type: temperature_mcu", "[gcode_macro START_PRINT]", "BED_MESH_CALIBRATE ADAPTIVE=1",
+                  "Z_TILT_ADJUST", "[gcode_macro M600]"):
+            self.assertIn(s, out)
+        cfg_parser(out)
+        P2, _ = import_config(out)
+        self.assertTrue(P2["retraction"] and P2["host_temp"] and P2["mcu_temp"] and P2["print_macros"])
+        self.assertEqual(P2["idle_timeout_min"], 30)
+        lpc = load_boards()["bigtreetech-skr-v1.4"]
+        self.assertTrue(any("processors" in e for e in errors(validate(P, out, lpc))))
+
+    def test_user_macro_is_never_replaced(self):
+        base = read("simple_printer.cfg").replace("[gcode_macro HELLO]", "[gcode_macro START_PRINT]")
+        P, _ = import_config(base)
+        P["print_macros"] = True
+        out = build(P, base, "merge")
+        self.assertEqual(out.count("[gcode_macro START_PRINT]"), 1)
+        self.assertIn('RESPOND MSG="hello"', out)
+        self.assertIn("[gcode_macro END_PRINT]", out)
+        P2, _ = import_config(out)
+        P2["print_macros"] = False
+        out2 = build(P2, out, "merge")
+        self.assertIn("[gcode_macro START_PRINT]", out2)
+        self.assertNotIn("[gcode_macro END_PRINT]", out2)
+
+    def test_schema1_project_is_converted(self):
+        old = {"kind": "atgenx-klipper-studio", "version": "1.0.0-beta.1", "driver": "tmc2208", "dual_z": True,
+               "cur_z": 0.65, "inv_z": True, "rd_z": 8, "microsteps": 16, "hold_ratio": 0.5, "cur_xy": 0.8,
+               "pins": {"z1_step": "P1.15", "x_step": "P2.2", "fan": "P2.3"}, "tmc": {"z1": {"uart_pin": "P1.1"}}}
+        P = project_from_dict(old)
+        z1 = P["motors"]["z1"]
+        self.assertTrue(z1["enabled"] and z1["invert"])
+        self.assertEqual((z1["step_pin"], z1["driver"], z1["run_current"]), ("P1.15", "tmc2208", 0.65))
+        self.assertEqual(z1["bus"]["uart_pin"], "P1.1")
+        self.assertAlmostEqual(P["motors"]["x"]["hold_current"], 0.4)
+        self.assertEqual(P["pins"]["fan"], "P2.3")
+
+
+class TestDoctor(unittest.TestCase):
+    def test_common_errors_are_recognised(self):
+        samples = {
+            "mcu 'mcu': Unable to connect": "serial",
+            "Lost communication with MCU 'mcu'": "lost_comm",
+            "MCU 'mcu' shutdown: Timer too close": "timer",
+            "Unable to read tmc uart 'stepper_x' register IFCNT": "tmc_comm",
+            "ADC out of range": "adc",
+            "Heater extruder not heating at expected rate": "heater_rate",
+            "Endstop x still triggered after retract": "endstop_triggered",
+            "Probe triggered prior to movement": "probe_prior",
+            "Option 'uart_address' is not valid in section 'tmc2208 stepper_x'": "option_invalid",
+            "Section 'led_effect heating' is not a valid config section": "section_invalid",
+            "MCU temperature not supported on lpc1769": "mcu_temp",
+        }
+        for text, rid in samples.items():
+            self.assertIn(rid, [h[0] for h in diagnose(text)], text)
+
+    def test_log_config_dump_is_ignored(self):
+        log = ("Start printer at Mon\n===== Config file =====\n# ADC out of range happened once\n"
+               "=======================\nLost communication with MCU 'mcu'\n")
+        self.assertEqual([h[0] for h in diagnose(last_session(log))], ["lost_comm"])
+
+
 class TestConfigSet(unittest.TestCase):
     def load(self):
         folder = os.path.join(FIX, "modular")
@@ -172,8 +323,8 @@ class TestConfigSet(unittest.TestCase):
         cs = self.load()
         P, _ = import_config(cs.files["printer.cfg"], includes_text=cs.includes_text())
         self.assertEqual(P["kinematics"], "corexy")
-        self.assertEqual(P["microsteps"], 32)
-        self.assertEqual(P["pins"]["x_step"], "P2.2")
+        self.assertEqual(P["motors"]["x"]["microsteps"], 32)
+        self.assertEqual(P["motors"]["x"]["step_pin"], "P2.2")
 
     def test_restart_kind(self):
         self.assertEqual(restart_kind("printer.cfg"), "klipper")
@@ -193,7 +344,8 @@ class TestI18n(unittest.TestCase):
                         src = fh.read()
                     used |= set(re.findall(r"""tr\(\s*["']([a-z_0-9]+\.[a-z_0-9]+)["']""", src))
                     used |= set(re.findall(r"""\(\s*["']((?:note|val|pin)\.[a-z_0-9]+)["']""", src))
-        used = {k for k in used if not k.endswith("_")}  # dynamic prefixes like "up.busy_" + state
+        used = {k for k in used if not k.endswith(("_", "."))}  # dynamic prefixes like "up.busy_" + state
+        used |= {"doc.%s.%s" % (r[0], part) for r in RULES for part in ("title", "cause", "fix")}
         used |= {"up.busy_printing", "up.busy_paused", "state.printing", "state.paused"}
         missing = sorted(k for k in used if k not in i18n.STRINGS)
         self.assertEqual(missing, [])

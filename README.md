@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="docs/brand/logo-banner.png" width="820" alt="Klipper Studio">
+
 # ATGENX Klipper Studio
 
 **A desktop app that builds, checks and safely uploads your Klipper `printer.cfg`, without breaking what you already have.**
@@ -12,7 +14,7 @@
 
 [العربية](README.ar.md) · [Supported boards](docs/BOARDS.md) · [Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md)
 
-<img src="docs/screenshots/review-en.png" width="900" alt="Review and upload page">
+<img src="docs/screenshots/start-en.png" width="900" alt="Klipper Studio start page">
 
 </div>
 
@@ -49,9 +51,14 @@ checks the common mistakes, and uploads it through Moonraker with a backup.
 - **All config files.** Browse every file on the printer as an include tree: `moonraker.conf`, `crowsnest.conf`,
   KlipperScreen, add-ons. Click a section to jump to it, edit and save with the same safety rules. Only the
   service the file needs is restarted.
-- **Covers the full machine.** Cartesian and CoreXY, dual Z with `z_tilt` (probe points calculated so the probe can
-  reach them), inductive probe, BLTouch or endstop, bed mesh, TMC2208/2209/2130/5160/2240, input shaper for X/Y/Z,
-  filament sensor, NeoPixel with live heater and progress gauges, arcs, exclude object.
+- **Motors & drivers manager.** Every motor on its own driver socket with its own driver and settings: current,
+  microsteps, 0.9°/1.8° motors, stealthChop/spreadCycle, interpolation, sense resistor. Add X2/Y2 (AWD) or up to 4 Z
+  motors, mix TMC2209/2208/2130/5160/2240/2660 drivers, turn on **sensorless homing** and **TMC Autotune** (203 motors).
+- **Troubleshooter.** Reads Klipper's state and `klippy.log` and explains 31 common problems (Timer too close, TMC UART
+  errors, ADC out of range, heater rate, endstops, probes, unknown options...) with the cause and the fix.
+- **Covers the full machine.** Cartesian and CoreXY, `z_tilt` for 2-4 Z motors or `quad_gantry_level`, inductive probe,
+  BLTouch or endstop, bed mesh, input shaper for X/Y/Z, filament sensor, NeoPixel with live heater and progress gauges,
+  firmware retraction, temperature sensors, optional START_PRINT/END_PRINT/M600 macros with adaptive mesh.
 - **English and Arabic** (right-to-left) interface, switchable at any time.
 - **Command line** for automation and CI: `python -m studio check printer.cfg`.
 
@@ -60,8 +67,8 @@ checks the common mistakes, and uploads it through Moonraker with a backup.
 | Board | All config files |
 |---|---|
 | <img src="docs/screenshots/board-en.png" width="440"> | <img src="docs/screenshots/files-en.png" width="440"> |
-| **Motors & drivers** | **Arabic UI** |
-| <img src="docs/screenshots/motors-en.png" width="440"> | <img src="docs/screenshots/review-ar.png" width="440"> |
+| **Motors & drivers** | **Troubleshooter (Arabic UI)** |
+| <img src="docs/screenshots/motors-en.png" width="440"> | <img src="docs/screenshots/doctor-ar.png" width="440"> |
 
 ## Install
 
@@ -93,6 +100,7 @@ No printer yet? Build a config from scratch, save it with **Save to computer**, 
 python -m studio boards --mcu stm32f446          # boards using an MCU
 python -m studio check printer.cfg --out result  # import + merge + validate, writes result/printer.merge.cfg
 python -m studio generate my.studio.json -o printer.cfg --base printer.cfg
+python -m studio doctor klippy.log               # explain the errors in a Klipper log
 python -m studio --lang ar                       # start the app in Arabic
 ```
 
@@ -110,9 +118,9 @@ python -m studio --lang ar                       # start the app in Arabic
 
 ## Roadmap
 
-- Delta and other kinematics, 3/4-Z (`quad_gantry_level`, `z_tilt` with 3 motors)
+- Delta and other kinematics
 - Multiple extruders and toolchangers, CAN toolhead boards
-- Sensorless homing wizard, guided PID, `SHAPER_CALIBRATE` and pressure advance calibration
+- Guided sensorless tuning, PID, `SHAPER_CALIBRATE` and pressure advance calibration
 - Firmware build helper (generates the `make menuconfig` `.config`)
 - Packaged installers for Windows, macOS and Linux
 

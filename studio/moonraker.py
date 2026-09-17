@@ -103,6 +103,11 @@ class Moonraker:
         body = self._req("GET", "/server/files/config/" + urllib.parse.quote(name), raw=True)
         return body.decode("utf-8")
 
+    def download_log(self, name="klippy.log", max_bytes=3 * 1024 * 1024):
+        """Tail of a log file from Moonraker's logs root."""
+        body = self._req("GET", "/server/files/logs/" + urllib.parse.quote(name), raw=True, timeout=60)
+        return body[-max_bytes:].decode("utf-8", "replace")
+
     def list_config(self):
         return [f["path"] for f in self.get("/server/files/list?root=config")]
 
