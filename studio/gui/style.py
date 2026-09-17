@@ -15,8 +15,10 @@ QSplitter::handle { background: transparent; }
 QListWidget#nav::item { padding: 11px 16px; border-radius: 8px; margin: 2px 8px; color: #8b949e; }
 QListWidget#nav::item:selected { background: #1f6feb33; color: #e6edf3; border: none; }
 QListWidget#nav::item:hover { background: #1c2430; }
-QLabel#brand { font-size: 17px; font-weight: 700; padding: 16px 18px 2px; letter-spacing: 1px; }
-QLabel#sub { color: #8b949e; padding: 0 18px 12px; font-size: 11px; }
+QLabel#brand { font-size: 18px; font-weight: 700; padding: 0 4px; }
+QPushButton#card { background: #161b22; border: 1px solid #2b3441; border-radius: 12px; padding: 0; text-align: left; }
+QPushButton#card:hover { border-color: #3b8eea; background: #1a2230; }
+QLabel#sub { color: #8b949e; padding: 2px 18px 12px; font-size: 11px; }
 QLabel#title { font-size: 20px; font-weight: 600; padding: 4px 0; }
 QLabel#hint { color: #8b949e; }
 QLabel#card { background: #0d1117; border: 1px solid #2b3441; border-radius: 8px; padding: 10px; }

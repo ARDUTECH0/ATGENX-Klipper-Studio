@@ -2,6 +2,11 @@
 
 ## 1.0.0-beta.2 - 2026-09-17
 
+### Look & feel
+- New logo and app icon (window, taskbar, Windows .ico), README banner and GitHub social preview image
+- Start page with four clear choices: connect to a printer, set up a new printer, open a file, fix a problem
+- `run.bat` starts the app without a console window
+
 ### Motors & drivers
 - Every motor is configured on its own: driver socket, driver type, current, hold current, microsteps, rotation distance, step angle (0.9°/1.8°), stealthChop threshold, interpolation, sense resistor
 - Put any motor on any free driver socket; socket conflicts are reported

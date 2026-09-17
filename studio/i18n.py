@@ -758,3 +758,28 @@ STRINGS.update({
     "val.retraction_slicer": _t("Firmware retraction is on - enable 'Use firmware retraction' in the slicer",
                                 "السحب من الفيرموير مفعّل - فعّل 'Use firmware retraction' في السلايسر"),
 })
+
+# ---------- start page (1.0.0-beta.2) ----------
+STRINGS.update({
+    "nav.start": _t("🏠   Start", "🏠   البداية"),
+    "start.title": _t("Welcome to Klipper Studio", "أهلًا بيك في Klipper Studio"),
+    "start.subtitle": _t("Set up, check and fix your Klipper printer without editing config files by hand. Pick what you want to do:",
+                         "ظبّط وافحص وصلّح طابعة كليبر من غير ما تعدّل ملفات الإعداد بإيدك. اختار عايز تعمل إيه:"),
+    "start.printer_title": _t("I have a running Klipper printer", "عندي طابعة شغالة بكليبر"),
+    "start.printer_desc": _t("Connect over the network, import every setting and file, then change what you need.",
+                             "اتصل بيها على الشبكة، واستورد كل الإعدادات والملفات، وغيّر اللي محتاجه."),
+    "start.new_title": _t("Set up a new printer", "تجهيز طابعة جديدة"),
+    "start.new_desc": _t("Pick your board from 83 supported boards and build a complete printer.cfg step by step.",
+                         "اختار بوردتك من 83 بوردة مدعومة وابني printer.cfg كامل خطوة بخطوة."),
+    "start.open_title": _t("Open a printer.cfg file", "فتح ملف printer.cfg"),
+    "start.open_desc": _t("Work on a file from your computer - no printer needed.", "اشتغل على ملف من جهازك - من غير طابعة."),
+    "start.doctor_title": _t("Something is wrong", "فيه مشكلة"),
+    "start.doctor_desc": _t("Read Klipper's error and log, and get the cause and the fix.", "اقرا رسالة الخطأ واللوج بتاع كليبر، واعرف السبب والحل."),
+    "start.steps_title": _t("How it works", "بيشتغل إزاي"),
+    "start.step1": _t("Connect or open a file", "اتصل بالطابعة أو افتح ملف"),
+    "start.step2": _t("Choose your board", "اختار البورده"),
+    "start.step3": _t("Adjust motors, heaters, probe and extras", "ظبّط المحركات والسخانات والمسبار والإضافات"),
+    "start.step4": _t("Review the changes and upload", "راجع التغييرات وارفع"),
+    "start.safe": _t("Nothing changes on your printer until you press Upload. The app checks the file, refuses while printing and makes a backup first.",
+                     "مفيش حاجة بتتغير على طابعتك غير لما تضغط رفع. البرنامج بيفحص الملف، وبيرفض والطابعة بتطبع، وبياخد نسخة احتياطية الأول."),
+})

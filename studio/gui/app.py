@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 """Main window."""
+import os
 import sys
 import threading
 
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QAction
+from PySide6.QtGui import QAction, QIcon
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDoubleSpinBox, QFormLayout, QGroupBox,
                                QHBoxLayout, QLabel, QLineEdit, QListWidget, QListWidgetItem, QMainWindow,
                                QMessageBox, QPushButton, QScrollArea, QSizePolicy, QSpinBox, QStackedWidget,
                                QTableWidgetItem, QToolBar, QVBoxLayout, QWidget)
 
-from .. import APP_NAME, LICENSE_NAME, REPO_URL, SUPPORT_URL, __version__
+from .. import APP_NAME, ASSETS_DIR, LICENSE_NAME, REPO_URL, SUPPORT_URL, __version__
 from .. import i18n
 from ..appdata import load_settings, save_settings
 from ..i18n import tr
@@ -47,7 +48,14 @@ class Studio(PagesMixin, MotorsMixin, FilesMixin, DoctorMixin, ActionsMixin, QMa
         side.setFixedWidth(240)
         sl = QVBoxLayout(side)
         sl.setContentsMargins(0, 0, 0, 0)
-        sl.addWidget(QLabel("KLIPPER STUDIO", objectName="brand"))
+        brand = QHBoxLayout()
+        brand.setContentsMargins(16, 14, 12, 2)
+        logo = QLabel()
+        logo.setPixmap(QIcon(os.path.join(ASSETS_DIR, "icon.svg")).pixmap(40, 40))
+        brand.addWidget(logo)
+        name = QLabel("Klipper Studio", objectName="brand")
+        brand.addWidget(name, 1)
+        sl.addLayout(brand)
         sl.addWidget(QLabel(tr("app.tagline"), objectName="sub"))
         self.nav = QListWidget(objectName="nav")
         self.nav.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
@@ -313,8 +321,15 @@ class Studio(PagesMixin, MotorsMixin, FilesMixin, DoctorMixin, ActionsMixin, QMa
 def run(smoke=False):
     settings = load_settings()
     i18n.set_lang(settings.get("lang") or i18n.system_lang())
+    if os.name == "nt":  # own taskbar icon instead of Python's
+        try:
+            import ctypes
+            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("ATGENX.KlipperStudio")
+        except (AttributeError, OSError):
+            pass
     app = QApplication.instance() or QApplication(sys.argv)
     app.setApplicationName(APP_NAME)
+    app.setWindowIcon(QIcon(os.path.join(ASSETS_DIR, "icon.svg")))
     app.setLayoutDirection(Qt.RightToLeft if i18n.is_rtl() else Qt.LeftToRight)
     app.setStyleSheet(STYLE)
     P = new_params()

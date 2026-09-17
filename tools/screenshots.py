@@ -37,7 +37,7 @@ def main(lang="en"):
     win.show()
     out = os.path.join(ROOT, "docs", "screenshots")
     os.makedirs(out, exist_ok=True)
-    shots = {"page_board": "board", "page_probe": "probe", "page_preview": "review", "page_files": "files"}
+    shots = {"page_start": "start", "page_board": "board", "page_probe": "probe", "page_preview": "review", "page_files": "files"}
 
     def shot(builder, name):
         win.goto_page(builder)

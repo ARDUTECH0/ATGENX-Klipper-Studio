@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
 """Wizard pages."""
+import os
+
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import (QCheckBox, QComboBox, QHBoxLayout, QHeaderView, QLabel, QLineEdit,
+from PySide6.QtGui import QIcon
+from PySide6.QtWidgets import (QCheckBox, QComboBox, QGridLayout, QGroupBox, QHBoxLayout, QHeaderView, QLabel,
+                               QLineEdit, QVBoxLayout, QWidget,
                                QListWidget, QPlainTextEdit, QPushButton, QRadioButton, QTabWidget,
                                QTableWidget)
 
+from .. import ASSETS_DIR
 from ..boards import board_label, load_boards
 from ..i18n import tr
 from ..model import KINEMATICS, LED_ORDERS, PROBES, SHAPERS, THERMISTORS
@@ -12,11 +17,69 @@ from .widgets import CfgHighlighter, SearchCombo
 
 
 class PagesMixin:
-    PAGES = [("nav.connection", "page_connection"), ("nav.board", "page_board"),
+    PAGES = [("nav.start", "page_start"), ("nav.connection", "page_connection"), ("nav.board", "page_board"),
              ("nav.machine", "page_machine"), ("nav.motors", "page_motors"),
              ("nav.thermal", "page_thermal"), ("nav.probe", "page_probe"),
              ("nav.extras", "page_extras"), ("nav.pins", "page_pins"),
              ("nav.preview", "page_preview"), ("nav.files", "page_files"), ("nav.doctor", "page_doctor")]
+
+    def page_start(self):
+        w = QWidget(objectName="page")
+        v = QVBoxLayout(w)
+        v.setContentsMargins(0, 10, 8, 0)
+        v.setSpacing(14)
+        head = QHBoxLayout()
+        logo = QLabel()
+        logo.setPixmap(QIcon(os.path.join(ASSETS_DIR, "icon.svg")).pixmap(96, 96))
+        head.addWidget(logo)
+        titles = QVBoxLayout()
+        t = QLabel(tr("start.title"), objectName="title")
+        t.setStyleSheet("font-size:26px;")
+        titles.addWidget(t)
+        s = QLabel(tr("start.subtitle"), objectName="hint")
+        s.setWordWrap(True)
+        s.setStyleSheet("font-size:14px;")
+        titles.addWidget(s)
+        head.addLayout(titles, 1)
+        v.addLayout(head)
+
+        grid = QGridLayout()
+        grid.setSpacing(12)
+        cards = [("🔌", "start.printer", lambda: (self.goto_page("page_connection"), self.binds_by_key["host"].setFocus())),
+                 ("🆕", "start.new", lambda: self.goto_page("page_board")),
+                 ("📂", "start.open", self.act_open_cfg),
+                 ("🩺", "start.doctor", lambda: self.goto_page("page_doctor"))]
+        for i, (icon, key, fn) in enumerate(cards):
+            b = QPushButton(objectName="card")
+            b.setCursor(Qt.PointingHandCursor)
+            b.setMinimumHeight(104)
+            lay = QVBoxLayout(b)
+            lay.setContentsMargins(18, 14, 18, 14)
+            ttl = QLabel("%s   %s" % (icon, tr(key + "_title")))
+            ttl.setStyleSheet("font-size:16px; font-weight:600; background:transparent;")
+            dsc = QLabel(tr(key + "_desc"), objectName="hint")
+            dsc.setWordWrap(True)
+            dsc.setStyleSheet("background:transparent;")
+            for lab in (ttl, dsc):
+                lab.setAttribute(Qt.WA_TransparentForMouseEvents)
+                lay.addWidget(lab)
+            b.clicked.connect(lambda _=False, f=fn: f())
+            grid.addWidget(b, i // 2, i % 2)
+        v.addLayout(grid)
+
+        steps = QGroupBox(tr("start.steps_title"))
+        sl = QHBoxLayout(steps)
+        for n in range(1, 5):
+            lab = QLabel("<span style='font-size:22px;color:#3b8eea;font-weight:700'>%d</span><br>%s" % (n, tr("start.step%d" % n)))
+            lab.setWordWrap(True)
+            lab.setAlignment(Qt.AlignTop | Qt.AlignHCenter)
+            sl.addWidget(lab, 1)
+        v.addWidget(steps)
+        safe = QLabel("🛡️  " + tr("start.safe"), objectName="hint")
+        safe.setWordWrap(True)
+        v.addWidget(safe)
+        v.addStretch(1)
+        return w
 
     def page_connection(self):
         w, v = self._page(tr("connection.title"), tr("connection.hint"))

@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="docs/brand/logo-banner.png" width="820" alt="Klipper Studio">
+
 # ATGENX Klipper Studio
 
 **A desktop app that builds, checks and safely uploads your Klipper `printer.cfg`, without breaking what you already have.**
@@ -12,7 +14,7 @@
 
 [العربية](README.ar.md) · [Supported boards](docs/BOARDS.md) · [Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md)
 
-<img src="docs/screenshots/review-en.png" width="900" alt="Review and upload page">
+<img src="docs/screenshots/start-en.png" width="900" alt="Klipper Studio start page">
 
 </div>
 
