@@ -1029,3 +1029,10 @@ STRINGS.update({
     "map.issue_conflict_full": _t("Pin {pin} is used by {a} and {b}", "الرجل {pin} مستخدمة لـ {a} و {b}"),
     "map.issue_board_off": _t("[mcu {board}] is switched off", "[mcu {board}] مقفول"),
 })
+
+STRINGS.update({
+    "map.reset_layout": _t("Reset layout", "ترتيب تلقائي"),
+    "map.layout_reset": _t("Map layout reset", "اترتبت الخريطة تلقائيًا"),
+    "map.drag_hint": _t("Drag a device to move it · scroll to zoom · your arrangement is saved with the project",
+                        "اسحب أي جهاز عشان تحركه · عجلة الماوس للتكبير · الترتيب بيتحفظ مع المشروع"),
+})

@@ -87,6 +87,13 @@ checks the common mistakes, and uploads it through Moonraker with a backup.
 
 ## Install
 
+### Windows - no Python needed
+
+Download **KlipperStudio.exe** from the [latest release](../../releases/latest) and double-click it.
+Windows SmartScreen will warn that the file is unsigned (signing needs a paid certificate): **More info -> Run anyway**.
+
+### From source (any system)
+
 Requires **Python 3.9+** on Windows, Linux or macOS.
 
 ```bash
@@ -97,6 +104,8 @@ python -m studio
 ```
 
 Windows: double-click `run.bat`. Linux/macOS: `./run.sh`.
+
+Building the executable yourself: `python tools/build_exe.py --test` (see [RELEASING.md](RELEASING.md)).
 
 ## Quick start
 

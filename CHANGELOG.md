@@ -2,6 +2,12 @@
 
 ## 1.0.0-beta.4 - 2026-09-17
 
+### Ready-to-run executable
+- `python tools/build_exe.py --test` builds a single-file **KlipperStudio.exe** (~48 MB) with the 83 board files,
+  icons and the TMC motor list bundled, then checks that it starts, finds the boards and can import / merge /
+  validate a config. Windows users need neither Python nor Git.
+- [RELEASING.md](RELEASING.md) documents the steps for every version.
+
 ### Wiring map (new page)
 - Your board in the middle and every connected device around it - motors with their driver sockets, heaters,
   thermistors, fans, probe, filament sensor, LED strip, and any section you added yourself - with each line
@@ -12,6 +18,9 @@
 - Click a device to see and edit its pins, drag devices to arrange them, scroll to zoom.
 - **Add device** adds a motor, switches a feature on, or adds a section from the catalog.
 - **Export image** saves the diagram as a PNG - useful for documenting your printer or when asking for help.
+- Dragging a device moves its wires and pin labels live, boards can be dragged too, the arrangement is saved with
+  the project, and **Reset layout** puts everything back. Dotted grid, wheel zoom, and the selected device's wires
+  are highlighted.
 
 ## 1.0.0-beta.3 - 2026-09-17
 

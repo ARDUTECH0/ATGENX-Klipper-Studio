@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
-"""Wiring map: the board in the middle, every device around it, and the pin each one uses."""
+"""Wiring map: the board in the middle, every device around it, and the pin each one uses.
+
+Devices and boards can be dragged - the wires and their pin labels follow live, and the
+arrangement is remembered with the project.
+"""
 import os
 
 from PySide6.QtCore import QPointF, QRectF, Qt
@@ -8,10 +12,9 @@ from PySide6.QtWidgets import (QFileDialog, QFormLayout, QFrame, QGraphicsItem, 
                                QGraphicsSimpleTextItem, QGraphicsView, QHBoxLayout, QLabel, QLineEdit, QMenu,
                                QPushButton, QToolButton, QVBoxLayout, QWidget)
 
-from .. import APP_NAME
-from ..features import CATALOG, set_feature
+from ..features import CATALOG, feature_on, set_feature
 from ..i18n import tr
-from ..model import MOTOR_LABEL, OPTIONAL_MOTORS, PRIMARY
+from ..model import OPTIONAL_MOTORS
 from ..wiring import set_pin, wiring
 
 GROUP_COLOR = {"motors": "#58a6ff", "heat": "#ff7b54", "fans": "#4ad7d4", "sensors": "#d2a8ff",
@@ -20,48 +23,83 @@ NODE_W, LINE_H = 250, 15
 SIDE = {"motors": "left", "heat": "top", "fans": "right", "lights": "right", "sensors": "bottom", "other": "bottom"}
 
 
+class MapView(QGraphicsView):
+    """Graph view with a dotted grid, wheel zoom and drag-to-pan."""
+
+    def __init__(self, scene):
+        super().__init__(scene)
+        self.setRenderHints(QPainter.Antialiasing | QPainter.TextAntialiasing)
+        self.setDragMode(QGraphicsView.ScrollHandDrag)
+        self.setTransformationAnchor(QGraphicsView.AnchorUnderMouse)
+        self.setBackgroundBrush(QColor("#0b0f16"))
+
+    def drawBackground(self, painter, rect):
+        super().drawBackground(painter, rect)
+        step = 40
+        painter.setPen(QPen(QColor("#1b2230"), 1))
+        x0 = int(rect.left()) - int(rect.left()) % step
+        y0 = int(rect.top()) - int(rect.top()) % step
+        painter.drawPoints([QPointF(x, y) for x in range(x0, int(rect.right()), step)
+                            for y in range(y0, int(rect.bottom()), step)])
+
+    def wheelEvent(self, ev):
+        factor = 1.15 if ev.angleDelta().y() > 0 else 1 / 1.15
+        if 0.2 <= self.transform().m11() * factor <= 3.0:
+            self.scale(factor, factor)
+
+
 class NodeItem(QGraphicsItem):
-    def __init__(self, node, on_click):
+    def __init__(self, node, page):
         super().__init__()
-        self.node = node
-        self.on_click = on_click
-        self.setFlags(QGraphicsItem.ItemIsMovable | QGraphicsItem.ItemIsSelectable)
+        self.node, self.page = node, page
+        self.setFlags(QGraphicsItem.ItemIsMovable | QGraphicsItem.ItemIsSelectable |
+                      QGraphicsItem.ItemSendsGeometryChanges)
         self.setAcceptHoverEvents(True)
+        self.setCursor(Qt.OpenHandCursor)
         self.hover = False
         self.edges = []
-        self._h = 40 + LINE_H * max(1, len(node["pins"])) + (14 if node["note"] else 0)
+        self.h = 42 + LINE_H * max(1, len(node["pins"])) + (14 if node["note"] else 0)
 
     def boundingRect(self):
-        return QRectF(0, 0, NODE_W, self._h)
+        return QRectF(0, 0, NODE_W, self.h)
 
     def paint(self, p, _opt, _widget=None):
         n = self.node
         color = QColor(GROUP_COLOR.get(n["group"], "#8b949e"))
-        bad = bool(n["issues"])
+        bad, active = bool(n["issues"]), self.isSelected() or self.hover
         p.setRenderHint(QPainter.Antialiasing)
-        p.setBrush(QBrush(QColor("#161b22" if not n["off"] else "#12161d")))
-        pen = QPen(QColor("#f85149") if bad else (color if (self.isSelected() or self.hover) else QColor("#2b3441")))
-        pen.setWidth(2 if (bad or self.isSelected() or self.hover) else 1)
+        body = QPainterPath()
+        body.addRoundedRect(self.boundingRect().adjusted(1, 1, -1, -1), 10, 10)
+        p.setBrush(QBrush(QColor("#1b2230" if active else ("#161b22" if not n["off"] else "#12161d"))))
+        pen = QPen(QColor("#f85149") if bad else (color if active else QColor("#2b3441")))
+        pen.setWidth(2 if (bad or active) else 1)
         if n["off"]:
             pen.setStyle(Qt.DashLine)
         p.setPen(pen)
-        p.drawRoundedRect(self.boundingRect().adjusted(1, 1, -1, -1), 10, 10)
+        p.drawPath(body)
+        p.setClipPath(body)                       # colour stripe of its group
+        p.setPen(Qt.NoPen)
+        p.setBrush(color if not n["off"] else QColor("#30363d"))
+        p.drawRect(QRectF(1, 1, 4, self.h - 2))
+        p.setClipping(False)
+
         p.setPen(QColor("#e6edf3") if not n["off"] else QColor("#6e7681"))
         f = QFont("Segoe UI", 10)
         f.setBold(True)
         p.setFont(f)
-        p.drawText(QRectF(12, 8, NODE_W - 24, 20), Qt.AlignLeft | Qt.AlignVCenter, "%s  %s" % (n["icon"], n["label"]))
+        p.drawText(QRectF(16, 8, NODE_W - 28, 20), Qt.AlignLeft | Qt.AlignVCenter, "%s  %s" % (n["icon"], n["label"]))
         y = 30
         if n["note"]:
             p.setFont(QFont("Segoe UI", 8))
             p.setPen(QColor("#8b949e"))
-            p.drawText(QRectF(12, y, NODE_W - 24, 14), Qt.AlignLeft, n["note"] + (("  ·  " + tr("map.off")) if n["off"] else ""))
+            p.drawText(QRectF(16, y, NODE_W - 28, 14), Qt.AlignLeft,
+                       n["note"] + (("  ·  " + tr("map.off")) if n["off"] else ""))
             y += 14
         p.setFont(QFont("Consolas", 8))
         for pin in n["pins"]:
             p.setPen(QColor("#f85149") if pin.get("issue") else QColor("#b7c3d1"))
-            text = "%s: %s" % (pin["label"], pin["pin"] or "—")
-            p.drawText(QRectF(12, y, NODE_W - 24, LINE_H), Qt.AlignLeft | Qt.AlignVCenter, text)
+            p.drawText(QRectF(16, y, NODE_W - 28, LINE_H), Qt.AlignLeft | Qt.AlignVCenter,
+                       "%s: %s" % (pin["label"], pin["pin"] or "—"))
             y += LINE_H
 
     def anchor(self, side):
@@ -69,24 +107,34 @@ class NodeItem(QGraphicsItem):
         return {"left": QPointF(r.right(), r.center().y()), "right": QPointF(r.left(), r.center().y()),
                 "top": QPointF(r.center().x(), r.bottom()), "bottom": QPointF(r.center().x(), r.top())}[side]
 
-    def hoverEnterEvent(self, ev):
-        self.hover = True
+    def set_active(self, on):
+        self.hover = on
+        for edge in self.edges:
+            edge.set_active(on)
         self.update()
+
+    def hoverEnterEvent(self, ev):
+        self.set_active(True)
         super().hoverEnterEvent(ev)
 
     def hoverLeaveEvent(self, ev):
-        self.hover = False
-        self.update()
+        self.set_active(self.isSelected())
         super().hoverLeaveEvent(ev)
 
     def mousePressEvent(self, ev):
-        self.on_click(self.node)
+        self.setCursor(Qt.ClosedHandCursor)
+        self.page._map_select(self.node)
         super().mousePressEvent(ev)
+
+    def mouseReleaseEvent(self, ev):
+        self.setCursor(Qt.OpenHandCursor)
+        self.page._map_remember(self.node["id"], self.pos())
+        super().mouseReleaseEvent(ev)
 
     def itemChange(self, change, value):
         if change == QGraphicsItem.ItemPositionHasChanged:
             for edge in self.edges:
-                edge.retrace()
+                edge.retrace()            # wires and pin labels follow the device
         return super().itemChange(change, value)
 
 
@@ -95,6 +143,9 @@ class BoardItem(QGraphicsItem):
         super().__init__()
         self.board = board
         self.w, self.h = (300, 330) if board["main"] else (230, 120)
+        self.setFlags(QGraphicsItem.ItemIsMovable | QGraphicsItem.ItemSendsGeometryChanges)
+        self.setCursor(Qt.OpenHandCursor)
+        self.edges = []
 
     def boundingRect(self):
         return QRectF(0, 0, self.w, self.h)
@@ -126,10 +177,10 @@ class BoardItem(QGraphicsItem):
         if b["main"]:
             p.setFont(QFont("Segoe UI", 8))
             p.setPen(QColor("#6e7681"))
-            for label, rect in ((tr("map.side_motors"), QRectF(8, self.h / 2 - 8, 90, 16)),
-                                (tr("map.side_heat"), QRectF(self.w / 2 - 45, 118, 90, 16)),
-                                (tr("map.side_fans"), QRectF(self.w - 98, self.h / 2 - 8, 90, 16)),
-                                (tr("map.side_sensors"), QRectF(self.w / 2 - 45, self.h - 26, 90, 16))):
+            for label, rect in ((tr("map.side_motors"), QRectF(8, self.h / 2 - 8, 96, 16)),
+                                (tr("map.side_heat"), QRectF(self.w / 2 - 48, 120, 96, 16)),
+                                (tr("map.side_fans"), QRectF(self.w - 104, self.h / 2 - 8, 96, 16)),
+                                (tr("map.side_sensors"), QRectF(self.w / 2 - 48, self.h - 28, 96, 16))):
                 p.drawText(rect, Qt.AlignCenter, label)
 
     def port(self, side):
@@ -137,20 +188,44 @@ class BoardItem(QGraphicsItem):
         return {"left": QPointF(r.left(), r.center().y()), "right": QPointF(r.right(), r.center().y()),
                 "top": QPointF(r.center().x(), r.top()), "bottom": QPointF(r.center().x(), r.bottom())}[side]
 
+    def itemChange(self, change, value):
+        if change == QGraphicsItem.ItemPositionHasChanged:
+            for edge in self.edges:
+                edge.retrace()
+        return super().itemChange(change, value)
+
+    def mouseReleaseEvent(self, ev):
+        self.setCursor(Qt.OpenHandCursor)
+        super().mouseReleaseEvent(ev)
+
 
 class EdgeItem(QGraphicsPathItem):
-    def __init__(self, node_item, board_item, side, color, dashed, offset):
+    """A wire from a device to a board port, with the pin name riding on it."""
+
+    def __init__(self, node_item, board_item, side, color, dashed, offset, label_text=""):
         super().__init__()
         self.node_item, self.board_item, self.side, self.offset = node_item, board_item, side, offset
-        pen = QPen(QColor(color), 1.6)
-        pen.setCapStyle(Qt.RoundCap)
-        if dashed:
-            pen.setStyle(Qt.DashLine)
-            pen.setColor(QColor("#f85149"))
-        self.setPen(pen)
-        self.setZValue(-1)
+        self.color = QColor("#f85149") if dashed else QColor(color)
+        self.dashed = dashed
+        self.label = None
+        if label_text:
+            self.label = QGraphicsSimpleTextItem(label_text, self)
+            self.label.setFont(QFont("Consolas", 8))
         node_item.edges.append(self)
+        board_item.edges.append(self)
+        self.set_active(False)
         self.retrace()
+
+    def set_active(self, on):
+        pen = QPen(self.color, 2.6 if on else 1.6)
+        pen.setCapStyle(Qt.RoundCap)
+        if self.dashed:
+            pen.setStyle(Qt.DashLine)
+        self.setPen(pen)
+        self.setOpacity(1.0 if on else 0.85)
+        self.setZValue(0 if on else -1)
+        if self.label:
+            self.label.setBrush(self.color if (on or self.dashed) else QColor("#8b949e"))
 
     def retrace(self):
         a = self.node_item.anchor(self.side)
@@ -164,6 +239,9 @@ class EdgeItem(QGraphicsPathItem):
         path = QPainterPath(a)
         path.cubicTo(c1, c2, b)
         self.setPath(path)
+        if self.label:
+            mid = path.pointAtPercent(0.55)
+            self.label.setPos(mid.x() - self.label.boundingRect().width() / 2, mid.y() - 14)
 
 
 class MapMixin:
@@ -177,7 +255,8 @@ class MapMixin:
         add.setMenu(self.map_add_menu)
         self.map_add_menu.aboutToShow.connect(self._fill_map_menu)
         row.addWidget(add)
-        for text, fn in ((tr("map.fit"), self._map_fit), (tr("map.export"), self.act_map_export)):
+        for text, fn in ((tr("map.fit"), self._map_fit), (tr("map.reset_layout"), self.act_map_reset),
+                         (tr("map.export"), self.act_map_export)):
             b = QPushButton(text)
             b.clicked.connect(fn)
             row.addWidget(b)
@@ -191,16 +270,13 @@ class MapMixin:
             lab.setStyleSheet("color:%s;" % color)
             legend.addWidget(lab)
         legend.addStretch(1)
+        legend.addWidget(QLabel(tr("map.drag_hint"), objectName="hint"))
         v.addLayout(legend)
 
         body = QHBoxLayout()
         self.map_scene = QGraphicsScene()
-        self.map_view = QGraphicsView(self.map_scene)
-        self.map_view.setRenderHints(QPainter.Antialiasing | QPainter.TextAntialiasing)
-        self.map_view.setDragMode(QGraphicsView.ScrollHandDrag)
-        self.map_view.setBackgroundBrush(QColor("#0d1117"))
+        self.map_view = MapView(self.map_scene)
         self.map_view.setMinimumHeight(560)
-        self.map_view.wheelEvent = self._map_wheel
         body.addWidget(self.map_view, 1)
 
         side = QFrame(objectName="listBox")
@@ -223,7 +299,7 @@ class MapMixin:
         sl.addStretch(1)
         body.addWidget(side)
         v.addLayout(body, 1)
-        self._map_selected = None
+        self._map_selected, self._map_open_conn = None, None
         return w
 
     # ---------- drawing ----------
@@ -231,6 +307,7 @@ class MapMixin:
         if not hasattr(self, "map_scene"):
             return
         data = wiring(self.P, self.board(), self.current_text or "")
+        saved = self.P.setdefault("map_positions", {})
         self.map_scene.clear()
         self._map_nodes = {}
 
@@ -246,35 +323,32 @@ class MapMixin:
 
         by_side = {"left": [], "right": [], "top": [], "bottom": [], "extra": []}
         for n in data["nodes"]:
-            item = NodeItem(n, self._map_select)
+            item = NodeItem(n, self)
             self.map_scene.addItem(item)
             self._map_nodes[n["id"]] = item
             side = SIDE.get(n["group"], "bottom")
             if any((pin.get("board") or "mcu") != "mcu" for pin in n["pins"]):
                 side = "extra"
-            by_side[side].append((item, side))
+            by_side[side].append(item)
 
-        gap, margin = 18, 150
-        col_half = 0
+        gap, margin, col_half = 18, 150, 0
         for side in ("left", "right"):
-            items = [i for i, _s in by_side[side]]
-            total = sum(i._h for i in items) + gap * max(0, len(items) - 1)
+            items = by_side[side]
+            total = sum(i.h for i in items) + gap * max(0, len(items) - 1)
             col_half = max(col_half, total / 2)
             y = -total / 2
             x = -bx - margin - NODE_W if side == "left" else bx + margin
             for i in items:
                 i.setPos(x, y)
-                y += i._h + gap
-        clear = max(by, col_half) + margin          # rows must clear the motor / fan columns
+                y += i.h + gap
+        clear = max(by, col_half) + 90
         bottom_y = clear
         for side in ("top", "bottom", "extra"):
-            items = [i for i, _s in by_side[side]]
-            rows = [items[k:k + 4] for k in range(0, len(items), 4)]
+            rows = [by_side[side][k:k + 4] for k in range(0, len(by_side[side]), 4)]
             for r, row in enumerate(rows):
-                row_h = max([i._h for i in row] or [0])
-                if side == "extra":                  # under the right column, next to its own board
-                    x = bx + margin
-                    y = bottom_y + gap * 4 + r * (row_h + gap)
+                row_h = max([i.h for i in row] or [0])
+                if side == "extra":
+                    x, y = bx + margin, bottom_y + gap * 4 + r * (row_h + gap)
                 else:
                     x = -(len(row) * NODE_W + gap * max(0, len(row) - 1)) / 2
                     y = (-clear - row_h - r * (row_h + gap)) if side == "top" else (clear + r * (row_h + gap))
@@ -284,8 +358,7 @@ class MapMixin:
                 if side == "bottom":
                     bottom_y = max(bottom_y, y + row_h)
 
-        # the extra boards sit next to the devices that use them
-        ex = [i for i, _s in by_side["extra"]]
+        ex = by_side["extra"]
         x_extra = bx + margin + NODE_W + 220
         for b in data["boards"]:
             if b["main"]:
@@ -295,26 +368,24 @@ class MapMixin:
             item.setPos(x_extra, y - item.h / 2 + 40)
             x_extra += item.w + 60
 
+        for nid, item in self._map_nodes.items():          # the user's own arrangement wins
+            if nid in saved:
+                item.setPos(QPointF(*saved[nid]))
+
         for nid, item in self._map_nodes.items():
             n = item.node
             side = "right" if item.x() > 0 else "left" if item.x() + NODE_W < 0 else \
                    ("top" if item.y() < 0 else "bottom")
-            visible = [pin for pin in n["pins"] if not pin["role"].startswith("bus:")]
+            labelled = [pin for pin in n["pins"] if not pin["role"].startswith("bus:")]
             for k, pin in enumerate(n["pins"]):
                 target = boards.get(pin.get("board") or "", main)
                 if target is None:
                     continue
                 offset = (k - (len(n["pins"]) - 1) / 2) * 9
                 edge_side = side if target is main else ("right" if item.x() < target.x() else "left")
-                EdgeItem(item, target, edge_side, GROUP_COLOR.get(n["group"], "#8b949e"),
-                         bool(pin.get("issue")), offset)
-                if pin in visible and len(visible) <= 4:
-                    label = QGraphicsSimpleTextItem(pin["pin"] or "—")
-                    label.setFont(QFont("Consolas", 8))
-                    label.setBrush(QColor("#f85149") if pin.get("issue") else QColor("#8b949e"))
-                    a, b2 = item.anchor(edge_side), target.port(edge_side)
-                    label.setPos((a.x() + b2.x()) / 2 - 20, (a.y() + b2.y()) / 2 - 14 + offset)
-                    self.map_scene.addItem(label)
+                text = (pin["pin"] or "—") if (pin in labelled and len(labelled) <= 2) else ""
+                self.map_scene.addItem(EdgeItem(item, target, edge_side, GROUP_COLOR.get(n["group"], "#8b949e"),
+                                                bool(pin.get("issue")), offset, text))
 
         bad = sum(1 for n in data["nodes"] if n["issues"])
         self.map_status.setText(tr("map.status", devices=len(data["nodes"]), boards=len(data["boards"]), problems=bad))
@@ -331,17 +402,23 @@ class MapMixin:
         self.map_view.resetTransform()
         view = self.map_view.viewport().rect()
         if rect.width() and rect.height():
-            scale = min(view.width() / rect.width(), view.height() / rect.height())
-            scale = max(0.35, min(scale, 1.0))   # never so small that the labels are unreadable
+            scale = max(0.35, min(min(view.width() / rect.width(), view.height() / rect.height()), 1.0))
             self.map_view.scale(scale, scale)
             self.map_view.centerOn(0, 0)
 
-    def _map_wheel(self, ev):
-        factor = 1.15 if ev.angleDelta().y() > 0 else 1 / 1.15
-        self.map_view.scale(factor, factor)
+    def _map_remember(self, node_id, pos):
+        self.P.setdefault("map_positions", {})[node_id] = [round(pos.x(), 1), round(pos.y(), 1)]
+
+    def act_map_reset(self):
+        self.P["map_positions"] = {}
+        self._fill_map()
+        self._log(tr("map.layout_reset"))
 
     # ---------- selection ----------
     def _map_select(self, node):
+        for nid, item in self._map_nodes.items():
+            item.setSelected(nid == node["id"])
+            item.set_active(nid == node["id"])
         self._map_selected = node["id"]
         self.map_sel_title.setText("%s  %s" % (node["icon"], node["label"]))
         notes = list(node["issues"]) or ([node["note"]] if node["note"] else [])
@@ -359,12 +436,11 @@ class MapMixin:
                     lambda nid=node["id"], role=pin["role"], e=edit: self._map_set_pin(nid, role, e.text()))
             self.map_form.addRow(pin["label"], edit)
         self.map_open_btn.setVisible(True)
-        if getattr(self, "_map_open_conn", None) is not None:
+        if self._map_open_conn is not None:
             self.map_open_btn.clicked.disconnect(self._map_open_conn)
-        page = node["page"]
+        page = node["page"] if editable else "page_files"
         self.map_open_btn.setText(tr("map.open_page") if editable else tr("map.open_files"))
-        self._map_open_conn = self.map_open_btn.clicked.connect(
-            lambda: self.goto_page("page_files" if not editable else page))
+        self._map_open_conn = self.map_open_btn.clicked.connect(lambda: self.goto_page(page))
 
     def _map_set_pin(self, node_id, role, value):
         if set_pin(self.P, node_id, role, value):
@@ -377,21 +453,19 @@ class MapMixin:
         m.clear()
         for mid in OPTIONAL_MOTORS:
             if not self.P["motors"][mid]["enabled"]:
-                a = m.addAction("⚙️  " + tr("motors.add_" + mid))
-                a.triggered.connect(lambda _=False, x=mid: self._map_add_motor(x))
+                m.addAction("⚙️  " + tr("motors.add_" + mid)).triggered.connect(
+                    lambda _=False, x=mid: self._map_add_motor(x))
         m.addSeparator()
         for fid in ("probe", "leds", "fil_sensor", "sensorless"):
-            from ..features import feature_on
             if not feature_on(self.P, fid):
-                a = m.addAction("＋  " + tr("feat.%s.title" % fid))
-                a.triggered.connect(lambda _=False, f=fid: self._map_add_feature(f))
+                m.addAction("＋  " + tr("feat.%s.title" % fid)).triggered.connect(
+                    lambda _=False, f=fid: self._map_add_feature(f))
         m.addSeparator()
         for cid in ("adxl_pico", "adxl_board", "chamber_sensor", "case_light", "controller_fan", "button"):
-            a = m.addAction("%s  %s" % (CATALOG[cid][0], tr("cat.%s.title" % cid)))
-            a.triggered.connect(lambda _=False, c=cid: self._map_add_catalog(c))
+            m.addAction("%s  %s" % (CATALOG[cid][0], tr("cat.%s.title" % cid))).triggered.connect(
+                lambda _=False, c=cid: self._map_add_catalog(c))
         m.addSeparator()
-        a = m.addAction("🗂️  " + tr("map.more_features"))
-        a.triggered.connect(lambda: self.goto_page("page_features"))
+        m.addAction("🗂️  " + tr("map.more_features")).triggered.connect(lambda: self.goto_page("page_features"))
 
     def _map_add_motor(self, mid):
         self.act_add_motor(mid)
@@ -413,7 +487,7 @@ class MapMixin:
     def act_map_export(self):
         rect = self.map_scene.itemsBoundingRect().adjusted(-30, -30, 30, 30)
         img = QImage(int(rect.width() * 2), int(rect.height() * 2), QImage.Format_ARGB32)
-        img.fill(QColor("#0d1117"))
+        img.fill(QColor("#0b0f16"))
         p = QPainter(img)
         p.setRenderHints(QPainter.Antialiasing | QPainter.TextAntialiasing)
         self.map_scene.render(p, target=QRectF(img.rect()), source=rect)

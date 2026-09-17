@@ -16,3 +16,4 @@ else:
 
 BOARDS_DIR = os.path.join(ROOT, "boards")
 ASSETS_DIR = os.path.join(ROOT, "studio", "assets")
+DATA_DIR = os.path.join(ROOT, "studio", "data")
