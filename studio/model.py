@@ -118,6 +118,9 @@ def new_params():
     p = OrderedDict((k, v) for k, v in DEFAULTS.items())
     p["pins"] = OrderedDict((k, "") for k in PIN_ROLES)
     p["motors"] = OrderedDict((m, new_motor(m)) for m in MOTOR_IDS)
+    p["custom_sections"] = []      # [{"id", "text", "enabled"}] added from the feature catalog
+    p["disabled_sections"] = []    # sections of the current file to comment out
+    p["enabled_sections"] = []     # commented-out sections of the current file to switch back on
     return p
 
 
@@ -193,6 +196,9 @@ def project_from_dict(data):
     for k, v in (data.get("pins") or {}).items():
         if k in P["pins"]:
             P["pins"][k] = str(v)
+    for key in ("custom_sections", "disabled_sections", "enabled_sections"):
+        if isinstance(data.get(key), list):
+            P[key] = data[key]
     if isinstance(data.get("motors"), dict):
         for mid, m in data["motors"].items():
             if mid in P["motors"] and isinstance(m, dict):

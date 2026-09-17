@@ -32,8 +32,15 @@ def read(*parts):
         return f.read()
 
 
+def page_builders():
+    """Page builder names from the GUI source (without importing Qt)."""
+    with io.open(os.path.join(os.path.dirname(HERE), "studio", "gui", "pages.py"), encoding="utf-8") as fh:
+        src = fh.read()
+    return re.findall(r'\("nav\.[a-z]+", "(page_[a-z]+)"\)', src)
+
+
 def errors(R):
-    return [m for k, m in R if k == "error"]
+    return [r[1] for r in R if r[0] == "error"]
 
 
 class TestCfgTools(unittest.TestCase):
@@ -295,6 +302,128 @@ class TestDoctor(unittest.TestCase):
         log = ("Start printer at Mon\n===== Config file =====\n# ADC out of range happened once\n"
                "=======================\nLost communication with MCU 'mcu'\n")
         self.assertEqual([h[0] for h in diagnose(last_session(log))], ["lost_comm"])
+
+
+class TestHelpAndLayout(unittest.TestCase):
+    def test_every_setting_has_help_in_every_language(self):
+        from studio.help import HELP, PAGE_GUIDE
+        root = os.path.join(os.path.dirname(HERE), "studio", "gui")
+        keys = set()
+        for f in os.listdir(root):
+            if f.endswith(".py"):
+                with io.open(os.path.join(root, f), encoding="utf-8") as fh:
+                    src = fh.read()
+                keys |= set(re.findall(r'self\.(?:spin|check|combo|line|_multi_line)\("([a-z_0-9]+)"', src))
+                keys |= set(re.findall(r'register_help\([^,]+, "([a-z_0-9.]+)"', src))
+                keys |= set(re.findall(r'"(motor\.[a-z_]+)"', src))
+        self.assertGreater(len(keys), 60)
+        self.assertEqual(sorted(k for k in keys if k not in HELP), [])
+        for key, h in HELP.items():
+            self.assertTrue(h["en"] and h["ar"], key)
+            self.assertIn(h["page"], PAGE_GUIDE, key)
+        self.assertEqual([b for b in page_builders() if b not in PAGE_GUIDE], [])
+
+    def test_checks_point_to_a_page(self):
+        from studio.validate import check_page
+        pages = set(page_builders())
+        with io.open(os.path.join(os.path.dirname(HERE), "studio", "validate.py"), encoding="utf-8") as fh:
+            src = fh.read()
+        for key in set(re.findall(r'"(val\.[a-z_0-9]+)"', src)):
+            self.assertIn(check_page(key), pages, key)
+        self.assertEqual(check_page("val.slot_conflict"), "page_motors")
+        self.assertEqual(check_page("val.parse_ok"), "page_files")
+        self.assertEqual(check_page("val.pa_zero"), "page_thermal")
+
+    def test_new_file_is_grouped_and_explained_without_duplicates(self):
+        i18n.set_lang("en")
+        text = read("simple_printer.cfg")
+        P, _ = import_config(text)
+        once = build(P, text, "full", keep_custom=True)
+        twice = build(import_config(once)[0], once, "full", keep_custom=True)
+        for out in (once, twice):
+            self.assertEqual(out.count("#  Motors and drivers"), 1)
+            self.assertEqual(out.count("# Connection to the controller board"), 1)
+            self.assertIn("[gcode_macro HELLO]", out)
+            cfg_parser(out)
+        main = split_save(once)[0]
+        self.assertLess(main.index("[mcu]"), main.index("[printer]"))
+        self.assertLess(main.index("[printer]"), main.index("[stepper_x]"))
+        self.assertLess(main.index("[extruder]"), main.index("[virtual_sdcard]"))
+
+    def test_merge_explains_only_new_sections(self):
+        i18n.set_lang("en")
+        text = read("simple_printer.cfg")
+        P, _ = import_config(text)
+        P["retraction"] = True
+        out = build(P, text, "merge")
+        self.assertIn("# Firmware retraction for G10/G11", out)
+        self.assertNotIn("# Connection to the controller board", out)  # existing sections get no new comments
+
+
+class TestFeatures(unittest.TestCase):
+    def setUp(self):
+        i18n.set_lang("en")
+
+    def test_every_feature_and_catalog_item_is_translated(self):
+        from studio.features import BUILTIN, CATALOG
+        cats = {spec[1] for spec in BUILTIN.values()} | {spec[1] for spec in CATALOG.values()}
+        keys = ["feat.%s.%s" % (f, p) for f in BUILTIN for p in ("title", "desc")]
+        keys += ["cat.%s.%s" % (c, p) for c in CATALOG for p in ("title", "desc")]
+        keys += ["fcat." + c for c in cats]
+        self.assertEqual([k for k in keys if k not in i18n.STRINGS], [])
+
+    def test_dependencies_are_switched_together(self):
+        from studio.features import feature_on, set_feature
+        P = new_params()
+        changed = set_feature(P, "adaptive_mesh", True)
+        self.assertTrue(feature_on(P, "probe") and P["print_macros"] and P["exclude_object"] and P["adaptive_mesh"])
+        self.assertIn("probe", changed)
+        set_feature(P, "probe", False)
+        self.assertFalse(feature_on(P, "adaptive_mesh"))
+        set_feature(P, "led_effects", True)
+        self.assertTrue(P["leds"] and P["led_effects"])
+        set_feature(P, "multi_z", True)
+        self.assertTrue(P["motors"]["z1"]["enabled"] and P["probe"] != "none")
+
+    def test_catalog_templates_are_valid_klipper_config(self):
+        from studio.features import CATALOG, fill_template, section_names
+        P = new_params()
+        for cid, spec in CATALOG.items():
+            text = fill_template(P, spec[3])
+            self.assertTrue(section_names(text), cid)
+            cfg_parser(text)
+
+    def test_switch_sections_off_and_on_again(self):
+        from studio.features import apply_section_toggles, list_sections
+        from studio.merge import is_managed
+        text = read("simple_printer.cfg").replace("#*# <", "#[adxl345]\n#cs_pin: rpi:None\n# # an inner note\n#spi_speed: 2000000\n\n#*# <", 1)
+        P, _ = import_config(text)
+        secs = dict(list_sections(text, lambda n: is_managed(n, P)))
+        self.assertTrue(secs["gcode_macro HELLO"])
+        self.assertFalse(secs["adxl345"])
+        on = apply_section_toggles(text, disable=["gcode_macro HELLO"], enable=["adxl345"])
+        c = cfg_parser(split_save(on)[0])
+        self.assertEqual(c.get("adxl345", "spi_speed"), "2000000")
+        self.assertFalse(c.has_section("gcode_macro HELLO"))
+        self.assertIn('#    RESPOND MSG="hello"', on)
+        back = apply_section_toggles(on, disable=["adxl345"], enable=["gcode_macro HELLO"])
+        c2 = cfg_parser(split_save(back)[0])
+        self.assertTrue(c2.has_section("gcode_macro HELLO") and not c2.has_section("adxl345"))
+
+    def test_added_features_and_missing_mcu_check(self):
+        from studio.features import CATALOG, fill_template
+        text = read("simple_printer.cfg")
+        P, _ = import_config(text)
+        P["custom_sections"] = [{"id": "adxl_pico", "text": fill_template(P, CATALOG["adxl_pico"][3]), "enabled": True},
+                                {"id": "skew_correction", "text": "[skew_correction]", "enabled": False}]
+        out = build(P, text, "merge")
+        self.assertIn("[mcu adxl]", out)
+        self.assertNotIn("[skew_correction]", out)
+        self.assertLess(out.index("[adxl345]"), out.index("SAVE_CONFIG"))
+        self.assertEqual(build(import_config(out)[0], out, "merge").count("[adxl345]"), 1)
+        P["custom_sections"][0]["text"] = "[adxl345]\ncs_pin: pico:gpio1\n"
+        msgs = errors(validate(P, build(P, text, "merge")))
+        self.assertTrue(any("mcu pico" in m for m in msgs), msgs)
 
 
 class TestConfigSet(unittest.TestCase):

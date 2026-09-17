@@ -7,6 +7,7 @@ from datetime import datetime
 from . import APP_NAME, __version__
 from .cfgtools import body_items, clean_save, item_value, parse_blocks, split_save, values_equal
 from .generator import APP_MACROS, LED_EFFECTS, MACRO_MARK, generate, soft_keys
+from .features import apply_section_toggles, section_names
 from .i18n import tr
 
 # Sections the app is responsible for. If one of them exists in the file but is
@@ -103,6 +104,73 @@ def merge_section(existing, generated, name):
     return out
 
 
+# ---------------------------------------------------------------- file layout & explanations
+CATEGORIES = ("board", "motion", "motors", "heat", "probe", "lights", "extras", "macros")
+BOARD_EXTRA_TYPES = ("static_digital_output", "output_pin", "mcp4018", "mcp4451", "mcp4728", "ad5206", "dac084",
+                     "adc_scaled", "replicape", "sx1509", "pca9533", "controller_fan", "thermistor", "temperature_fan")
+CATEGORY_OF = {"mcu": "board", "board_extra": "board", "printer": "motion", "stepper": "motors", "tmc": "motors",
+               "autotune": "motors", "extruder": "heat", "heater_bed": "heat", "verify_heater": "heat", "fan": "heat",
+               "heater_fan": "heat", "probe": "probe", "bltouch": "probe", "safe_z_home": "probe", "bed_mesh": "probe",
+               "z_tilt": "probe", "quad_gantry_level": "probe", "neopixel": "lights", "led_effect": "lights",
+               "gcode_macro": "macros"}
+
+
+def section_type(name):
+    t = name.split()[0]
+    if t.startswith("stepper_"):
+        return "stepper"
+    if t.startswith("tmc"):
+        return "tmc"
+    if t == "autotune_tmc":
+        return "autotune"
+    if t in BOARD_EXTRA_TYPES:
+        return "board_extra"
+    return t
+
+
+def section_category(name):
+    return CATEGORY_OF.get(section_type(name), "extras")
+
+
+def section_doc(name, previous=None):
+    """Comment lines explaining a generated section (once for a run of the same type)."""
+    t = section_type(name)
+    if previous is not None and section_type(previous) == t and t not in ("stepper", "tmc"):
+        return []
+    text = tr("cfgdoc." + t)
+    return [] if text == "cfgdoc." + t else ["# " + text]
+
+
+def banner(category):
+    return ["", "#" * 72, "#  " + tr("cfgcat." + category), "#" * 72]
+
+
+def generated_comment_lines():
+    """Every comment line the app itself writes (in any language)."""
+    from .i18n import LANGS, STRINGS
+    out = {"#" * 72}
+    for key, entry in STRINGS.items():
+        if key.startswith(("cfgdoc.", "cfgcat.", "cfg.")):
+            for lang in LANGS:
+                out.add("# " + entry[lang])
+                out.add("#  " + entry[lang])
+    return out
+
+
+def layout_sections(gen):
+    """Generated sections grouped by category, with a banner per group and an explanation per section."""
+    names = sorted(gen, key=lambda s: CATEGORIES.index(section_category(s)))
+    lines, cat, prev = [], None, None
+    for name in names:
+        c = section_category(name)
+        if c != cat:
+            lines += banner(c)
+            cat, prev = c, None
+        lines += [""] + section_doc(name, prev) + gen[name].split("\n")
+        prev = name
+    return lines
+
+
 def header(P, ts):
     return "\n".join([
         "#" * 72,
@@ -111,20 +179,46 @@ def header(P, ts):
         "#",
         "#  " + tr("cfg.header_line1"),
         "#  " + tr("cfg.header_line2"),
+        "#  " + tr("cfg.header_line3"),
         "#" * 72,
     ])
+
+
+def added_features(P, existing_text):
+    """Lines for the enabled catalog / custom sections that are not in the file yet."""
+    existing = set(section_names(split_save(existing_text or "")[0]))
+    lines = []
+    for item in P.get("custom_sections", []):
+        text = (item.get("text") or "").strip("\n")
+        names = section_names(text)
+        if not item.get("enabled", True) or not names or any(nm in existing for nm in names):
+            continue
+        lines += ["", "# " + tr("cfgdoc.custom")] + text.split("\n")
+        existing.update(names)
+    return lines
+
+
+def _append_before_save(text, lines):
+    if not lines:
+        return text
+    main, save = split_save(text)
+    main = main.rstrip("\n") + "\n" + "\n".join(lines) + "\n"
+    return main + ("\n" + save if save else "")
 
 
 def build(P, current_text=None, mode="merge", keep_custom=True, board=None):
     gen = generate(P, board)
     ts = datetime.now().strftime("%Y-%m-%d %H:%M")
     if not current_text:
-        parts = [header(P, ts), ""] + [b + "\n" for b in gen.values()]
-        return "\n".join(parts).rstrip("\n") + "\n"
+        text = "\n".join([header(P, ts)] + layout_sections(gen)).rstrip("\n") + "\n"
+        return _append_before_save(text, added_features(P, text))
 
+    # features switched on / off on the Features page (comment / uncomment, never delete)
+    current_text = apply_section_toggles(current_text.replace("\r\n", "\n"),
+                                         P.get("disabled_sections", ()), P.get("enabled_sections", ()))
     if P["kinematics"] not in SUPPORTED_KINEMATICS:
         # delta, polar, winch ... - never rewrite a machine the app can't model
-        return current_text.replace("\r\n", "\n")
+        return _append_before_save(current_text, added_features(P, current_text))
 
     main, save = split_save(current_text)
     head, blocks = parse_blocks(main)
@@ -152,22 +246,25 @@ def build(P, current_text=None, mode="merge", keep_custom=True, board=None):
                     lines += b["lead"]
             else:
                 lines += b["lead"] + b["body"]
-        new = [gen[k] for k in gen if k not in used]
+        new = [k for k in gen if k not in used]
         if new:
-            add = []
-            for g in new:
-                add += [""] + g.split("\n")
+            add, prev = [], None
+            for k in new:
+                add += [""] + section_doc(k, prev) + gen[k].split("\n")
+                prev = k
             at = len(head) if insert_at is None else insert_at
             lines[at:at] = add + [""]
         text = "\n".join(lines).rstrip("\n") + "\n"
     else:
-        parts = [header(P, ts), ""] + [g + "\n" for g in gen.values()]
+        parts = [header(P, ts)] + layout_sections(gen) + [""]
         if keep_custom:
             kept = [b for b in blocks if not is_managed(b["name"], P, b["body"]) and b["name"] not in gen]
             if kept:
+                ours = generated_comment_lines()
                 parts += ["#" * 72, "#  " + tr("cfg.kept_sections"), "#" * 72, ""]
-                parts += ["\n".join(b["lead"] + b["body"]).strip("\n") + "\n" for b in kept]
+                parts += ["\n".join([l for l in b["lead"] if l.strip() not in ours] + b["body"]).strip("\n") + "\n"
+                          for b in kept]
         text = re.sub(r"\n{4,}", "\n\n\n", "\n".join(parts)).rstrip("\n") + "\n"
     if save:
         text += "\n" + save
-    return text
+    return _append_before_save(text, added_features(P, text))

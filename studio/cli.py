@@ -55,10 +55,10 @@ def _report(P, text, out, board):
     print("  macros     %d -> %d" % (len(re.findall(r"^\[gcode_macro ", old_main, re.M)),
                                       len(re.findall(r"^\[gcode_macro ", new_main, re.M))))
     print("  SAVE_CONFIG %s" % re.findall(r"^#\*# \[([^\]]+)\]", new_save, re.M))
-    for kind, msg in R:
+    for kind, msg, _page in R:
         if kind != "ok" or msg.startswith(("Mesh", "منطقة")):
             print("  %s %s" % (ICONS[kind], msg))
-    return sum(1 for k, _ in R if k == "error")
+    return sum(1 for r in R if r[0] == "error")
 
 
 def cmd_check(a):

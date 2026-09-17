@@ -1,5 +1,36 @@
 # Changelog
 
+## 1.0.0-beta.3 - 2026-09-17
+
+### Features you can switch on and off
+- New **Features** page with three parts:
+  - **Built-in**: a switch per feature (probe, multiple Z, adaptive mesh, sensorless homing, AWD, TMC Autotune,
+    input shaper, retraction, arcs, exclude object, print macros, filament sensor, LEDs, temperatures, idle timeout).
+    Turning one on also turns on what it needs, and turning that off turns the dependent features off.
+  - **In your file**: every section of your printer.cfg with a switch. Off comments the section out with `#`,
+    on removes the `#` again - nothing is ever deleted. Sections you had already commented out show up as off.
+  - **Add a feature**: a catalog of 22 well-known sections and plugins (Mainsail/Fluidd macros, Timelapse,
+    Shake&Tune, ADXL345 on Pi/Pico/board, skew correction, axis twist, bed screws helpers, save variables,
+    force move, filament motion sensor, electronics and chamber fans, chamber sensor, case light, beeper,
+    G-code button, servo, or a blank section) with an editable template, added at the end of printer.cfg.
+- Check: a pin like `pico:gpio1` whose `[mcu pico]` is switched off is reported before upload.
+
+### Explanations everywhere
+- **Help panel** next to the pages: what the page is for, and for the setting under the mouse what it does,
+  typical values and the exact place it takes in printer.cfg. Tooltips everywhere, and it can be hidden.
+- **Sidebar badges**: each page shows how many errors or warnings it has, and clicking a check on
+  Review & upload opens the page that fixes it.
+- **The generated file explains itself**: sections grouped under headings (board, motion, motors, heaters,
+  probe and leveling, lights, extras, macros) with a one-line explanation above each section. Your own
+  comments and sections are still untouched.
+- **User guide** in English and Arabic (`docs/GUIDE.md`, `docs/GUIDE.ar.md`), generated from the same help
+  source the app uses: install, the screen, seven common tasks, every page and setting, the feature catalog,
+  file layout, safety and FAQ. Reachable from the app toolbar.
+
+### Other
+- Support link (Buy me a coffee) in the app, the README and the repository
+- Tests: 36 unit tests, all 206 Klipper example configs, and 36 end-to-end checks against a fake Moonraker
+
 ## 1.0.0-beta.2 - 2026-09-17
 
 ### Look & feel

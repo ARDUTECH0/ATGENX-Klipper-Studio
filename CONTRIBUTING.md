@@ -50,6 +50,17 @@ QT_QPA_PLATFORM=offscreen python tools/gui_e2e.py      # the real app window aga
 Rules live in `studio/doctor.py` (id, regular expression, page to open). Add `doc.<id>.title`, `doc.<id>.cause` and
 `doc.<id>.fix` to `studio/i18n.py` in every language, and a sample message to `TestDoctor` in `tests/test_core.py`.
 
+## Adding a feature to the catalog
+
+`studio/features.py` -> `CATALOG`: an id, icon, category, the plugin it needs (or "") and a template. Add
+`cat.<id>.title` and `cat.<id>.desc` to `studio/i18n.py` in every language. Templates must be valid Klipper
+config - the test suite parses every one of them.
+
+## Adding an explanation
+
+`studio/help.py` -> `HELP`: the page it belongs to, the exact place in printer.cfg, and the English and Arabic
+text. It then shows in the app's help panel, in the tooltip, and in `docs/GUIDE*.md` (`python tools/guide_md.py`).
+
 ## Translations
 
 UI strings live in `studio/i18n.py`. Every entry has an `en` and an `ar` text; keep `{placeholders}` identical.

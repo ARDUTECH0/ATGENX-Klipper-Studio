@@ -37,16 +37,42 @@ def active_pins(P):
     return out + [(tr("pin." + r), p.get(r, "")) for r in roles]
 
 
+# which page fixes a check (by message key)
+VAL_PAGE = {
+    "parse": "page_files", "duplicates": "page_files", "no_duplicates": "page_files", "section_elsewhere": "page_files",
+    "klipper_warning": "page_files", "serial": "page_board", "pins_empty": "page_pins", "pin_conflict": "page_pins",
+    "slot_conflict": "page_motors", "no_slot": "page_motors", "tmc": "page_motors", "current_high": "page_motors",
+    "hold_above_run": "page_motors", "microsteps": "page_motors", "sensorless": "page_motors",
+    "diag_polarity": "page_motors", "sg_range": "page_motors", "autotune": "page_motors",
+    "mechanics_differ": "page_motors", "qgl": "page_motors", "multi_z_no_probe": "page_motors",
+    "ref_z_tilt": "page_motors", "ref_qgl": "page_motors", "z_accel": "page_machine", "kinematics": "page_machine",
+    "mesh": "page_probe", "probe_z_zero": "page_probe", "ref_probe": "page_probe", "pa": "page_thermal",
+    "fan_low": "page_thermal", "shaper": "page_extras", "led_plugin": "page_extras", "mcu_temp": "page_extras",
+    "adaptive_needs_exclude": "page_extras", "slicer_start": "page_extras", "retraction_slicer": "page_extras",
+    "ref_leds": "page_extras", "ref_led_effects": "page_extras", "ref_fil_sensor": "page_extras",
+    "ref_retraction": "page_extras", "ready": "page_preview", "custom": "page_features",
+    "section_enabled": "page_features", "section_disabled": "page_features", "mcu_missing": "page_features",
+}
+
+
+def check_page(key):
+    name = key.split(".", 1)[-1]
+    for prefix in sorted(VAL_PAGE, key=len, reverse=True):
+        if name == prefix or name.startswith(prefix + "_") or name.startswith(prefix):
+            return VAL_PAGE[prefix]
+    return "page_preview"
+
+
 def validate(P, text, board=None, elsewhere=None, klipper_warnings=None):
-    """Returns [(level, message)] with level in error / warn / ok.
+    """Returns [(level, message, page)] with level in error / warn / ok and the page that fixes it.
 
     elsewhere        - {section: file} of sections defined in included files
     klipper_warnings - configfile.warnings reported by the running Klipper
     """
     R = []
-    E = lambda k, **kw: R.append(("error", tr(k, **kw)))
-    W = lambda k, **kw: R.append(("warn", tr(k, **kw)))
-    O = lambda k, **kw: R.append(("ok", tr(k, **kw)))
+    E = lambda k, **kw: R.append(("error", tr(k, **kw), check_page(k)))
+    W = lambda k, **kw: R.append(("warn", tr(k, **kw), check_page(k)))
+    O = lambda k, **kw: R.append(("ok", tr(k, **kw), check_page(k)))
 
     main, save = split_save(text)
     try:
@@ -206,6 +232,38 @@ def validate(P, text, board=None, elsewhere=None, klipper_warnings=None):
     for cond, key in refs:
         if cond:
             E(key)
+
+    # ---------------- added features and switched sections
+    from .features import empty_pins, section_names
+    from .merge import is_managed as _managed
+    for item in P.get("custom_sections", []):
+        if not item.get("enabled", True):
+            continue
+        text = item.get("text") or ""
+        secs = section_names(text)
+        if not secs:
+            E("val.custom_no_section")
+            continue
+        try:
+            cfg_parser(text)
+        except Exception as e:  # configparser raises several error types
+            E("val.custom_parse", section=secs[0], err=str(e).splitlines()[0])
+        for s in secs:
+            if _managed(s, P):
+                E("val.custom_managed", section=s)
+        pins_left = empty_pins(text)
+        if pins_left:
+            W("val.custom_pins", section=secs[0], pins=", ".join(pins_left))
+    # a pin on a second MCU (pico:gpio1, rpi:None) needs that [mcu name] section switched on
+    mcus = {n.split(None, 1)[1] for n in names if n.startswith("mcu ")}
+    for key, mcu in re.findall(r"^\s*([a-z_]*pin)\s*[:=]\s*[\^~!]*([a-z][a-z0-9_]*):", body, re.M):
+        if mcu != "probe" and "_stepper_" not in mcu and mcu not in mcus:
+            E("val.mcu_missing", mcu=mcu, key=key)
+            break
+    for s in P.get("enabled_sections", []):
+        O("val.section_enabled", section=s)
+    for s in P.get("disabled_sections", []):
+        O("val.section_disabled", section=s)
 
     # ---------------- modular configs
     if elsewhere:

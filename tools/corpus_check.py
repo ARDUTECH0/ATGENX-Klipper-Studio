@@ -68,7 +68,7 @@ def check(path):
                 d = [l for l in difflib.unified_diff(out.splitlines(), again.splitlines(), lineterm="", n=0)
                      if l[:1] in "+-" and l[:3] not in ("+++", "---")]
                 problems.append("merge not idempotent: %s" % d[:6])
-            errors = [m for k, m in validate(P, out, board) if k == "error"]
+            errors = [r[1] for r in validate(P, out, board) if r[0] == "error"]
     return P, problems, errors
 
 
