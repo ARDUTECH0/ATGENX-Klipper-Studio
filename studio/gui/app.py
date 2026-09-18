@@ -5,10 +5,10 @@ import sys
 import threading
 
 from PySide6.QtCore import Qt, QUrl
-from PySide6.QtGui import QAction, QDesktopServices, QIcon
+from PySide6.QtGui import QAction, QColor, QDesktopServices, QIcon
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDoubleSpinBox, QFormLayout, QGroupBox,
                                QHBoxLayout, QLabel, QLineEdit, QListWidget, QListWidgetItem, QMainWindow,
-                               QMessageBox, QPushButton, QScrollArea, QSizePolicy, QSpinBox, QStackedWidget,
+                               QColorDialog, QInputDialog, QMessageBox, QPushButton, QScrollArea, QSizePolicy, QSpinBox, QStackedWidget,
                                QTableWidgetItem, QToolBar, QVBoxLayout, QWidget)
 
 from .. import APP_NAME, ASSETS_DIR, LICENSE_NAME, REPO_URL, SUPPORT_URL, __version__
@@ -19,16 +19,18 @@ from ..model import MOTOR_LABEL, PIN_ROLES, bus_keys, enabled_motors, new_params
 from .actions import ActionsMixin
 from .doctor_page import DoctorMixin
 from .features_page import FeaturesMixin
+from .fleet_page import FleetMixin
 from .files_page import FilesMixin
 from .map_page import MapMixin
 from .help_panel import HelpMixin
 from .motors_page import MotorsMixin
 from .pages import PagesMixin
-from .style import STYLE
+from .icons import clear_cache, icon, strip_emoji
+from .style import PRESETS, accent, set_accent, style
 from .widgets import Bridge
 
 
-class Studio(PagesMixin, FeaturesMixin, MotorsMixin, MapMixin, FilesMixin, DoctorMixin, HelpMixin, ActionsMixin, QMainWindow):
+class Studio(PagesMixin, FeaturesMixin, MotorsMixin, MapMixin, FilesMixin, FleetMixin, DoctorMixin, HelpMixin, ActionsMixin, QMainWindow):
     def __init__(self, P=None, current_text=None, current_src=None):
         super().__init__()
         self.P = P or new_params()
@@ -84,7 +86,9 @@ class Studio(PagesMixin, FeaturesMixin, MotorsMixin, MapMixin, FilesMixin, Docto
         lay.addWidget(self.build_help_panel())
 
         for key, builder in self.PAGES:
-            self.nav.addItem(QListWidgetItem(tr(key)))
+            item = QListWidgetItem(strip_emoji(tr(key)))
+            item.setIcon(icon(key.split(".")[1], accent()))
+            self.nav.addItem(item)
             sc = QScrollArea()
             sc.setWidgetResizable(True)
             sc.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
@@ -102,34 +106,43 @@ class Studio(PagesMixin, FeaturesMixin, MotorsMixin, MapMixin, FilesMixin, Docto
 
     # ---------- chrome ----------
     def _toolbar(self):
+        self._tb_icons = []
         tb = QToolBar()
         tb.setMovable(False)
         self.addToolBar(tb)
         for key, fn in (("tb.new", self.act_new), ("tb.open_project", self.act_open_project),
                         ("tb.save_project", self.act_save_project), ("tb.open_cfg", self.act_open_cfg)):
-            a = QAction(tr(key), self)
+            a = QAction(icon(key.split(".")[1], accent()), strip_emoji(tr(key)), self)
             a.triggered.connect(fn)
             tb.addAction(a)
+            self._tb_icons.append((a, key.split(".")[1]))
         spacer = QWidget()
         spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
         tb.addWidget(spacer)
-        a = QAction(tr("tb.help_panel"), self)
+        a = QAction(icon("help_panel", accent()), strip_emoji(tr("tb.help_panel")), self)
         a.setCheckable(True)
         a.setChecked(True)
         a.toggled.connect(self.act_toggle_help)
         tb.addAction(a)
-        a = QAction(tr("tb.guide"), self)
+        self._tb_icons.append((a, "help_panel"))
+        a = QAction(icon("guide", accent()), strip_emoji(tr("tb.guide")), self)
         a.triggered.connect(self.act_guide)
         tb.addAction(a)
-        a = QAction(tr("tb.language"), self)
-        a.triggered.connect(self.act_language)
+        self._tb_icons.append((a, "guide"))
+        # The app is English only. The Arabic strings are still in i18n and can be reached with
+        # `python -m studio --lang ar`, but there is no switch in the window.
+        a = QAction(icon("theme", accent()), tr("tb.theme"), self)
+        a.triggered.connect(self.act_theme)
         tb.addAction(a)
-        a = QAction("☕  " + tr("tb.support"), self)
+        self._tb_icons.append((a, "theme"))
+        a = QAction(icon("support", accent()), strip_emoji(tr("tb.support")), self)
         a.triggered.connect(lambda: QDesktopServices.openUrl(QUrl(SUPPORT_URL)))
         tb.addAction(a)
-        a = QAction(tr("tb.about"), self)
+        self._tb_icons.append((a, "support"))
+        a = QAction(icon("about", accent()), strip_emoji(tr("tb.about")), self)
         a.triggered.connect(self.act_about)
         tb.addAction(a)
+        self._tb_icons.append((a, "about"))
 
     def _page(self, title, hint):
         w = QWidget(objectName="page")
@@ -326,6 +339,27 @@ class Studio(PagesMixin, FeaturesMixin, MotorsMixin, MapMixin, FilesMixin, Docto
         app._studio_window = win
         self.close()
 
+    def act_theme(self):
+        """Pick the accent colour: a preset, or anything from the colour dialog."""
+        names = [n for n, _ in PRESETS] + [tr("theme.custom")]
+        name, ok = QInputDialog.getItem(self, tr("tb.theme"), tr("theme.pick"), names, 0, False)
+        if not ok:
+            return
+        color = dict(PRESETS).get(name, "")
+        if not color:
+            picked = QColorDialog.getColor(QColor(accent()), self, tr("tb.theme"))
+            if not picked.isValid():
+                return
+            color = picked.name()
+        set_accent(color)
+        clear_cache()
+        QApplication.instance().setStyleSheet(style(color))
+        for i, (key, _) in enumerate(self.PAGES):
+            self.nav.item(i).setIcon(icon(key.split(".")[1], color))
+        for a, name in getattr(self, "_tb_icons", []):
+            a.setIcon(icon(name, color))
+        self.statusBar().showMessage(tr("theme.changed", color=color))
+
     def act_about(self):
         box = QMessageBox(self)
         box.setWindowTitle(tr("tb.about"))
@@ -341,9 +375,9 @@ class Studio(PagesMixin, FeaturesMixin, MotorsMixin, MapMixin, FilesMixin, Docto
         super().closeEvent(ev)
 
 
-def run(smoke=False):
+def run(smoke=False, lang=""):
     settings = load_settings()
-    i18n.set_lang(settings.get("lang") or i18n.system_lang())
+    i18n.set_lang(lang or "en")  # English unless --lang asked for something else
     if os.name == "nt":  # own taskbar icon instead of Python's
         try:
             import ctypes
@@ -354,7 +388,7 @@ def run(smoke=False):
     app.setApplicationName(APP_NAME)
     app.setWindowIcon(QIcon(os.path.join(ASSETS_DIR, "icon.svg")))
     app.setLayoutDirection(Qt.RightToLeft if i18n.is_rtl() else Qt.LeftToRight)
-    app.setStyleSheet(STYLE)
+    app.setStyleSheet(style())
     P = new_params()
     P["host"] = settings.get("host", "")
     P["port"] = int(settings.get("port", 7125) or 7125)

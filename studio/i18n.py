@@ -1036,3 +1036,76 @@ STRINGS.update({
     "map.drag_hint": _t("Drag a device to move it · scroll to zoom · your arrangement is saved with the project",
                         "اسحب أي جهاز عشان تحركه · عجلة الماوس للتكبير · الترتيب بيتحفظ مع المشروع"),
 })
+
+# ---------- printers, sync and remote files (English only; the app no longer offers Arabic) ----------
+def _e(en):
+    return {"en": en}
+
+
+STRINGS.update({
+    "nav.printers": _e("🖨   Printers"),
+    "nav.remote": _e("📁   Printer files"),
+    "fleet.title": _e("Printers"),
+    "fleet.hint": _e("Your machines, and sending the same files to all of them at once. Tick the printers to "
+                     "use, add the files, and press Sync. A file that is printing or waiting in the queue is "
+                     "never overwritten."),
+    "fleet.col.use": _e("Use"),
+    "fleet.col.name": _e("Name"),
+    "fleet.col.host": _e("Host"),
+    "fleet.col.port": _e("Port"),
+    "fleet.col.folder": _e("Folder"),
+    "fleet.add": _e("Add printer"),
+    "fleet.edit": _e("Edit"),
+    "fleet.remove": _e("Remove"),
+    "fleet.up": _e("Move up"),
+    "fleet.down": _e("Move down"),
+    "fleet.edit_title": _e("Printer"),
+    "fleet.name": _e("Name"),
+    "fleet.host": _e("Host or IP"),
+    "fleet.port": _e("Moonraker port"),
+    "fleet.ssh_port": _e("SSH port"),
+    "fleet.folder": _e("Folder on the printer"),
+    "fleet.folder_hint": _e("gcodes root if left empty"),
+    "fleet.remove_q": _e("Remove {name} from the list? Nothing on the printer is touched."),
+    "fleet.files_group": _e("Files to send"),
+    "fleet.add_files": _e("Add files..."),
+    "fleet.add_folder": _e("Add folder..."),
+    "fleet.clear_files": _e("Clear"),
+    "fleet.files_total": _e("{count} files  ·  {size}"),
+    "fleet.into": _e("Into folder"),
+    "fleet.dry_run": _e("Dry run"),
+    "fleet.skip_same": _e("Skip files already there with the same size"),
+    "fleet.sync": _e("Sync to selected printers"),
+    "fleet.stop": _e("Stop"),
+    "fleet.no_printers": _e("Tick at least one printer first."),
+    "fleet.no_files": _e("Add the files you want to send first."),
+    "fleet.eta": _e("ETA {time}"),
+    "fleet.log_start": _e("Sending {count} files to {printers} printers"),
+    "fleet.log_dry": _e("(dry run - nothing will be written)"),
+    "fleet.log_dry_sent": _e("would send"),
+    "fleet.log_sent": _e("sent"),
+    "fleet.log_same": _e("already there"),
+    "fleet.log_busy": _e("SKIPPED - printing or queued"),
+    "fleet.log_connected": _e("{name}: connected"),
+    "fleet.log_stopping": _e("stopping after the current file..."),
+    "fleet.log_done": _e("Finished: {sent} sent, {busy} skipped as busy, {failed} failed"),
+    "fleet.done_line": _e("{sent} sent · {skipped} same · {busy} busy · {failed} failed"),
+    "remote.title": _e("Printer files"),
+    "remote.hint": _e("What is on a printer right now. Double-click a folder to open it, hover a file to see its "
+                      "thumbnail, and select files to delete them. Anything printing or queued is protected."),
+    "remote.refresh": _e("Refresh"),
+    "remote.up": _e("Up one folder"),
+    "remote.delete": _e("Delete selected"),
+    "remote.loading": _e("Loading..."),
+    "remote.count": _e("{dirs} folders · {files} files · {busy} protected"),
+    "remote.protected": _e("protected"),
+    "remote.protected_q": _e("These are printing or queued and will not be deleted: {names}"),
+    "remote.delete_q": _e("Delete {names} from the printer? This cannot be undone."),
+})
+
+STRINGS.update({
+    "tb.theme": _e("Theme"),
+    "theme.pick": _e("Accent colour"),
+    "theme.custom": _e("Custom..."),
+    "theme.changed": _e("Accent colour set to {color}"),
+})

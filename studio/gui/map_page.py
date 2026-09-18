@@ -404,7 +404,7 @@ class MapMixin:
         if rect.width() and rect.height():
             scale = max(0.35, min(min(view.width() / rect.width(), view.height() / rect.height()), 1.0))
             self.map_view.scale(scale, scale)
-            self.map_view.centerOn(0, 0)
+            self.map_view.centerOn(rect.center())
 
     def _map_remember(self, node_id, pos):
         self.P.setdefault("map_positions", {})[node_id] = [round(pos.x(), 1), round(pos.y(), 1)]

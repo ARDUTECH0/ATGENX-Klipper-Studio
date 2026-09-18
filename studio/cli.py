@@ -159,9 +159,4 @@ def main(argv=None):
     except ImportError as e:
         print("PySide6 is required for the app:  pip install -r requirements.txt\n(%s)" % e)
         return 2
-    if a.lang:
-        from .appdata import load_settings, save_settings
-        s = load_settings()
-        s["lang"] = a.lang
-        save_settings(s)
-    return run(smoke=a.smoke)
+    return run(smoke=a.smoke, lang=a.lang or "")

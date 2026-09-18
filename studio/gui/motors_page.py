@@ -60,7 +60,8 @@ class MotorsMixin:
         hdr = self.motor_table.horizontalHeader()
         for i in range(len(COLS)):
             hdr.setSectionResizeMode(i, QHeaderView.ResizeToContents)
-        hdr.setSectionResizeMode(1, QHeaderView.Stretch)
+        hdr.setSectionResizeMode(2, QHeaderView.Stretch)  # the driver name takes the spare room
+        hdr.setMinimumSectionSize(78)  # so the socket column is never cut off
         self.motor_table.setMinimumHeight(300)
         self.motor_table.currentCellChanged.connect(lambda r, *_: self._select_motor_row(r))
         v.addWidget(self.motor_table)
