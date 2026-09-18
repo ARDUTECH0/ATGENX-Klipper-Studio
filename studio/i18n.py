@@ -71,14 +71,14 @@ STRINGS = {
     "about.text": _t(
         "<h3>{app} {ver}</h3>"
         "<p>A guided printer.cfg builder for Klipper printers.</p>"
-        "<p>License: <b>{license}</b><br>Free for personal, educational and other noncommercial use. "
-        "Selling it or using it commercially is not allowed.</p>"
+        "<p>License: <b>{license}</b><br>Free software: you may use, study, change and share it. "
+        "It comes with absolutely no warranty.</p>"
         "<p><a href='{repo}'>Source code</a> &nbsp;·&nbsp; <a href='{support}'>Support the project</a></p>"
         "<p style='color:#8b949e'>Board pin data is derived from Klipper's config files. "
         "Klipper is a separate project by Kevin O'Connor and contributors.</p>",
         "<h3>{app} {ver}</h3>"
         "<p>برنامج بيساعدك تبني printer.cfg لطابعات كليبر خطوة بخطوة.</p>"
-        "<p>الترخيص: <b>{license}</b><br>مجاني للاستخدام الشخصي والتعليمي وأي استخدام غير تجاري. "
+        "<p>الترخيص: <b>{license}</b><br>برنامج حر: استخدمه وعدّله ووزّعه. "
         "ممنوع بيعه أو استخدامه تجاريًا.</p>"
         "<p><a href='{repo}'>الكود المصدري</a> &nbsp;·&nbsp; <a href='{support}'>ادعم المشروع</a></p>"
         "<p style='color:#8b949e'>بيانات أرجل البوردات مأخوذة من ملفات إعداد كليبر. "

@@ -81,5 +81,5 @@ Open an issue with your board, Klipper and Moonraker versions, what you expected
 ## License of contributions
 
 By submitting a pull request you agree that your contribution is licensed under the project's
-[PolyForm Noncommercial 1.0.0](LICENSE) license, and that the maintainer may also offer it under other terms
-(for example a commercial license) together with the rest of the project.
+[GNU GPL v3.0 or later](LICENSE), the same licence as the rest of the project. You keep the copyright on
+what you wrote.

@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### License
+- The project is now **GNU GPL v3.0 or later**, replacing PolyForm Noncommercial. It is free
+  software: use it, change it, share it, sell it - as long as what you pass on stays GPL with
+  its source. This is what was promised to the community when they asked.
+
 ## 1.0.0-beta.4 - 2026-09-17
 
 ### Ready-to-run executable
