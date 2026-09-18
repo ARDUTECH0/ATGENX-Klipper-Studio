@@ -313,51 +313,51 @@ python -m studio --lang ar
 
 | الميزة | بيعمل إيه | محتاج |
 |---|---|---|
-| 🎯 **مسبار القاعدة** | قياس القاعدة: شبكة القاعدة، تصفير Z بالمسبار، تسوية Z. |  |
-| ⚖️ **أكتر من محرك Z** | محرك Z تاني على درايفر منفصل، بيتسوّى تلقائيًا بـ z_tilt. | مسبار القاعدة |
-| 🗺️ **شبكة ذكية** | بيقيس تحت القطع المطبوعة بس في بداية كل طبعة. | مسبار القاعدة, ماكروهات الطباعة, إلغاء قطعة |
-| 🧲 **تصفير من غير ليميت** | تصفير X و Y من غير سويتشات باستخدام StallGuard. |  |
-| 🔁 **AWD (محركين X/Y)** | محرك تاني على محور X و Y. |  |
-| 🎛️ **TMC Autotune** | ضبط الدرايفر على موديل محركك بالظبط. اختار المحرك لكل محور. | klipper_tmc_autotune |
-| 〰️ **Input Shaper** | بيلغي التموجات عشان تطبع أسرع وأنضف. |  |
-| ↩️ **السحب من الفيرموير** | سحب G10/G11 تقدر تظبطه أثناء الطباعة. |  |
-| ⌒ **حركات الأقواس** | يقبل أقواس G2/G3 من السلايسر. |  |
-| ✂️ **إلغاء قطعة** | إلغاء قطعة فاشلة من غير ما توقف الطبعة. |  |
-| ▶️ **ماكروهات الطباعة** | START_PRINT و END_PRINT وتغيير الفيلامنت M600. |  |
-| 🧵 **حساس خلصان الفيلامنت** | وقفة مؤقتة لما الفيلامنت يخلص. |  |
-| 💡 **شريط الإضاءة** | شريط NeoPixel / WS2812 على البورده. |  |
-| 🌈 **مؤشرات الإضاءة** | الشريط يمتلي مع الحرارة وتقدم الطبعة. | klipper-led_effect |
-| 🌡️ **حرارة الراسبيري** | بتظهر في Mainsail / Fluidd. |  |
-| 🔥 **حرارة البورده** | حرارة المعالج الداخلية (STM32، RP2040، SAM). |  |
-| ⏱️ **إطفاء بعد الخمول** | يقفل المحركات والسخانات بعد 30 دقيقة خمول. |  |
-| ❄️ **حماية حرارية أوسع** | للأوض الباردة أو المراوح القوية اللي بتعمل 'not heating at expected rate'. |  |
+| probe **مسبار القاعدة** | قياس القاعدة: شبكة القاعدة، تصفير Z بالمسبار، تسوية Z. |  |
+| leveling **أكتر من محرك Z** | محرك Z تاني على درايفر منفصل، بيتسوّى تلقائيًا بـ z_tilt. | مسبار القاعدة |
+| mesh **شبكة ذكية** | بيقيس تحت القطع المطبوعة بس في بداية كل طبعة. | مسبار القاعدة, ماكروهات الطباعة, إلغاء قطعة |
+| magnet **تصفير من غير ليميت** | تصفير X و Y من غير سويتشات باستخدام StallGuard. |  |
+| loop **AWD (محركين X/Y)** | محرك تاني على محور X و Y. |  |
+| sliders **TMC Autotune** | ضبط الدرايفر على موديل محركك بالظبط. اختار المحرك لكل محور. | klipper_tmc_autotune |
+| wave **Input Shaper** | بيلغي التموجات عشان تطبع أسرع وأنضف. |  |
+| retract **السحب من الفيرموير** | سحب G10/G11 تقدر تظبطه أثناء الطباعة. |  |
+| arc **حركات الأقواس** | يقبل أقواس G2/G3 من السلايسر. |  |
+| exclude **إلغاء قطعة** | إلغاء قطعة فاشلة من غير ما توقف الطبعة. |  |
+| play **ماكروهات الطباعة** | START_PRINT و END_PRINT وتغيير الفيلامنت M600. |  |
+| filament **حساس خلصان الفيلامنت** | وقفة مؤقتة لما الفيلامنت يخلص. |  |
+| bulb **شريط الإضاءة** | شريط NeoPixel / WS2812 على البورده. |  |
+| bulb **مؤشرات الإضاءة** | الشريط يمتلي مع الحرارة وتقدم الطبعة. | klipper-led_effect |
+| thermal **حرارة الراسبيري** | بتظهر في Mainsail / Fluidd. |  |
+| thermal **حرارة البورده** | حرارة المعالج الداخلية (STM32، RP2040، SAM). |  |
+| timer **إطفاء بعد الخمول** | يقفل المحركات والسخانات بعد 30 دقيقة خمول. |  |
+| thermal **حماية حرارية أوسع** | للأوض الباردة أو المراوح القوية اللي بتعمل 'not heating at expected rate'. |  |
 
 ### الكتالوج - مميزات تقدر تضيفها
 
 | الميزة | بيعمل إيه | بيضيف |
 |---|---|---|
-| 🖥️ **ماكروهات Mainsail** | ماكروهات PAUSE / RESUME / CANCEL_PRINT اللي جاية مع Mainsail. (Mainsail) | `[include mainsail.cfg]` |
-| 🖥️ **ماكروهات Fluidd** | ماكروهات PAUSE / RESUME / CANCEL_PRINT اللي جاية مع Fluidd. (Fluidd) | `[include fluidd.cfg]` |
-| 🎞️ **تايم لابس** | فيديو تايم لابس طبقة بطبقة (moonraker-timelapse). (moonraker-timelapse) | `[include timelapse.cfg]` |
-| 📊 **Shake&Tune** | مقارنة السيور ورسومات الرنين لضبط الـ Input Shaper. (Klippain Shake&Tune) | `[shaketune]` |
-| 📐 **ADXL345 على الراسبيري** | حساس تسارع على SPI الراسبيري لـ SHAPER_CALIBRATE. محتاج خدمة Linux host MCU. | `[mcu rpi]` `[adxl345]` `[resonance_tester]` |
-| 📐 **ADXL345 على Raspberry Pi Pico** | حساس تسارع على Pico بالـ USB. حط مسار سيريال الـ Pico بتاعك. | `[mcu adxl]` `[adxl345]` `[resonance_tester]` `[output_pin power_mode]` |
-| 📐 **ADXL345 على البورده** | حساس تسارع على SPI البورده. املا cs_pin و spi_bus. | `[adxl345]` `[resonance_tester]` |
-| 📏 **تصحيح الميل** | بيصلّح الفريم اللي مش مظبوط 90° (SET_SKEW). | `[skew_correction]` |
-| 🌀 **تعويض التواء المحور** | بيعوّض التواء جسر X للمسابير اللي مش جنب النوزل. | `[axis_twist_compensation]` |
-| 🔩 **مساعد مسامير القاعدة (بالمسبار)** | SCREWS_TILT_CALCULATE بيقولك تلف كل مسمار قد إيه. | `[screws_tilt_adjust]` |
-| 🔩 **مساعد مسامير القاعدة (اختبار الورقة)** | BED_SCREWS_ADJUST بيروح لكل مسمار للتسوية اليدوية. | `[bed_screws]` |
-| 💾 **حفظ المتغيرات** | الماكروهات تقدر تحفظ قيم بعد إعادة التشغيل (SAVE_VARIABLE). | `[save_variables]` |
-| 🛠️ **حركة إجبارية** | تحريك محرك من غير تصفير (FORCE_MOVE، SET_KINEMATIC_POSITION). استخدمه بحذر. | `[force_move]` |
-| 🧵 **حساس حركة الفيلامنت** | بيكتشف الانسداد والخلصان (BTT SFS وشبهه). املا switch_pin. | `[filament_motion_sensor smart_sensor]` |
-| 🌬️ **مروحة الإلكترونيات** | بتشتغل طول ما المحركات شغالة. املا رجل المروحة. | `[controller_fan electronics_fan]` |
-| 🌬️ **مروحة شفط الغرفة** | مروحة بتتحكم فيها الحرارة للطابعات المقفولة. املا pin و sensor_pin. | `[temperature_fan chamber]` |
-| 🌡️ **ثرمستور الغرفة** | بيعرض حرارة الغرفة. املا sensor_pin. | `[temperature_sensor chamber]` |
-| 💡 **إضاءة الصندوق** | إضاءة بتتحكم في شدتها على مخرج مروحة (SET_PIN PIN=caselight VALUE=1). | `[output_pin caselight]` |
-| 🔔 **بازر** | بازر للتنبيهات. املا الرجل. | `[output_pin beeper]` |
-| 🔘 **زرار G-code** | يشغّل G-code لما تضغط زرار حقيقي. | `[gcode_button my_button]` |
-| 🦾 **سيرفو** | سيرفو (SET_SERVO)، زي مسّاحة النوزل. | `[servo my_servo]` |
-| 📝 **قسم مخصص** | اكتب أي قسم كليبر بنفسك. | `[my_section]` |
+| screen **ماكروهات Mainsail** | ماكروهات PAUSE / RESUME / CANCEL_PRINT اللي جاية مع Mainsail. (Mainsail) | `[include mainsail.cfg]` |
+| screen **ماكروهات Fluidd** | ماكروهات PAUSE / RESUME / CANCEL_PRINT اللي جاية مع Fluidd. (Fluidd) | `[include fluidd.cfg]` |
+| film **تايم لابس** | فيديو تايم لابس طبقة بطبقة (moonraker-timelapse). (moonraker-timelapse) | `[include timelapse.cfg]` |
+| chart **Shake&Tune** | مقارنة السيور ورسومات الرنين لضبط الـ Input Shaper. (Klippain Shake&Tune) | `[shaketune]` |
+| chart **ADXL345 على الراسبيري** | حساس تسارع على SPI الراسبيري لـ SHAPER_CALIBRATE. محتاج خدمة Linux host MCU. | `[mcu rpi]` `[adxl345]` `[resonance_tester]` |
+| chart **ADXL345 على Raspberry Pi Pico** | حساس تسارع على Pico بالـ USB. حط مسار سيريال الـ Pico بتاعك. | `[mcu adxl]` `[adxl345]` `[resonance_tester]` `[output_pin power_mode]` |
+| chart **ADXL345 على البورده** | حساس تسارع على SPI البورده. املا cs_pin و spi_bus. | `[adxl345]` `[resonance_tester]` |
+| ruler **تصحيح الميل** | بيصلّح الفريم اللي مش مظبوط 90° (SET_SKEW). | `[skew_correction]` |
+| ruler **تعويض التواء المحور** | بيعوّض التواء جسر X للمسابير اللي مش جنب النوزل. | `[axis_twist_compensation]` |
+| leveling **مساعد مسامير القاعدة (بالمسبار)** | SCREWS_TILT_CALCULATE بيقولك تلف كل مسمار قد إيه. | `[screws_tilt_adjust]` |
+| leveling **مساعد مسامير القاعدة (اختبار الورقة)** | BED_SCREWS_ADJUST بيروح لكل مسمار للتسوية اليدوية. | `[bed_screws]` |
+| save_project **حفظ المتغيرات** | الماكروهات تقدر تحفظ قيم بعد إعادة التشغيل (SAVE_VARIABLE). | `[save_variables]` |
+| tools **حركة إجبارية** | تحريك محرك من غير تصفير (FORCE_MOVE، SET_KINEMATIC_POSITION). استخدمه بحذر. | `[force_move]` |
+| filament **حساس حركة الفيلامنت** | بيكتشف الانسداد والخلصان (BTT SFS وشبهه). املا switch_pin. | `[filament_motion_sensor smart_sensor]` |
+| fan **مروحة الإلكترونيات** | بتشتغل طول ما المحركات شغالة. املا رجل المروحة. | `[controller_fan electronics_fan]` |
+| fan **مروحة شفط الغرفة** | مروحة بتتحكم فيها الحرارة للطابعات المقفولة. املا pin و sensor_pin. | `[temperature_fan chamber]` |
+| thermal **ثرمستور الغرفة** | بيعرض حرارة الغرفة. املا sensor_pin. | `[temperature_sensor chamber]` |
+| bulb **إضاءة الصندوق** | إضاءة بتتحكم في شدتها على مخرج مروحة (SET_PIN PIN=caselight VALUE=1). | `[output_pin caselight]` |
+| bell **بازر** | بازر للتنبيهات. املا الرجل. | `[output_pin beeper]` |
+| press **زرار G-code** | يشغّل G-code لما تضغط زرار حقيقي. | `[gcode_button my_button]` |
+| tools **سيرفو** | سيرفو (SET_SERVO)، زي مسّاحة النوزل. | `[servo my_servo]` |
+| note **قسم مخصص** | اكتب أي قسم كليبر بنفسك. | `[my_section]` |
 
 ## 6. ترتيب ملف printer.cfg الناتج
 

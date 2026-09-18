@@ -136,7 +136,7 @@ class FilesMixin:
         done = set()
 
         def add_file(parent, path):
-            label = path + ("  ●" if path in self.cs_edits else "")
+            label = path + ("  " if path in self.cs_edits else "")
             it = QTreeWidgetItem([label])
             it.setData(0, Qt.UserRole, ("file", path, 1))
             if path in cs.missing:
@@ -169,16 +169,16 @@ class FilesMixin:
     def _files_fill_issues(self):
         self.files_issues.clear()
         for p in self.cs.missing:
-            it = QListWidgetItem("✖   " + tr("files.missing_include", path=p))
+            it = QListWidgetItem("" + tr("files.missing_include", path=p))
             it.setForeground(QColor("#f85149"))
             self.files_issues.addItem(it)
         for w in self.cs.warnings:
             msg = w.get("message", str(w)) if isinstance(w, dict) else str(w)
-            it = QListWidgetItem("▲   Klipper: " + msg)
+            it = QListWidgetItem("   Klipper: " + msg)
             it.setForeground(QColor("#d29922"))
             self.files_issues.addItem(it)
         if not self.files_issues.count():
-            it = QListWidgetItem("✔   " + tr("files.no_issues"))
+            it = QListWidgetItem("" + tr("files.no_issues"))
             it.setForeground(QColor("#3fb950"))
             self.files_issues.addItem(it)
 

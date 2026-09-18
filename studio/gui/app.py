@@ -65,7 +65,7 @@ class Studio(PagesMixin, FeaturesMixin, MotorsMixin, MapMixin, FilesMixin, Fleet
         self.nav = QListWidget(objectName="nav")
         self.nav.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         sl.addWidget(self.nav, 1)
-        self.conn_lbl = QLabel("●  " + tr("conn.offline"))
+        self.conn_lbl = QLabel("" + tr("conn.offline"))
         self.conn_lbl.setStyleSheet("color:#6e7681;padding:12px 18px;")
         sl.addWidget(self.conn_lbl)
         lay.addWidget(side)
@@ -176,7 +176,7 @@ class Studio(PagesMixin, FeaturesMixin, MotorsMixin, MapMixin, FilesMixin, Fleet
         w.setRange(lo, hi)
         w.setSingleStep(step)
         if suffix:
-            w.setSuffix("  " + suffix)
+            w.setSuffix("" + suffix)
         w.setMinimumWidth(170)
         conv = (lambda: float(w.value())) if dec else (lambda: int(w.value()))
         return self._bind(key, w, lambda val: w.setValue(val), conv)

@@ -64,7 +64,7 @@ def other_devices(text, is_managed, boards):
             if is_managed(name) or name.startswith(("mcu", "gcode_macro", "include", "delayed_gcode",
                                                     "gcode_shell_command", "menu ", "display_template")):
                 continue
-            current = _node("section:" + name, "other", "[%s]" % name, "🧩", [], "page_features",
+            current = _node("section:" + name, "other", "[%s]" % name, "section", [], "page_features",
                             off=commented)
             nodes.append(current)
             continue
@@ -106,35 +106,35 @@ def wiring(P, board=None, config_text="", is_managed=None):
                 pins.append(_pin("bus:" + key, m["bus"][key], key))
         label = "%s  ·  %s" % (MOTOR_LABEL[mid], m["slot"] or MOTOR_SECTION[mid])
         note = m["driver"].upper() if m["driver"] != "none" else tr("driver.none")
-        nodes.append(_node("motor:" + mid, "motors", label, "⚙️", pins, "page_motors", note=note))
+        nodes.append(_node("motor:" + mid, "motors", label, "motors", pins, "page_motors", note=note))
 
     p = P["pins"]
-    nodes.append(_node("heater:e", "heat", tr("pin.e_heater"), "🔥", [_pin("e_heater", p["e_heater"], "heater_pin")],
+    nodes.append(_node("heater:e", "heat", tr("pin.e_heater"), "heat", [_pin("e_heater", p["e_heater"], "heater_pin")],
                        "page_thermal"))
-    nodes.append(_node("sensor:e", "heat", tr("pin.e_sensor"), "🌡️", [_pin("e_sensor", p["e_sensor"], "sensor_pin")],
+    nodes.append(_node("sensor:e", "heat", tr("pin.e_sensor"), "sensor", [_pin("e_sensor", p["e_sensor"], "sensor_pin")],
                        "page_thermal", note=P["therm_e"]))
     if p["bed_heater"]:
-        nodes.append(_node("heater:bed", "heat", tr("pin.bed_heater"), "🔥",
+        nodes.append(_node("heater:bed", "heat", tr("pin.bed_heater"), "heat",
                            [_pin("bed_heater", p["bed_heater"], "heater_pin")], "page_thermal"))
-        nodes.append(_node("sensor:bed", "heat", tr("pin.bed_sensor"), "🌡️",
+        nodes.append(_node("sensor:bed", "heat", tr("pin.bed_sensor"), "sensor",
                            [_pin("bed_sensor", p["bed_sensor"], "sensor_pin")], "page_thermal", note=P["therm_bed"]))
     if p["fan"]:
-        nodes.append(_node("fan:part", "fans", tr("pin.fan"), "🌀", [_pin("fan", p["fan"], "pin")], "page_thermal"))
+        nodes.append(_node("fan:part", "fans", tr("pin.fan"), "fan", [_pin("fan", p["fan"], "pin")], "page_thermal"))
     if p["hotend_fan"]:
-        nodes.append(_node("fan:hotend", "fans", tr("pin.hotend_fan"), "🌀",
+        nodes.append(_node("fan:hotend", "fans", tr("pin.hotend_fan"), "fan",
                            [_pin("hotend_fan", p["hotend_fan"], "pin")], "page_thermal"))
     if P["probe"] == "inductive":
-        nodes.append(_node("probe", "sensors", tr("probe.inductive"), "🎯", [_pin("probe", p["probe"], "pin")],
+        nodes.append(_node("probe", "sensors", tr("probe.inductive"), "probe", [_pin("probe", p["probe"], "pin")],
                            "page_probe"))
     elif P["probe"] == "bltouch":
-        nodes.append(_node("probe", "sensors", tr("probe.bltouch"), "🎯",
+        nodes.append(_node("probe", "sensors", tr("probe.bltouch"), "probe",
                            [_pin("bl_sensor", p["bl_sensor"], "sensor_pin"),
                             _pin("bl_control", p["bl_control"], "control_pin")], "page_probe"))
     if P["fil_sensor"]:
-        nodes.append(_node("fil", "sensors", tr("pin.fil_sensor"), "🧵", [_pin("fil_sensor", p["fil_sensor"], "switch_pin")],
+        nodes.append(_node("fil", "sensors", tr("pin.fil_sensor"), "filament", [_pin("fil_sensor", p["fil_sensor"], "switch_pin")],
                            "page_extras"))
     if P["leds"]:
-        nodes.append(_node("leds", "lights", tr("pin.neopixel"), "💡", [_pin("neopixel", p["neopixel"], "pin")],
+        nodes.append(_node("leds", "lights", tr("pin.neopixel"), "bulb", [_pin("neopixel", p["neopixel"], "pin")],
                            "page_extras", note="%d x %s" % (P["led_count"], P["led_order"])))
     nodes += other_devices(config_text, is_managed, boards)
 

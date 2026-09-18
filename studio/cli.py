@@ -23,7 +23,7 @@ from .merge import build
 from .model import MOTOR_LABEL, enabled_motors, load_project
 from .validate import validate
 
-ICONS = {"error": "✖", "warn": "▲", "ok": "✔"}
+ICONS = {"error": "", "warn": "", "ok": ""}
 
 
 def _utf8():

@@ -7,7 +7,7 @@ arrangement is remembered with the project.
 import os
 
 from PySide6.QtCore import QPointF, QRectF, Qt
-from PySide6.QtGui import QBrush, QColor, QFont, QImage, QPainter, QPainterPath, QPen
+from PySide6.QtGui import QBrush, QColor, QFont, QImage, QPainter, QPainterPath, QPen, QPixmap
 from PySide6.QtWidgets import (QFileDialog, QFormLayout, QFrame, QGraphicsItem, QGraphicsPathItem, QGraphicsScene,
                                QGraphicsSimpleTextItem, QGraphicsView, QHBoxLayout, QLabel, QLineEdit, QMenu,
                                QPushButton, QToolButton, QVBoxLayout, QWidget)
@@ -46,6 +46,14 @@ class MapView(QGraphicsView):
         factor = 1.15 if ev.angleDelta().y() > 0 else 1 / 1.15
         if 0.2 <= self.transform().m11() * factor <= 3.0:
             self.scale(factor, factor)
+
+
+def node_icon(name, color):
+    """The drawn icon for a device on the map, or None when it has no name."""
+    if not name:
+        return None
+    from .icons import icon as draw
+    return draw(name, color, 18)
 
 
 class NodeItem(QGraphicsItem):
@@ -87,7 +95,10 @@ class NodeItem(QGraphicsItem):
         f = QFont("Segoe UI", 10)
         f.setBold(True)
         p.setFont(f)
-        p.drawText(QRectF(16, 8, NODE_W - 28, 20), Qt.AlignLeft | Qt.AlignVCenter, "%s  %s" % (n["icon"], n["label"]))
+        ic = node_icon(n["icon"], color.name() if not n["off"] else "#6e7681")
+        if ic is not None:
+            p.drawPixmap(13, 9, ic.pixmap(18, 18))
+        p.drawText(QRectF(36, 8, NODE_W - 48, 20), Qt.AlignLeft | Qt.AlignVCenter, n["label"])
         y = 30
         if n["note"]:
             p.setFont(QFont("Segoe UI", 8))
@@ -265,9 +276,21 @@ class MapMixin:
         v.addLayout(row)
 
         legend = QHBoxLayout()
+        legend.setSpacing(6)
         for group, color in GROUP_COLOR.items():
-            lab = QLabel("●  " + tr("map.group_" + group))
-            lab.setStyleSheet("color:%s;" % color)
+            swatch = QLabel()                      # a drawn dot in the group's colour, not a bullet character
+            pm = QPixmap(10, 10)
+            pm.fill(Qt.transparent)
+            sp = QPainter(pm)
+            sp.setRenderHint(QPainter.Antialiasing)
+            sp.setPen(Qt.NoPen)
+            sp.setBrush(QColor(color))
+            sp.drawEllipse(1, 1, 8, 8)
+            sp.end()
+            swatch.setPixmap(pm)
+            legend.addWidget(swatch)
+            lab = QLabel(tr("map.group_" + group))
+            lab.setStyleSheet("color:%s; margin-right:10px;" % color)
             legend.addWidget(lab)
         legend.addStretch(1)
         legend.addWidget(QLabel(tr("map.drag_hint"), objectName="hint"))
@@ -420,7 +443,7 @@ class MapMixin:
             item.setSelected(nid == node["id"])
             item.set_active(nid == node["id"])
         self._map_selected = node["id"]
-        self.map_sel_title.setText("%s  %s" % (node["icon"], node["label"]))
+        self.map_sel_title.setText(node["label"])
         notes = list(node["issues"]) or ([node["note"]] if node["note"] else [])
         self.map_sel_note.setText("\n".join(notes))
         self.map_sel_note.setStyleSheet("color:%s;" % ("#f85149" if node["issues"] else "#8b949e"))
@@ -453,7 +476,7 @@ class MapMixin:
         m.clear()
         for mid in OPTIONAL_MOTORS:
             if not self.P["motors"][mid]["enabled"]:
-                m.addAction("⚙️  " + tr("motors.add_" + mid)).triggered.connect(
+                m.addAction(tr("motors.add_" + mid)).triggered.connect(
                     lambda _=False, x=mid: self._map_add_motor(x))
         m.addSeparator()
         for fid in ("probe", "leds", "fil_sensor", "sensorless"):
@@ -465,7 +488,7 @@ class MapMixin:
             m.addAction("%s  %s" % (CATALOG[cid][0], tr("cat.%s.title" % cid))).triggered.connect(
                 lambda _=False, c=cid: self._map_add_catalog(c))
         m.addSeparator()
-        m.addAction("🗂️  " + tr("map.more_features")).triggered.connect(lambda: self.goto_page("page_features"))
+        m.addAction(tr("map.more_features")).triggered.connect(lambda: self.goto_page("page_features"))
 
     def _map_add_motor(self, mid):
         self.act_add_motor(mid)

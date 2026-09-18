@@ -2,7 +2,7 @@
 """Wizard pages."""
 import os
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QSize, Qt
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (QCheckBox, QComboBox, QGridLayout, QGroupBox, QHBoxLayout, QHeaderView, QLabel,
                                QLineEdit, QVBoxLayout, QWidget,
@@ -13,6 +13,8 @@ from .. import ASSETS_DIR
 from ..boards import board_label, load_boards
 from ..i18n import tr
 from ..model import KINEMATICS, LED_ORDERS, PROBES, SHAPERS, THERMISTORS
+from .icons import icon
+from .style import accent
 from .widgets import CfgHighlighter, SearchCombo
 
 
@@ -47,17 +49,20 @@ class PagesMixin:
 
         grid = QGridLayout()
         grid.setSpacing(12)
-        cards = [("🔌", "start.printer", lambda: (self.goto_page("page_connection"), self.binds_by_key["host"].setFocus())),
-                 ("🆕", "start.new", lambda: self.goto_page("page_board")),
-                 ("📂", "start.open", self.act_open_cfg),
-                 ("🩺", "start.doctor", lambda: self.goto_page("page_doctor"))]
-        for i, (icon, key, fn) in enumerate(cards):
+        cards = [("connection", "start.printer", lambda: (self.goto_page("page_connection"), self.binds_by_key["host"].setFocus())),
+                 ("new", "start.new", lambda: self.goto_page("page_board")),
+                 ("open_cfg", "start.open", self.act_open_cfg),
+                 ("doctor", "start.doctor", lambda: self.goto_page("page_doctor"))]
+        for i, (icon_name, key, fn) in enumerate(cards):
             b = QPushButton(objectName="card")
             b.setCursor(Qt.PointingHandCursor)
+            b.setIcon(icon(icon_name, accent()))
+            b.setIconSize(QSize(26, 26))
             b.setMinimumHeight(104)
             lay = QVBoxLayout(b)
             lay.setContentsMargins(18, 14, 18, 14)
-            ttl = QLabel("%s   %s" % (icon, tr(key + "_title")))
+            ttl = QLabel(tr(key + "_title"))
+            ttl.setPixmap  # painted icon is set on the button below
             ttl.setStyleSheet("font-size:16px; font-weight:600; background:transparent;")
             dsc = QLabel(tr(key + "_desc"), objectName="hint")
             dsc.setWordWrap(True)
@@ -77,7 +82,7 @@ class PagesMixin:
             lab.setAlignment(Qt.AlignTop | Qt.AlignHCenter)
             sl.addWidget(lab, 1)
         v.addWidget(steps)
-        safe = QLabel("🛡️  " + tr("start.safe"), objectName="hint")
+        safe = QLabel("  " + tr("start.safe"), objectName="hint")
         safe.setWordWrap(True)
         v.addWidget(safe)
         v.addStretch(1)

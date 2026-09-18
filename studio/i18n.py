@@ -51,15 +51,15 @@ STRINGS = {
     # ---------- app ----------
     "app.tagline": _t("Klipper configuration, done right", "إعداد كليبر باحتراف"),
     "app.ready": _t("Ready", "جاهز"),
-    "nav.connection": _t("🔌   Connection", "🔌   الاتصال"),
-    "nav.board": _t("🧩   Board", "🧩   البورده"),
-    "nav.machine": _t("📐   Machine", "📐   الماكينة"),
-    "nav.motors": _t("⚙️   Motors & drivers", "⚙️   المحركات والدرايفرات"),
-    "nav.thermal": _t("🔥   Hotend & bed", "🔥   النوزل والقاعدة"),
-    "nav.probe": _t("🎯   Probe & leveling", "🎯   المسبار والتسوية"),
-    "nav.extras": _t("💡   LEDs & extras", "💡   الإضاءة والإضافات"),
-    "nav.pins": _t("📌   Pins", "📌   الأرجل (Pins)"),
-    "nav.preview": _t("🚀   Review & upload", "🚀   المراجعة والرفع"),
+    "nav.connection": _t("Connection", "الاتصال"),
+    "nav.board": _t("Board", "البورده"),
+    "nav.machine": _t("Machine", "الماكينة"),
+    "nav.motors": _t("Motors & drivers", "المحركات والدرايفرات"),
+    "nav.thermal": _t("Hotend & bed", "النوزل والقاعدة"),
+    "nav.probe": _t("Probe & leveling", "المسبار والتسوية"),
+    "nav.extras": _t("LEDs & extras", "الإضاءة والإضافات"),
+    "nav.pins": _t("Pins", "الأرجل (Pins)"),
+    "nav.preview": _t("Review & upload", "المراجعة والرفع"),
     "nav.prev": _t("Back", "السابق"),
     "nav.next": _t("Next", "التالي"),
     "tb.new": _t("New", "جديد"),
@@ -319,7 +319,7 @@ STRINGS = {
         "هيحصل الآتي:\n\n1. التأكد إن الطابعة مش بتطبع\n2. التأكد إن printer.cfg ما اتغيرش على الطابعة\n"
         "3. نسخة احتياطية على الطابعة وعلى الجهاز\n4. رفع printer.cfg الجديد\n5. FIRMWARE_RESTART"),
     "msg.warnings": _t("Warnings:", "تحذيرات:"),
-    "msg.upload_ok": _t("✔ Uploaded - Klipper is ready.", "✔ اترفع - كليبر جاهز."),
+    "msg.upload_ok": _t(" Uploaded - Klipper is ready.", " اترفع - كليبر جاهز."),
     "msg.upload_not_ready": _t("Klipper did not start correctly ({state}):\n\n{msg}\n\nUse “Restore last backup” to go back.",
                                "كليبر ما قامش صح ({state}):\n\n{msg}\n\nاستخدم «استرجاع آخر نسخة احتياطية» عشان ترجع."),
     "msg.confirm_restore": _t("Restore printer.cfg from {name} and restart?", "ترجّع printer.cfg من {name} وتعيد التشغيل؟"),
@@ -346,7 +346,7 @@ STRINGS = {
     "up.restarting": _t("FIRMWARE_RESTART ... waiting for Klipper", "FIRMWARE_RESTART ... مستني كليبر"),
 
     # ---------- config files ----------
-    "nav.files": _t("📁   All config files", "📁   كل ملفات الإعداد"),
+    "nav.files": _t("All config files", "كل ملفات الإعداد"),
     "files.title": _t("All config files", "كل ملفات الإعداد"),
     "files.hint": _t(
         "Every file on the printer: printer.cfg with its include tree, moonraker.conf, crowsnest.conf, "
@@ -538,7 +538,7 @@ STRINGS.update({
                              "الماكروهات اللي البرنامج بيكتبها فيها 'Klipper Studio' في الوصف. لو عدّلت واحد بإيدك وعايز نسختك تفضل، امسح الكلمة دي."),
 
     # ---------- troubleshooter page ----------
-    "nav.doctor": _t("🩺   Troubleshooter", "🩺   حل المشاكل"),
+    "nav.doctor": _t("Troubleshooter", "حل المشاكل"),
     "doctor.title": _t("Troubleshooter", "حل المشاكل"),
     "doctor.hint": _t(
         "Reads Klipper's state, its config warnings and the last session of klippy.log, recognises the common errors, "
@@ -761,7 +761,7 @@ STRINGS.update({
 
 # ---------- start page (1.0.0-beta.2) ----------
 STRINGS.update({
-    "nav.start": _t("🏠   Start", "🏠   البداية"),
+    "nav.start": _t("Start", "البداية"),
     "start.title": _t("Welcome to Klipper Studio", "أهلًا بيك في Klipper Studio"),
     "start.subtitle": _t("Set up, check and fix your Klipper printer without editing config files by hand. Pick what you want to do:",
                          "ظبّط وافحص وصلّح طابعة كليبر من غير ما تعدّل ملفات الإعداد بإيدك. اختار عايز تعمل إيه:"),
@@ -852,7 +852,7 @@ STRINGS.update({
 
 # ---------- features page ----------
 STRINGS.update({
-    "nav.features": _t("🧩   Features", "🧩   المميزات"),
+    "nav.features": _t("Features", "المميزات"),
     "features.title": _t("Features", "المميزات"),
     "features.hint": _t(
         "Turn features on and off, switch any section of your printer.cfg on or off, and add new features from the catalog. "
@@ -998,7 +998,7 @@ STRINGS.update({
 
 # ---------- wiring map ----------
 STRINGS.update({
-    "nav.map": _t("🗺️   Wiring map", "🗺️   خريطة التوصيلات"),
+    "nav.map": _t("Wiring map", "خريطة التوصيلات"),
     "map.title": _t("Wiring map", "خريطة التوصيلات"),
     "map.hint": _t("Everything that is connected to your board, and the pin each device uses. Click a device to edit its pins, drag to arrange, scroll to zoom.",
                    "كل اللي متوصل ببوردتك، والرجل اللي كل جهاز مستخدمها. اضغط على الجهاز تعدّل أرجله، واسحب عشان ترتب، وعجلة الماوس للتكبير."),
@@ -1043,8 +1043,8 @@ def _e(en):
 
 
 STRINGS.update({
-    "nav.printers": _e("🖨   Printers"),
-    "nav.remote": _e("📁   Printer files"),
+    "nav.printers": _e("Printers"),
+    "nav.remote": _e("Printer files"),
     "fleet.title": _e("Printers"),
     "fleet.hint": _e("Your machines, and sending the same files to all of them at once. Tick the printers to "
                      "use, add the files, and press Sync. A file that is printing or waiting in the queue is "

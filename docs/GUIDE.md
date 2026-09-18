@@ -318,51 +318,51 @@ Check printer now reads Klipper's state and the last klippy.log session. Or past
 
 | Feature | What it does | Needs |
 |---|---|---|
-| 🎯 **Bed probe** | Probe the bed: bed mesh, Z homing with the probe, Z leveling. |  |
-| ⚖️ **Multiple Z motors** | Second Z motor on its own driver, leveled automatically with z_tilt. | Bed probe |
-| 🗺️ **Adaptive mesh** | Probes only under the printed parts at the start of each print. | Bed probe, Print macros, Cancel objects |
-| 🧲 **Sensorless homing** | Home X and Y without endstop switches using StallGuard. |  |
-| 🔁 **AWD (dual X/Y motors)** | A second motor on the X and Y axes. |  |
-| 🎛️ **TMC Autotune** | Driver tuning for your exact motor model. Choose the motor per axis. | klipper_tmc_autotune |
-| 〰️ **Input shaper** | Cancels ringing so you can print faster and cleaner. |  |
-| ↩️ **Firmware retraction** | G10/G11 retraction you can tune during a print. |  |
-| ⌒ **Arc moves** | Accept G2/G3 arcs from the slicer. |  |
-| ✂️ **Cancel objects** | Cancel one failed part without stopping the print. |  |
-| ▶️ **Print macros** | START_PRINT, END_PRINT and M600 filament change. |  |
-| 🧵 **Filament runout sensor** | Pause when the filament runs out. |  |
-| 💡 **LED strip** | NeoPixel / WS2812 strip on the board. |  |
-| 🌈 **LED status effects** | The strip fills with temperature and print progress. | klipper-led_effect |
-| 🌡️ **Raspberry Pi temperature** | Shown in Mainsail / Fluidd. |  |
-| 🔥 **Board temperature** | Internal MCU temperature (STM32, RP2040, SAM). |  |
-| ⏱️ **Idle timeout** | Turn motors and heaters off after 30 idle minutes. |  |
-| ❄️ **Relaxed heater check** | For cold rooms or strong fans that trigger 'not heating at expected rate'. |  |
+| probe **Bed probe** | Probe the bed: bed mesh, Z homing with the probe, Z leveling. |  |
+| leveling **Multiple Z motors** | Second Z motor on its own driver, leveled automatically with z_tilt. | Bed probe |
+| mesh **Adaptive mesh** | Probes only under the printed parts at the start of each print. | Bed probe, Print macros, Cancel objects |
+| magnet **Sensorless homing** | Home X and Y without endstop switches using StallGuard. |  |
+| loop **AWD (dual X/Y motors)** | A second motor on the X and Y axes. |  |
+| sliders **TMC Autotune** | Driver tuning for your exact motor model. Choose the motor per axis. | klipper_tmc_autotune |
+| wave **Input shaper** | Cancels ringing so you can print faster and cleaner. |  |
+| retract **Firmware retraction** | G10/G11 retraction you can tune during a print. |  |
+| arc **Arc moves** | Accept G2/G3 arcs from the slicer. |  |
+| exclude **Cancel objects** | Cancel one failed part without stopping the print. |  |
+| play **Print macros** | START_PRINT, END_PRINT and M600 filament change. |  |
+| filament **Filament runout sensor** | Pause when the filament runs out. |  |
+| bulb **LED strip** | NeoPixel / WS2812 strip on the board. |  |
+| bulb **LED status effects** | The strip fills with temperature and print progress. | klipper-led_effect |
+| thermal **Raspberry Pi temperature** | Shown in Mainsail / Fluidd. |  |
+| thermal **Board temperature** | Internal MCU temperature (STM32, RP2040, SAM). |  |
+| timer **Idle timeout** | Turn motors and heaters off after 30 idle minutes. |  |
+| thermal **Relaxed heater check** | For cold rooms or strong fans that trigger 'not heating at expected rate'. |  |
 
 ### Catalog - features you can add
 
 | Feature | What it does | Adds |
 |---|---|---|
-| 🖥️ **Mainsail macros** | PAUSE / RESUME / CANCEL_PRINT macros shipped with Mainsail. (Mainsail) | `[include mainsail.cfg]` |
-| 🖥️ **Fluidd macros** | PAUSE / RESUME / CANCEL_PRINT macros shipped with Fluidd. (Fluidd) | `[include fluidd.cfg]` |
-| 🎞️ **Timelapse** | Layer-by-layer timelapse videos (moonraker-timelapse). (moonraker-timelapse) | `[include timelapse.cfg]` |
-| 📊 **Shake&Tune** | Belt comparison and resonance graphs for input shaper tuning. (Klippain Shake&Tune) | `[shaketune]` |
-| 📐 **ADXL345 on the Raspberry Pi** | Accelerometer wired to the Pi's SPI for SHAPER_CALIBRATE. Needs the Linux host MCU service. | `[mcu rpi]` `[adxl345]` `[resonance_tester]` |
-| 📐 **ADXL345 on a Raspberry Pi Pico** | Accelerometer on a USB Pico. Put your Pico's serial path. | `[mcu adxl]` `[adxl345]` `[resonance_tester]` `[output_pin power_mode]` |
-| 📐 **ADXL345 on the printer board** | Accelerometer on the board's SPI header. Fill cs_pin and spi_bus. | `[adxl345]` `[resonance_tester]` |
-| 📏 **Skew correction** | Corrects a frame that isn't perfectly square (SET_SKEW). | `[skew_correction]` |
-| 🌀 **Axis twist compensation** | Compensates a twisted X gantry for probes mounted off the nozzle. | `[axis_twist_compensation]` |
-| 🔩 **Bed screws helper (probe)** | SCREWS_TILT_CALCULATE tells how much to turn each bed screw. | `[screws_tilt_adjust]` |
-| 🔩 **Bed screws helper (paper test)** | BED_SCREWS_ADJUST moves to each screw for manual leveling. | `[bed_screws]` |
-| 💾 **Save variables** | Macros can store values across restarts (SAVE_VARIABLE). | `[save_variables]` |
-| 🛠️ **Force move** | Move a motor without homing (FORCE_MOVE, SET_KINEMATIC_POSITION). Use with care. | `[force_move]` |
-| 🧵 **Filament motion sensor** | Detects jams and runout (BTT SFS and similar). Fill switch_pin. | `[filament_motion_sensor smart_sensor]` |
-| 🌬️ **Electronics fan** | Runs while the motors are enabled. Fill the fan pin. | `[controller_fan electronics_fan]` |
-| 🌬️ **Chamber exhaust fan** | Temperature-controlled fan for enclosures. Fill pin and sensor_pin. | `[temperature_fan chamber]` |
-| 🌡️ **Chamber thermistor** | Shows the enclosure temperature. Fill sensor_pin. | `[temperature_sensor chamber]` |
-| 💡 **Case light** | Dimmable light on a fan/heater output (SET_PIN PIN=caselight VALUE=1). | `[output_pin caselight]` |
-| 🔔 **Beeper** | Buzzer for M300 style notifications. Fill the pin. | `[output_pin beeper]` |
-| 🔘 **G-code button** | Run G-code when a physical button is pressed. | `[gcode_button my_button]` |
-| 🦾 **Servo** | A hobby servo (SET_SERVO), e.g. for a nozzle wiper. | `[servo my_servo]` |
-| 📝 **Custom section** | Write any Klipper section yourself. | `[my_section]` |
+| screen **Mainsail macros** | PAUSE / RESUME / CANCEL_PRINT macros shipped with Mainsail. (Mainsail) | `[include mainsail.cfg]` |
+| screen **Fluidd macros** | PAUSE / RESUME / CANCEL_PRINT macros shipped with Fluidd. (Fluidd) | `[include fluidd.cfg]` |
+| film **Timelapse** | Layer-by-layer timelapse videos (moonraker-timelapse). (moonraker-timelapse) | `[include timelapse.cfg]` |
+| chart **Shake&Tune** | Belt comparison and resonance graphs for input shaper tuning. (Klippain Shake&Tune) | `[shaketune]` |
+| chart **ADXL345 on the Raspberry Pi** | Accelerometer wired to the Pi's SPI for SHAPER_CALIBRATE. Needs the Linux host MCU service. | `[mcu rpi]` `[adxl345]` `[resonance_tester]` |
+| chart **ADXL345 on a Raspberry Pi Pico** | Accelerometer on a USB Pico. Put your Pico's serial path. | `[mcu adxl]` `[adxl345]` `[resonance_tester]` `[output_pin power_mode]` |
+| chart **ADXL345 on the printer board** | Accelerometer on the board's SPI header. Fill cs_pin and spi_bus. | `[adxl345]` `[resonance_tester]` |
+| ruler **Skew correction** | Corrects a frame that isn't perfectly square (SET_SKEW). | `[skew_correction]` |
+| ruler **Axis twist compensation** | Compensates a twisted X gantry for probes mounted off the nozzle. | `[axis_twist_compensation]` |
+| leveling **Bed screws helper (probe)** | SCREWS_TILT_CALCULATE tells how much to turn each bed screw. | `[screws_tilt_adjust]` |
+| leveling **Bed screws helper (paper test)** | BED_SCREWS_ADJUST moves to each screw for manual leveling. | `[bed_screws]` |
+| save_project **Save variables** | Macros can store values across restarts (SAVE_VARIABLE). | `[save_variables]` |
+| tools **Force move** | Move a motor without homing (FORCE_MOVE, SET_KINEMATIC_POSITION). Use with care. | `[force_move]` |
+| filament **Filament motion sensor** | Detects jams and runout (BTT SFS and similar). Fill switch_pin. | `[filament_motion_sensor smart_sensor]` |
+| fan **Electronics fan** | Runs while the motors are enabled. Fill the fan pin. | `[controller_fan electronics_fan]` |
+| fan **Chamber exhaust fan** | Temperature-controlled fan for enclosures. Fill pin and sensor_pin. | `[temperature_fan chamber]` |
+| thermal **Chamber thermistor** | Shows the enclosure temperature. Fill sensor_pin. | `[temperature_sensor chamber]` |
+| bulb **Case light** | Dimmable light on a fan/heater output (SET_PIN PIN=caselight VALUE=1). | `[output_pin caselight]` |
+| bell **Beeper** | Buzzer for M300 style notifications. Fill the pin. | `[output_pin beeper]` |
+| press **G-code button** | Run G-code when a physical button is pressed. | `[gcode_button my_button]` |
+| tools **Servo** | A hobby servo (SET_SERVO), e.g. for a nozzle wiper. | `[servo my_servo]` |
+| note **Custom section** | Write any Klipper section yourself. | `[my_section]` |
 
 ## 6. How the generated printer.cfg is organized
 

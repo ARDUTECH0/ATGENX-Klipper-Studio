@@ -16,27 +16,27 @@ from .model import Z_MOTORS
 # --------------------------------------------------------------------------- built-in features
 # id: (icon, category, page, requires plugin, depends on)
 BUILTIN = OrderedDict([
-    ("probe", ("🎯", "leveling", "page_probe", "", [])),
-    ("multi_z", ("⚖️", "leveling", "page_motors", "", ["probe"])),
-    ("adaptive_mesh", ("🗺️", "leveling", "page_extras", "", ["probe", "print_macros", "exclude_object"])),
-    ("sensorless", ("🧲", "motion", "page_motors", "", [])),
-    ("awd", ("🔁", "motion", "page_motors", "", [])),
-    ("autotune", ("🎛️", "motion", "page_motors", "klipper_tmc_autotune", [])),
-    ("shaper", ("〰️", "quality", "page_extras", "", [])),
-    ("retraction", ("↩️", "quality", "page_extras", "", [])),
-    ("arcs", ("⌒", "quality", "page_extras", "", [])),
-    ("exclude_object", ("✂️", "printing", "page_extras", "", [])),
-    ("print_macros", ("▶️", "printing", "page_extras", "", [])),
-    ("fil_sensor", ("🧵", "printing", "page_extras", "", [])),
-    ("leds", ("💡", "lights", "page_extras", "", [])),
-    ("led_effects", ("🌈", "lights", "page_extras", "klipper-led_effect", ["leds"])),
-    ("host_temp", ("🌡️", "monitoring", "page_extras", "", [])),
-    ("mcu_temp", ("🔥", "monitoring", "page_extras", "", [])),
-    ("idle_timeout", ("⏱️", "monitoring", "page_extras", "", [])),
-    ("cool_room", ("❄️", "monitoring", "page_thermal", "", [])),
+    ("probe", ("probe", "leveling", "page_probe", "", [])),
+    ("multi_z", ("leveling", "leveling", "page_motors", "", ["probe"])),
+    ("adaptive_mesh", ("mesh", "leveling", "page_extras", "", ["probe", "print_macros", "exclude_object"])),
+    ("sensorless", ("magnet", "motion", "page_motors", "", [])),
+    ("awd", ("loop", "motion", "page_motors", "", [])),
+    ("autotune", ("sliders", "motion", "page_motors", "klipper_tmc_autotune", [])),
+    ("shaper", ("wave", "quality", "page_extras", "", [])),
+    ("retraction", ("retract", "quality", "page_extras", "", [])),
+    ("arcs", ("arc", "quality", "page_extras", "", [])),
+    ("exclude_object", ("exclude", "printing", "page_extras", "", [])),
+    ("print_macros", ("play", "printing", "page_extras", "", [])),
+    ("fil_sensor", ("filament", "printing", "page_extras", "", [])),
+    ("leds", ("bulb", "lights", "page_extras", "", [])),
+    ("led_effects", ("bulb", "lights", "page_extras", "klipper-led_effect", ["leds"])),
+    ("host_temp", ("thermal", "monitoring", "page_extras", "", [])),
+    ("mcu_temp", ("thermal", "monitoring", "page_extras", "", [])),
+    ("idle_timeout", ("timer", "monitoring", "page_extras", "", [])),
+    ("cool_room", ("thermal", "monitoring", "page_thermal", "", [])),
 ])
-CATEGORY_ICONS = OrderedDict([("leveling", "🎯"), ("motion", "⚙️"), ("quality", "✨"), ("printing", "🖨️"),
-                              ("lights", "💡"), ("monitoring", "📈")])
+CATEGORY_ICONS = OrderedDict([("leveling", "leveling"), ("motion", "sliders"), ("quality", "wave"),
+                              ("printing", "printers"), ("lights", "bulb"), ("monitoring", "thermal")])
 
 BOOL_KEYS = {"shaper", "retraction", "arcs", "exclude_object", "print_macros", "fil_sensor", "leds",
              "led_effects", "host_temp", "mcu_temp", "cool_room", "adaptive_mesh"}
@@ -192,40 +192,40 @@ def apply_section_toggles(text, disable=(), enable=()):
 # --------------------------------------------------------------------------- catalog
 # id: (icon, category, requires, template). {bed_x2} etc. are filled from the project.
 CATALOG = OrderedDict([
-    ("mainsail", ("🖥️", "interface", "Mainsail", "[include mainsail.cfg]")),
-    ("fluidd", ("🖥️", "interface", "Fluidd", "[include fluidd.cfg]")),
-    ("timelapse", ("🎞️", "interface", "moonraker-timelapse", "[include timelapse.cfg]")),
-    ("shaketune", ("📊", "tuning", "Klippain Shake&Tune", "[shaketune]\n# result_folder: ~/printer_data/config/ShakeTune_results")),
-    ("adxl_pi", ("📐", "tuning", "", "[mcu rpi]\nserial: /tmp/klipper_host_mcu\n\n[adxl345]\ncs_pin: rpi:None\n\n"
+    ("mainsail", ("screen", "interface", "Mainsail", "[include mainsail.cfg]")),
+    ("fluidd", ("screen", "interface", "Fluidd", "[include fluidd.cfg]")),
+    ("timelapse", ("film", "interface", "moonraker-timelapse", "[include timelapse.cfg]")),
+    ("shaketune", ("chart", "tuning", "Klippain Shake&Tune", "[shaketune]\n# result_folder: ~/printer_data/config/ShakeTune_results")),
+    ("adxl_pi", ("chart", "tuning", "", "[mcu rpi]\nserial: /tmp/klipper_host_mcu\n\n[adxl345]\ncs_pin: rpi:None\n\n"
                                      "[resonance_tester]\naccel_chip: adxl345\nprobe_points:\n    {bed_x2}, {bed_y2}, 20")),
-    ("adxl_pico", ("📐", "tuning", "", "[mcu adxl]\nserial: /dev/serial/by-id/usb-Klipper_rp2040_XXXX-if00\n\n"
+    ("adxl_pico", ("chart", "tuning", "", "[mcu adxl]\nserial: /dev/serial/by-id/usb-Klipper_rp2040_XXXX-if00\n\n"
                                        "[adxl345]\ncs_pin: adxl:gpio1\nspi_bus: spi0a\naxes_map: x,z,y\n\n"
                                        "[resonance_tester]\naccel_chip: adxl345\nprobe_points:\n    {bed_x2}, {bed_y2}, 20\n\n"
                                        "[output_pin power_mode]\npin: adxl:gpio23")),
-    ("adxl_board", ("📐", "tuning", "", "[adxl345]\ncs_pin: \nspi_bus: \n\n[resonance_tester]\naccel_chip: adxl345\n"
+    ("adxl_board", ("chart", "tuning", "", "[adxl345]\ncs_pin: \nspi_bus: \n\n[resonance_tester]\naccel_chip: adxl345\n"
                                         "probe_points:\n    {bed_x2}, {bed_y2}, 20")),
-    ("skew_correction", ("📏", "tuning", "", "[skew_correction]")),
-    ("axis_twist", ("🌀", "tuning", "", "[axis_twist_compensation]\ncalibrate_start_x: {margin}\ncalibrate_end_x: {bed_x_m}\n"
+    ("skew_correction", ("ruler", "tuning", "", "[skew_correction]")),
+    ("axis_twist", ("ruler", "tuning", "", "[axis_twist_compensation]\ncalibrate_start_x: {margin}\ncalibrate_end_x: {bed_x_m}\n"
                                         "calibrate_y: {bed_y2}")),
-    ("screws_tilt", ("🔩", "leveling", "", "[screws_tilt_adjust]\nscrew1: 30, 30\nscrew1_name: front left\n"
+    ("screws_tilt", ("leveling", "leveling", "", "[screws_tilt_adjust]\nscrew1: 30, 30\nscrew1_name: front left\n"
                                           "screw2: {bed_x_30}, 30\nscrew2_name: front right\nscrew3: {bed_x_30}, {bed_y_30}\n"
                                           "screw3_name: rear right\nscrew4: 30, {bed_y_30}\nscrew4_name: rear left\n"
                                           "horizontal_move_z: 10\nspeed: 50\nscrew_thread: CW-M3")),
-    ("bed_screws", ("🔩", "leveling", "", "[bed_screws]\nscrew1: 30, 30\nscrew2: {bed_x_30}, 30\n"
+    ("bed_screws", ("leveling", "leveling", "", "[bed_screws]\nscrew1: 30, 30\nscrew2: {bed_x_30}, 30\n"
                                          "screw3: {bed_x_30}, {bed_y_30}\nscrew4: 30, {bed_y_30}")),
-    ("save_variables", ("💾", "macros", "", "[save_variables]\nfilename: ~/printer_data/config/variables.cfg")),
-    ("force_move", ("🛠️", "macros", "", "[force_move]\nenable_force_move: True")),
-    ("motion_sensor", ("🧵", "printing", "", "[filament_motion_sensor smart_sensor]\ndetection_length: 7.0\n"
+    ("save_variables", ("save_project", "macros", "", "[save_variables]\nfilename: ~/printer_data/config/variables.cfg")),
+    ("force_move", ("tools", "macros", "", "[force_move]\nenable_force_move: True")),
+    ("motion_sensor", ("filament", "printing", "", "[filament_motion_sensor smart_sensor]\ndetection_length: 7.0\n"
                                              "extruder: extruder\nswitch_pin: \npause_on_runout: True")),
-    ("controller_fan", ("🌬️", "fans", "", "[controller_fan electronics_fan]\npin: \nstepper: stepper_x, stepper_y, stepper_z")),
-    ("chamber_fan", ("🌬️", "fans", "", "[temperature_fan chamber]\npin: \nsensor_type: Generic 3950\nsensor_pin: \n"
+    ("controller_fan", ("fan", "fans", "", "[controller_fan electronics_fan]\npin: \nstepper: stepper_x, stepper_y, stepper_z")),
+    ("chamber_fan", ("fan", "fans", "", "[temperature_fan chamber]\npin: \nsensor_type: Generic 3950\nsensor_pin: \n"
                                         "control: watermark\nmax_temp: 70\nmin_temp: 0\ntarget_temp: 40")),
-    ("chamber_sensor", ("🌡️", "fans", "", "[temperature_sensor chamber]\nsensor_type: Generic 3950\nsensor_pin: ")),
-    ("case_light", ("💡", "lights", "", "[output_pin caselight]\npin: \npwm: True\nvalue: 0\ncycle_time: 0.010")),
-    ("beeper", ("🔔", "interface", "", "[output_pin beeper]\npin: \npwm: True\nvalue: 0\ncycle_time: 0.001")),
-    ("button", ("🔘", "interface", "", "[gcode_button my_button]\npin: \npress_gcode:\n    M117 Button pressed")),
-    ("servo", ("🦾", "hardware", "", "[servo my_servo]\npin: \nmaximum_servo_angle: 180")),
-    ("blank", ("📝", "hardware", "", "[my_section]\n")),
+    ("chamber_sensor", ("thermal", "fans", "", "[temperature_sensor chamber]\nsensor_type: Generic 3950\nsensor_pin: ")),
+    ("case_light", ("bulb", "lights", "", "[output_pin caselight]\npin: \npwm: True\nvalue: 0\ncycle_time: 0.010")),
+    ("beeper", ("bell", "interface", "", "[output_pin beeper]\npin: \npwm: True\nvalue: 0\ncycle_time: 0.001")),
+    ("button", ("press", "interface", "", "[gcode_button my_button]\npin: \npress_gcode:\n    M117 Button pressed")),
+    ("servo", ("tools", "hardware", "", "[servo my_servo]\npin: \nmaximum_servo_angle: 180")),
+    ("blank", ("note", "hardware", "", "[my_section]\n")),
 ])
 
 

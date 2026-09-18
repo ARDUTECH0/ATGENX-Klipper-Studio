@@ -139,6 +139,137 @@ def _draw(name, p, c):
         p.drawLine(12, 11, 12, 16)
         p.setBrush(QColor(c))
         p.drawEllipse(QPointF(12, 8.2), 0.9, 0.9)
+    elif name == "leveling":
+        p.drawLine(4, 16, 20, 16)
+        p.drawLine(12, 16, 12, 6)
+        p.drawEllipse(QPointF(12, 5), 2, 2)
+        p.drawLine(7, 19, 17, 19)
+    elif name == "mesh":
+        for i in range(4):
+            v = 6 + i * 4
+            p.drawLine(5, v, 19, v)
+            p.drawLine(v, 5, v, 19)
+    elif name == "magnet":
+        p.drawArc(QRectF(5.5, 5, 13, 13), 0, 180 * 16)
+        p.drawLine(5.5, 11.5, 5.5, 17)
+        p.drawLine(10.5, 11.5, 10.5, 17)
+        p.drawLine(13.5, 11.5, 13.5, 17)
+        p.drawLine(18.5, 11.5, 18.5, 17)
+    elif name == "loop":
+        p.drawArc(QRectF(5, 5, 14, 14), 40 * 16, 280 * 16)
+        p.drawLine(17, 4.5, 18.5, 8)
+        p.drawLine(18.5, 8, 15, 8.5)
+    elif name == "sliders":
+        for i, y in enumerate((8, 12.5, 17)):
+            p.drawLine(4.5, y, 19.5, y)
+            p.setBrush(QColor(c))
+            p.drawEllipse(QPointF(8 + i * 4.5, y), 2, 2)
+            p.setBrush(Qt.NoBrush)
+    elif name == "wave":
+        path = QPainterPath(QPointF(4, 12))
+        path.cubicTo(7, 4, 9, 20, 12, 12)
+        path.cubicTo(15, 4, 17, 20, 20, 12)
+        p.drawPath(path)
+    elif name == "retract":
+        p.drawLine(6, 8, 18, 8)
+        p.drawArc(QRectF(12, 8, 7, 8), 90 * 16, -180 * 16)
+        p.drawLine(15.5, 16, 7, 16)
+        p.drawLine(7, 16, 10, 13)
+        p.drawLine(7, 16, 10, 19)
+    elif name == "arc":
+        p.drawArc(QRectF(4, 6, 16, 16), 0, 180 * 16)
+        p.setBrush(QColor(c))
+        p.drawEllipse(QPointF(4, 14), 1.6, 1.6)
+        p.drawEllipse(QPointF(20, 14), 1.6, 1.6)
+    elif name == "exclude":
+        p.drawRect(QRectF(5, 5, 14, 14))
+        p.drawLine(8, 8, 16, 16)
+        p.drawLine(16, 8, 8, 16)
+    elif name == "play":
+        path = QPainterPath(QPointF(8, 5.5))
+        path.lineTo(19, 12)
+        path.lineTo(8, 18.5)
+        path.closeSubpath()
+        p.drawPath(path)
+        p.drawLine(5, 5.5, 5, 18.5)
+    elif name == "filament":
+        p.drawEllipse(QPointF(12, 10), 6.5, 6.5)
+        p.drawEllipse(QPointF(12, 10), 2, 2)
+        p.drawLine(12, 16.5, 12, 20.5)
+    elif name == "bulb":
+        p.drawEllipse(QPointF(12, 10), 4.6, 4.6)
+        p.drawLine(9.5, 16.5, 14.5, 16.5)
+        p.drawLine(10.5, 19, 13.5, 19)
+    elif name == "timer":
+        p.drawEllipse(QPointF(12, 13), 6.5, 6.5)
+        p.drawLine(12, 13, 12, 9.5)
+        p.drawLine(12, 13, 15, 14.5)
+        p.drawLine(9.5, 4, 14.5, 4)
+    elif name == "heat":
+        path = QPainterPath(QPointF(12, 4))
+        path.cubicTo(17, 9, 18, 13, 15.5, 16)
+        path.cubicTo(13, 19, 11, 19, 8.5, 16)
+        path.cubicTo(6, 13, 8, 9, 12, 4)
+        p.drawPath(path)
+    elif name in ("thermal2", "sensor"):
+        p.drawLine(11, 5, 11, 14)
+        p.drawEllipse(QPointF(11, 16.5), 3.2, 3.2)
+        p.drawLine(14, 7, 17, 7)
+        p.drawLine(14, 10, 17, 10)
+    elif name == "fan":
+        p.drawEllipse(QPointF(12, 12), 7.5, 7.5)
+        for a in (0, 120, 240):
+            path = QPainterPath(QPointF(12, 12))
+            import math
+            r1, r2 = 6.5, 6.5
+            a1, a2 = math.radians(a), math.radians(a + 55)
+            path.lineTo(12 + r1 * math.cos(a1), 12 + r1 * math.sin(a1))
+            path.quadTo(12 + 8 * math.cos(math.radians(a + 27)), 12 + 8 * math.sin(math.radians(a + 27)),
+                        12 + r2 * math.cos(a2), 12 + r2 * math.sin(a2))
+            path.closeSubpath()
+            p.drawPath(path)
+    elif name == "section":
+        p.drawRect(QRectF(4.5, 6.5, 15, 11))
+        p.drawLine(4.5, 10, 19.5, 10)
+        p.drawLine(7.5, 13.5, 13, 13.5)
+    elif name == "screen":
+        p.drawRoundedRect(QRectF(4, 5.5, 16, 11), 2, 2)
+        p.drawLine(9, 19, 15, 19)
+        p.drawLine(12, 16.5, 12, 19)
+    elif name == "film":
+        p.drawRoundedRect(QRectF(4, 6, 16, 12), 2, 2)
+        for x in (7, 17):
+            for y in (8.5, 12, 15.5):
+                p.drawLine(x - 1.2, y, x + 1.2, y)
+    elif name == "chart":
+        p.drawLine(5, 19, 19, 19)
+        p.drawLine(5, 19, 5, 5)
+        p.drawLine(7.5, 15, 11, 11)
+        p.drawLine(11, 11, 14, 14)
+        p.drawLine(14, 14, 18.5, 7.5)
+    elif name == "ruler":
+        p.drawRoundedRect(QRectF(3.5, 8.5, 17, 7), 1.5, 1.5)
+        for x in (7, 10.5, 14, 17.5):
+            p.drawLine(x, 8.5, x, 11.5)
+    elif name == "tools":
+        p.drawLine(5.5, 18.5, 13, 11)
+        p.drawEllipse(QPointF(15.5, 8.5), 3.6, 3.6)
+        p.drawLine(4.5, 17.5, 6.5, 19.5)
+    elif name == "bell":
+        p.drawArc(QRectF(6, 5, 12, 12), 0, 180 * 16)
+        p.drawLine(6, 11, 6, 16)
+        p.drawLine(18, 11, 18, 16)
+        p.drawLine(4.5, 16, 19.5, 16)
+        p.drawArc(QRectF(10, 17, 4, 3), 0, -180 * 16)
+    elif name == "press":
+        p.drawEllipse(QPointF(12, 12), 7.5, 7.5)
+        p.setBrush(QColor(c))
+        p.drawEllipse(QPointF(12, 12), 3, 3)
+    elif name == "note":
+        p.drawRect(QRectF(5.5, 4.5, 13, 15))
+        p.drawLine(8.5, 9, 15.5, 9)
+        p.drawLine(8.5, 12.5, 15.5, 12.5)
+        p.drawLine(8.5, 16, 12.5, 16)
     elif name == "theme":
         p.drawEllipse(QPointF(12, 12), 7.5, 7.5)
         p.setBrush(QColor(c))

@@ -83,7 +83,7 @@ class HelpMixin:
         self.help_cfg.hide()
         v.addStretch(1)
 
-        guide = QPushButton("📖  " + tr("help.open_guide"))
+        guide = QPushButton("" + tr("help.open_guide"))
         guide.clicked.connect(self.act_guide)
         v.addWidget(guide)
         scroll.setWidget(body)
@@ -159,7 +159,7 @@ class HelpMixin:
         for i, (key, builder) in enumerate(self.PAGES):
             item = self.nav.item(i)
             errs, warns = counts.get(builder, [0, 0])
-            badge = ("   ✕ %d" % errs) if errs else (("   △ %d" % warns) if warns else "")
+            badge = ("    %d" % errs) if errs else (("    %d" % warns) if warns else "")
             item.setText(strip_emoji(tr(key)) + badge)
             item.setForeground(QColor("#ffa198") if errs else QColor("#e6c07b") if warns else QColor("#8b949e"))
             item.setToolTip(tr("help.nav_badge", errors=errs, warnings=warns) if (errs or warns) else "")
