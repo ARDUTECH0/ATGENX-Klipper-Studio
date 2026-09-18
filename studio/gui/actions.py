@@ -71,7 +71,7 @@ class ActionsMixin:
             return
         self.collect()
         x0, y0, x1, y1 = mesh_bounds(self.P)
-        self.mesh_lbl.setText("X %s → %s    Y %s → %s" % (n(x0), n(x1), n(y0), n(y1)))
+        self.mesh_lbl.setText("X %s  %s    Y %s  %s" % (n(x0), n(x1), n(y0), n(y1)))
         mode = "merge" if self.rb_merge.isChecked() else "full"
         self.cb_keep.setEnabled(mode == "full")
         board = self.board()
@@ -88,7 +88,7 @@ class ActionsMixin:
             add = sum(1 for l in d if l.startswith("+") and not l.startswith("+++"))
             rem = sum(1 for l in d if l.startswith("-") and not l.startswith("---"))
             self.diff_box.setPlainText("\n".join(d) if d else tr("preview.no_diff"))
-            self.tabs.setTabText(1, "%s  (+%d  −%d)" % (tr("preview.diff"), add, rem))
+            self.tabs.setTabText(1, "%s  (+%d  %d)" % (tr("preview.diff"), add, rem))
             self.src_lbl.setText(tr("preview.based_on", src=self.current_src))
         else:
             self.diff_box.setPlainText(tr("preview.no_current"))
@@ -99,7 +99,7 @@ class ActionsMixin:
                                 elsewhere=cs.section_files() if cs else None,
                                 klipper_warnings=cs.warnings if cs else None)
         self.val_list.clear()
-        icons = {"error": ("✖", "#f85149"), "warn": ("▲", "#d29922"), "ok": ("✔", "#3fb950")}
+        icons = {"error": ("", "#f85149"), "warn": ("", "#d29922"), "ok": ("", "#3fb950")}
         errs = 0
         order = {"error": 0, "warn": 1, "ok": 2}
         for kind, msg, page in sorted(self.results, key=lambda r: order[r[0]]):
@@ -111,7 +111,7 @@ class ActionsMixin:
                 it.setToolTip(tr("preview.check_click"))
             self.val_list.addItem(it)
             errs += kind == "error"
-        self.tabs.setTabText(0, tr("preview.checks_errors", count=errs) if errs else tr("preview.checks") + "  ✔")
+        self.tabs.setTabText(0, tr("preview.checks_errors", count=errs) if errs else tr("preview.checks") + "  ")
         self.update_nav_status()
 
     # ---------- projects ----------
@@ -180,7 +180,7 @@ class ActionsMixin:
         try:
             m = self.mr()
         except MoonrakerError as e:
-            self.info_box.setPlainText("✖  %s" % e)
+            self.info_box.setPlainText("  %s" % e)
             return
         self.info_box.setPlainText(tr("msg.connecting", url=m.base))
 
@@ -189,14 +189,14 @@ class ActionsMixin:
 
         def done(r, e):
             if e:
-                self.info_box.setPlainText("✖  %s" % e)
+                self.info_box.setPlainText("  %s" % e)
                 self._set_conn(False)
                 return
             info, srv, st, chip, files = r
             matches = boards_for_mcu(chip) if chip else []
             boards = load_boards()
             lines = [
-                "✔  " + tr("msg.connected"),
+                "" + tr("msg.connected"),
                 "Klipper    : %s  |  %s" % (info.get("state"), info.get("software_version", "")),
                 "Moonraker  : %s" % srv.get("moonraker_version", ""),
                 "Host       : %s" % info.get("hostname", ""),
@@ -217,9 +217,9 @@ class ActionsMixin:
     def _set_conn(self, ok, state=""):
         if ok:
             col = "#d29922" if state in ("printing", "paused") else "#3fb950"
-            txt = "●  " + tr("conn.connected", state=tr("state." + state) if state in ("printing", "paused") else state)
+            txt = "" + tr("conn.connected", state=tr("state." + state) if state in ("printing", "paused") else state)
         else:
-            col, txt = "#f85149", "●  " + tr("conn.offline")
+            col, txt = "#f85149", "" + tr("conn.offline")
         self.conn_lbl.setText(txt)
         self.conn_lbl.setStyleSheet("color:%s;padding:12px 18px;" % col)
 
@@ -325,7 +325,7 @@ class ActionsMixin:
 
         def done(r, e):
             if e:
-                self._log("✖ " + str(e))
+                self._log(" " + str(e))
                 QMessageBox.critical(self, APP_NAME, str(e))
                 return
             bname, fresh, info = r

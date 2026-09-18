@@ -9,6 +9,8 @@ from ..features import (BUILTIN, CATALOG, CATEGORY_ICONS, feature_on, fill_templ
                         set_feature)
 from ..help import help_text
 from ..i18n import tr
+from .icons import icon as draw
+from .style import accent
 from .widgets import CfgHighlighter
 
 
@@ -79,11 +81,25 @@ def _clear(layout):
             item.layout().deleteLater()
 
 
+def _with_icon(label, name):
+    """A heading with its drawn icon in front of it."""
+    from PySide6.QtWidgets import QHBoxLayout, QLabel, QWidget
+    box = QWidget()
+    lay = QHBoxLayout(box)
+    lay.setContentsMargins(0, 0, 0, 0)
+    lay.setSpacing(8)
+    ic = QLabel()
+    ic.setPixmap(draw(name, accent(), 20).pixmap(20, 20))
+    lay.addWidget(ic)
+    lay.addWidget(label, 1)
+    return box
+
+
 class FeaturesMixin:
     def page_features(self):
         w, v = self._page(tr("features.title"), tr("features.hint"))
         self.feature_search = QLineEdit()
-        self.feature_search.setPlaceholderText("🔍  " + tr("features.search"))
+        self.feature_search.setPlaceholderText(tr("features.search"))
         self.feature_search.textChanged.connect(lambda _t: self._fill_features())
         v.addWidget(self.feature_search)
 
@@ -93,9 +109,9 @@ class FeaturesMixin:
         self.tab_builtin, self.tab_builtin_lay = self._scroll_tab()
         self.tab_file, self.tab_file_lay = self._scroll_tab()
         self.tab_add, self.tab_add_lay = self._scroll_tab()
-        self.feature_tabs.addTab(self.tab_builtin, "⚙️  " + tr("features.tab_builtin"))
-        self.feature_tabs.addTab(self.tab_file, "📄  " + tr("features.tab_file", count=0))
-        self.feature_tabs.addTab(self.tab_add, "➕  " + tr("features.tab_add"))
+        self.feature_tabs.addTab(self.tab_builtin, tr("features.tab_builtin"))
+        self.feature_tabs.addTab(self.tab_file, tr("features.tab_file", count=0))
+        self.feature_tabs.addTab(self.tab_add, tr("features.tab_add"))
         v.addWidget(self.feature_tabs, 1)
         return w
 
@@ -142,7 +158,9 @@ class FeaturesMixin:
             ids = [f for f, spec in BUILTIN.items() if spec[1] == cat]
             if not ids:
                 continue
-            head = QLabel("%s  %s" % (icon, tr("fcat." + cat)), objectName="sectionHead")
+            head = QLabel(tr("fcat." + cat), objectName="sectionHead")
+            head.setPixmap  # the category icon is drawn next to it below
+            head = _with_icon(head, icon)
             lay.addWidget(head)
             self._feature_heads[cat] = head
             grid = QGridLayout()
@@ -160,7 +178,8 @@ class FeaturesMixin:
         card.setMinimumHeight(118)
         h = QHBoxLayout(card)
         h.setContentsMargins(14, 12, 14, 12)
-        ic = QLabel(icon, objectName="featureIcon")
+        ic = QLabel(objectName="featureIcon")
+        ic.setPixmap(draw(icon, accent(), 26).pixmap(26, 26))
         ic.setFixedWidth(30)
         ic.setAlignment(Qt.AlignTop | Qt.AlignHCenter)
         h.addWidget(ic)
@@ -172,15 +191,15 @@ class FeaturesMixin:
         col.addWidget(desc)
         badges = []
         if plugin:
-            badges.append("🔌 " + tr("features.needs", what=plugin))
+            badges.append(tr("features.needs", what=plugin))
         if deps:
-            badges.append("🔗 " + tr("features.depends", what=", ".join(tr("feat.%s.title" % d) for d in deps)))
+            badges.append(tr("features.depends", what=", ".join(tr("feat.%s.title" % d) for d in deps)))
         if badges:
             b = QLabel("   ".join(badges), objectName="featureBadge")
             b.setWordWrap(True)
             col.addWidget(b)
         col.addStretch(1)
-        link = QPushButton(tr("features.settings") + "  →", objectName="link")
+        link = QPushButton(tr("features.settings") + "  ", objectName="link")
         link.setCursor(Qt.PointingHandCursor)
         link.clicked.connect(lambda _=False, p=page: self.goto_page(p))
         row = QHBoxLayout()
@@ -208,14 +227,14 @@ class FeaturesMixin:
         _clear(lay)
         from ..merge import is_managed
         if not self.current_text:
-            self.feature_tabs.setTabText(1, "📄  " + tr("features.tab_file", count=0))
+            self.feature_tabs.setTabText(1, tr("features.tab_file", count=0))
             msg = QLabel(tr("features.no_file"), objectName="hint")
             msg.setWordWrap(True)
             lay.addWidget(msg)
             lay.addStretch(1)
             return
         secs = list_sections(self.current_text, lambda n: is_managed(n, self.P))
-        self.feature_tabs.setTabText(1, "📄  " + tr("features.tab_file", count=len(secs)))
+        self.feature_tabs.setTabText(1, tr("features.tab_file", count=len(secs)))
         hint = QLabel(tr("features.file_hint"), objectName="hint")
         hint.setWordWrap(True)
         lay.addWidget(hint)
@@ -247,7 +266,7 @@ class FeaturesMixin:
         h.addWidget(lab, 1)
         state = QLabel(objectName="hint")
         if now_on != originally_on:
-            state.setText("● " + tr("features.pending_on" if now_on else "features.pending_off"))
+            state.setText(" " + tr("features.pending_on" if now_on else "features.pending_off"))
             state.setStyleSheet("color:#d29922;")
         elif not originally_on:
             state.setText(tr("features.was_off"))
@@ -273,7 +292,7 @@ class FeaturesMixin:
     def _fill_catalog(self):
         lay = self.tab_add_lay
         _clear(lay)
-        lay.addWidget(QLabel("📦  " + tr("features.added"), objectName="sectionHead"))
+        lay.addWidget(QLabel(tr("features.added"), objectName="sectionHead"))
         items = self.P["custom_sections"]
         if not items:
             e = QLabel(tr("features.added_empty"), objectName="hint")
@@ -282,7 +301,7 @@ class FeaturesMixin:
             lay.addWidget(self._custom_editor(idx, item))
 
         lay.addSpacing(8)
-        lay.addWidget(QLabel("🗂️  " + tr("features.catalog"), objectName="sectionHead"))
+        lay.addWidget(QLabel(tr("features.catalog"), objectName="sectionHead"))
         existing = set(section_names(self.current_text or ""))
         cats = []
         for cid, (icon, cat, requires, template) in CATALOG.items():
@@ -306,7 +325,8 @@ class FeaturesMixin:
         card = QFrame(objectName="featureCard")
         h = QHBoxLayout(card)
         h.setContentsMargins(14, 10, 14, 10)
-        ic = QLabel(icon, objectName="featureIcon")
+        ic = QLabel(objectName="featureIcon")
+        ic.setPixmap(draw(icon, accent(), 26).pixmap(26, 26))
         ic.setFixedWidth(34)
         h.addWidget(ic)
         col = QVBoxLayout()
@@ -316,13 +336,13 @@ class FeaturesMixin:
         d.setWordWrap(True)
         col.addWidget(d)
         names = section_names(template)
-        tag = QLabel(" ".join("[%s]" % n for n in names) + (("   🔌 " + requires) if requires else ""), objectName="featureBadge")
+        tag = QLabel(" ".join("[%s]" % n for n in names) + (("    " + requires) if requires else ""), objectName="featureBadge")
         tag.setWordWrap(True)
         col.addWidget(tag)
         h.addLayout(col, 1)
         taken = [n for n in names if n in existing] if cid != "blank" else []
         added = any(it.get("id") == cid for it in self.P["custom_sections"]) and cid != "blank"
-        btn = QPushButton("✔" if added else tr("features.add"), objectName="primary" if not (taken or added) else "")
+        btn = QPushButton("" if added else tr("features.add"), objectName="primary" if not (taken or added) else "")
         btn.setEnabled(not taken and not added)
         if taken:
             btn.setToolTip(tr("features.exists", section=taken[0]))
