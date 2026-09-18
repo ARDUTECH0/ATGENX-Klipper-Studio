@@ -7,6 +7,7 @@ from PySide6.QtWidgets import QCheckBox, QFormLayout, QFrame, QLabel, QPushButto
 from .. import REPO_URL
 from ..help import HELP, help_cfg, help_text, page_guide
 from ..i18n import get_lang, tr
+from .icons import strip_emoji
 
 
 class _HelpFilter(QObject):
@@ -134,7 +135,7 @@ class HelpMixin:
         if not hasattr(self, "help_page_title"):
             return
         key, builder = self.PAGES[idx]
-        self.help_page_title.setText(tr(key).strip().split("   ", 1)[-1])
+        self.help_page_title.setText(strip_emoji(tr(key)))
         self.help_page_text.setText(page_guide(builder))
         self.help_title.setText(tr("help.hover_hint"))
         self.help_text.setText("")
@@ -158,7 +159,7 @@ class HelpMixin:
         for i, (key, builder) in enumerate(self.PAGES):
             item = self.nav.item(i)
             errs, warns = counts.get(builder, [0, 0])
-            badge = ("   ✖ %d" % errs) if errs else (("   ▲ %d" % warns) if warns else "")
-            item.setText(tr(key) + badge)
+            badge = ("   ✕ %d" % errs) if errs else (("   △ %d" % warns) if warns else "")
+            item.setText(strip_emoji(tr(key)) + badge)
             item.setForeground(QColor("#ffa198") if errs else QColor("#e6c07b") if warns else QColor("#8b949e"))
             item.setToolTip(tr("help.nav_badge", errors=errs, warnings=warns) if (errs or warns) else "")

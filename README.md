@@ -15,7 +15,9 @@
 
 [العربية](README.ar.md) · [User guide](docs/GUIDE.md) · [Supported boards](docs/BOARDS.md) · [Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md)
 
-<img src="docs/screenshots/start-en.png" width="900" alt="Klipper Studio start page">
+<img src="docs/demo/demo.gif" width="900" alt="Klipper Studio: importing a printer.cfg, setting up motors, the wiring map and the diff">
+
+*45 seconds: import a real `printer.cfg`, pick a board, set up the motors, see the wiring map - and the diff before anything is uploaded.*
 
 </div>
 

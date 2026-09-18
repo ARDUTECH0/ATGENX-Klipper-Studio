@@ -12,6 +12,21 @@ def _h(page, cfg, en, ar):
 
 # --------------------------------------------------------------------------- pages
 PAGE_GUIDE = OrderedDict([
+    ("page_printers", (
+        "Your printers, and sending the same files to all of them at once.\n"
+        "1. Add printer: name, address, and - if they are not the usual ones - the Moonraker port, "
+        "the SSH port and the folder its files go into.\n"
+        "2. Tick the printers you want, add files or a whole folder, and press Sync.\n"
+        "3. Each printer gets its own progress bar with speed and time left, and the log says what "
+        "happened.\n\n"
+        "Dry run does everything except write. A file that is printing or waiting in the queue is "
+        "never overwritten - it is skipped and listed for you.",
+        "طابعاتك، وإرسال نفس الملفات لكلها في نفس الوقت. جرب Dry run الأول.")),
+    ("page_remote", (
+        "What is on a printer right now. Double-click a folder to open it, hover a file to see the "
+        "thumbnail the slicer put in it, and select files to delete them.\n\n"
+        "Anything printing or queued is marked and cannot be deleted.",
+        "اللي موجود على الطابعة دلوقتي. اللي بيتطبع محمي.")),
     ("page_start", (
         "Pick what you want to do. Every path ends on Review & upload, where you see the checks and the exact changes before anything reaches the printer.",
         "اختار عايز تعمل إيه. كل الطرق بتنتهي في صفحة المراجعة والرفع، وهناك بتشوف نتيجة الفحص والتغييرات بالظبط قبل ما أي حاجة توصل للطابعة.")),
@@ -68,6 +83,17 @@ PAGE_GUIDE = OrderedDict([
 
 # --------------------------------------------------------------------------- settings
 HELP = OrderedDict([
+    # printers and sync
+    ("fleet.dry_run", _h("page_printers", "",
+                         "Runs the whole sync without writing anything: it connects, compares every file and "
+                         "tells you what it would send, replace or skip. Use it the first time you point the app "
+                         "at a printer you care about.",
+                         "بيشغل العملية كلها من غير ما يكتب حاجة: بيتصل ويقارن كل ملف ويقولك هيبعت إيه.")),
+    ("fleet.skip_same", _h("page_printers", "",
+                           "A file already on the printer with exactly the same size is left alone. Turn this off "
+                           "to send everything again, for example after re-slicing with the same file names.",
+                           "الملف الموجود على الطابعة بنفس الحجم بيتساب زي ما هو. اقفلها عشان يبعت كل حاجة تاني.")),
+
     # connection
     ("host", _h("page_connection", "",
                 "The printer's IP address or host name, the same one you open Mainsail or Fluidd with. Example: 192.168.1.50 or mainsailos.local.",

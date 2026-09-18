@@ -263,12 +263,73 @@ def main():
     P2 = load_project(tmp)
     check("project: save/load round trip", P2["motors"] == win.P["motors"] and P2["pins"] == win.P["pins"])
 
-    win.act_language()
-    app.processEvents()
-    nw = app._studio_window
-    check("language: switched to Arabic window", i18n.get_lang() == "ar" and nw is not win and nw.P is win.P)
-    nw.do_generate()
-    check("language: Arabic window generates", bool(nw.generated))
+    check("language: the window is English and has no language switch",
+          i18n.get_lang() == "en" and not [a for a in win.findChildren(type(win.actions()[0]))
+                                           if "عرب" in a.text()] if win.actions() else i18n.get_lang() == "en")
+
+    # ---- printers, parallel sync and the remote file browser
+    from studio import printers as PR, sync as SY
+    p1 = PR.new_printer("fleet one", "127.0.0.1", port=fake.port)
+    fake2 = FakeMoonraker().start()
+    p2 = PR.new_printer("fleet two", "127.0.0.1", port=fake2.port)
+    win.fleet = PR.save_printers([p1, p2])
+    win._fill_printers()
+    check("printers: both rows are listed", win.printer_table.rowCount() == 2)
+    check("printers: reorder moves a printer", PR.move_printer(win.fleet, p2["id"], -1)[0]["name"] == "fleet two")
+    win.fleet = PR.save_printers([p1, p2])
+    win._fill_printers()
+
+    folder = tempfile.mkdtemp(prefix="gcode_")
+    for name, size in (("cube.gcode", 30000), ("benchy.gcode", 30000)):
+        with io.open(os.path.join(folder, name), "w", encoding="utf-8", newline="") as f:
+            f.write("G1 X1\n" * (size // 6))
+    win._add_paths([folder])
+    check("printers: files are listed with a total", win.file_list.count() == 3)
+
+    win.cb_dry.setChecked(True)
+    win.act_sync()
+    wait(win)
+    check("sync: dry run wrote nothing to either printer", not fake.gcodes and not fake2.gcodes)
+    check("sync: the log says it was a dry run", "dry run" in win.sync_log.toPlainText())
+
+    win.cb_dry.setChecked(False)
+    win.act_sync()
+    wait(win)
+    check("sync: both printers received both files",
+          sorted(fake.gcodes) == ["benchy.gcode", "cube.gcode"] and sorted(fake2.gcodes) == ["benchy.gcode", "cube.gcode"])
+    check("sync: every printer got a progress bar", len(win.sync_bars) == 2)
+    check("sync: the bars finished", all(b.value() == 1000 for b, _ in win.sync_bars.values()))
+
+    fake.print_state, fake.printing = "printing", "cube.gcode"
+    fake.gcodes["cube.gcode"] = "OLD"
+    win.act_sync()
+    wait(win)
+    check("sync: the file being printed was not overwritten", fake.gcodes["cube.gcode"] == "OLD")
+    check("sync: the log reports the skip", "SKIPPED" in win.sync_log.toPlainText())
+    fake.print_state, fake.printing = "standby", ""
+
+    win.goto_page("page_remote")
+    fake.gcodes["parts/bracket.gcode"] = "G1"
+    fake.thumbs["benchy.gcode"] = open(png, "rb").read() if os.path.exists(png) else b"x"
+    win.act_remote_refresh()
+    wait(win)
+    names = [win.remote_list.item(i).data(Qt.UserRole) for i in range(win.remote_list.count())]
+    check("remote: folders and files are shown", ("dir", "parts") in names and ("file", "benchy.gcode") in names)
+    win._remote_open(win.remote_list.item([n[1] for n in names].index("parts")))
+    wait(win)
+    check("remote: opening a folder navigates into it", win.remote_path == "parts")
+    win.act_remote_up()
+    wait(win)
+    check("remote: up returns to the root", win.remote_path == "")
+
+    fake.print_state, fake.printing = "printing", "benchy.gcode"
+    win.act_remote_refresh()
+    wait(win)
+    win.remote_list.selectAll()
+    win.act_remote_delete()
+    wait(win)
+    check("remote: a printing file is never deleted", "benchy.gcode" in fake.gcodes)
+    fake2.stop()
 
     fake.stop()
     failed = [n for n, ok in RESULTS if not ok]

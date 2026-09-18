@@ -13,3 +13,6 @@ tests/.studio_home/
 dist/
 build/
 tools/_entry.py
+tests/.studio_home_live/
+docs/demo/*.mp4
+build/demo-frames/

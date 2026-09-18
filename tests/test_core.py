@@ -427,6 +427,22 @@ class TestFeatures(unittest.TestCase):
 
 
 class TestWiringMap(unittest.TestCase):
+    def test_a_switched_off_section_is_not_reported_as_a_problem(self):
+        """Found on a real printer: [adxl345] and [mcu pico] both commented out is not an error."""
+        P = new_params()
+        text = (
+            "[stepper_x]\nstep_pin: PA1\n"
+            "# [mcu pico]\n# serial: /dev/serial/by-id/usb-Klipper_rp2040_X-if00\n"
+            "# [adxl345]\n# cs_pin: pico:gpio1\n"
+        )
+        from studio.wiring import wiring
+        data = wiring(P, None, text)
+        adxl = [n for n in data["nodes"] if "adxl345" in n["label"]]
+        self.assertTrue(adxl, "the commented section should still be drawn")
+        self.assertTrue(adxl[0]["off"])
+        self.assertEqual([p.get("issue") for p in adxl[0]["pins"] if p.get("issue")], [])
+        self.assertEqual(adxl[0]["issues"], [])
+
     def setUp(self):
         i18n.set_lang("en")
         self.text = read("simple_printer.cfg")
@@ -547,11 +563,13 @@ class TestI18n(unittest.TestCase):
         used |= {"up.busy_printing", "up.busy_paused", "state.printing", "state.paused"}
         missing = sorted(k for k in used if k not in i18n.STRINGS)
         self.assertEqual(missing, [])
+        # The app ships in English. Arabic is kept for the strings that already had it (--lang ar),
+        # so it is optional - but where it exists the placeholders must still match.
         for key, entry in i18n.STRINGS.items():
-            for lang in i18n.LANGS:
-                self.assertTrue(entry.get(lang), "%s has no %s text" % (key, lang))
-            ph = {lang: sorted(set(re.findall(r"\{(\w+)\}", entry[lang]))) for lang in i18n.LANGS}
-            self.assertEqual(ph["en"], ph["ar"], "placeholders differ in " + key)
+            self.assertTrue(entry.get("en"), "%s has no English text" % key)
+            if entry.get("ar"):
+                ph = {lang: sorted(set(re.findall(r"\{(\w+)\}", entry[lang]))) for lang in ("en", "ar")}
+                self.assertEqual(ph["en"], ph["ar"], "placeholders differ in " + key)
 
 
 if __name__ == "__main__":

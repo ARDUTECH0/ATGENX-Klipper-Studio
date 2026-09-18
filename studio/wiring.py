@@ -143,6 +143,8 @@ def wiring(P, board=None, config_text="", is_managed=None):
     for n in nodes:
         for pin in n["pins"]:
             pin["board"] = _pin_board(pin["pin"], boards)
+            if n["off"]:
+                continue  # a section that is switched off is not in use, so it cannot be wrong
             if not pin["pin"].strip():
                 pin["issue"] = tr("map.issue_empty")
                 n["issues"].append(pin["issue"])

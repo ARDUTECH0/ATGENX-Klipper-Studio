@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """Minimal Moonraker HTTP client (standard library only)."""
+import io
 import json
+import os
 import time
 import urllib.error
 import urllib.parse
@@ -12,6 +14,47 @@ from .i18n import tr
 
 class MoonrakerError(Exception):
     pass
+
+
+class Aborted(Exception):
+    """Raised inside an upload when the caller asked it to stop."""
+
+
+class _StreamedFile(object):
+    """A multipart body that reads the file as it is sent, so progress can be reported.
+
+    urllib asks a file-like object for chunks, so a 200 MB gcode never sits in memory.
+    """
+
+    def __init__(self, prefix, path, suffix, progress=None, stop=None):
+        self.parts = [io.BytesIO(prefix), io.open(path, "rb"), io.BytesIO(suffix)]
+        self.i, self.sent = 0, 0
+        self.total = len(prefix) + os.path.getsize(path) + len(suffix)
+        self.progress, self.stop = progress, stop
+
+    def read(self, n=-1):
+        if self.stop and self.stop():
+            self.close()
+            raise Aborted()
+        if n is None or n < 0:
+            n = 1 << 20
+        while self.i < len(self.parts):
+            b = self.parts[self.i].read(n)
+            if b:
+                self.sent += len(b)
+                if self.progress:
+                    self.progress(self.sent, self.total)
+                return b
+            self.parts[self.i].close()
+            self.i += 1
+        return b""
+
+    def close(self):
+        for p in self.parts[self.i:]:
+            try:
+                p.close()
+            except OSError:
+                pass
 
 
 class Moonraker:
@@ -132,6 +175,86 @@ class Moonraker:
         data += text.encode("utf-8") + ("\r\n--%s--\r\n" % b).encode("utf-8")
         return self._req("POST", "/server/files/upload", data=data, timeout=30,
                          headers={"Content-Type": "multipart/form-data; boundary=" + b})
+
+    # ---- gcode files ----
+    def list_dir(self, path="gcodes"):
+        """One folder: {'dirs': [...], 'files': [...]}."""
+        return self.get("/server/files/directory?path=%s&extended=true" % urllib.parse.quote(path))
+
+    def list_gcodes(self):
+        """Every gcode file on the printer, as {path: size}."""
+        return dict((f["path"], f.get("size", 0)) for f in self.get("/server/files/list?root=gcodes"))
+
+    def metadata(self, filename):
+        return self.get("/server/files/metadata?filename=" + urllib.parse.quote(filename))
+
+    def download(self, root, path, timeout=300):
+        return self._req("GET", "/server/files/%s/%s" % (root, urllib.parse.quote(path)),
+                         raw=True, timeout=timeout)
+
+    def thumbnail(self, filename):
+        """The biggest thumbnail the slicer embedded, as image bytes - or b'' if there is none."""
+        try:
+            thumbs = self.metadata(filename).get("thumbnails") or []
+        except MoonrakerError:
+            return b""
+        if not thumbs:
+            return b""
+        best = max(thumbs, key=lambda t: t.get("size") or t.get("width") or 0)
+        rel = (best.get("relative_path") or "").lstrip("/")
+        if not rel:
+            return b""
+        folder = filename.rpartition("/")[0]
+        path = "%s/%s" % (folder, rel) if folder and not rel.startswith(folder + "/") else rel
+        try:
+            return self.download("gcodes", path, timeout=60)
+        except MoonrakerError:
+            return b""
+
+    def upload_gcode(self, local_path, remote_dir="", progress=None, stop=None, timeout=3600):
+        """Sends a local file to the gcodes root, reporting progress(sent, total) as it goes."""
+        b = "----studio" + uuid.uuid4().hex
+        name = os.path.basename(local_path)
+        folder = (remote_dir or "").strip("/")
+        path_field = ("--%s\r\nContent-Disposition: form-data; name=\"path\"\r\n\r\n%s\r\n" % (b, folder)) if folder else ""
+        prefix = (("--%s\r\nContent-Disposition: form-data; name=\"root\"\r\n\r\ngcodes\r\n" % b) + path_field +
+                  ("--%s\r\nContent-Disposition: form-data; name=\"file\"; filename=\"%s\"\r\n"
+                   "Content-Type: application/octet-stream\r\n\r\n" % (b, name))).encode("utf-8")
+        suffix = ("\r\n--%s--\r\n" % b).encode("utf-8")
+        body = _StreamedFile(prefix, local_path, suffix, progress, stop)
+        try:
+            return self._req("POST", "/server/files/upload", data=body, timeout=timeout,
+                             headers={"Content-Type": "multipart/form-data; boundary=" + b,
+                                      "Content-Length": str(body.total)})
+        finally:
+            body.close()
+
+    def delete_gcode(self, path):
+        return self._req("DELETE", "/server/files/gcodes/" + urllib.parse.quote(path.lstrip("/")))
+
+    def delete_dir(self, path, force=True):
+        """Deletes a folder under gcodes; force also removes what is inside it."""
+        path = "gcodes/" + path.strip("/") if not path.startswith("gcodes") else path
+        return self._req("DELETE", "/server/files/directory?path=%s&force=%s"
+                         % (urllib.parse.quote(path), "true" if force else "false"))
+
+    def busy_files(self):
+        """Files that must never be overwritten or deleted: printing now, or waiting in the queue."""
+        busy = set()
+        try:
+            st = self.query("print_stats")["print_stats"]
+            if (st.get("state") or "") in ("printing", "paused") and st.get("filename"):
+                busy.add(st["filename"].lstrip("/"))
+        except (MoonrakerError, KeyError, TypeError):
+            pass
+        try:
+            for job in self.get("/server/job_queue/status").get("queued_jobs") or []:
+                name = job.get("filename") or job.get("path")
+                if name:
+                    busy.add(str(name).lstrip("/"))
+        except (MoonrakerError, KeyError, TypeError, AttributeError):
+            pass
+        return busy
 
     # ---- control ----
     def firmware_restart(self):
