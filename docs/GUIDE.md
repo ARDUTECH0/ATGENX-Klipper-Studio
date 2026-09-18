@@ -1,6 +1,6 @@
 # Klipper Studio - User guide
 
-This guide explains every page and every setting of Klipper Studio 1.0.0-beta.4, and walks through the most common tasks. The same explanations appear inside the app in the help panel on the right - point at any setting to read them.
+This guide explains every page and every setting of Klipper Studio 1.0.0-beta.5, and walks through the most common tasks. The same explanations appear inside the app in the help panel on the right - point at any setting to read them.
 
 ## Contents
 
@@ -287,6 +287,26 @@ Smart merge keeps your file and changes only what's needed. Clean new file rewri
 ### All config files
 
 All files of the printer. Click a file or a section in the tree, edit, then Save to printer. A backup is made first and only the matching service restarts (Klipper for .cfg, Moonraker for moonraker.conf...).
+
+### Printers
+
+Your printers, and sending the same files to all of them at once.  
+1. Add printer: name, address, and - if they are not the usual ones - the Moonraker port, the SSH port and the folder its files go into.  
+2. Tick the printers you want, add files or a whole folder, and press Sync.  
+3. Each printer gets its own progress bar with speed and time left, and the log says what happened.  
+  
+Dry run does everything except write. A file that is printing or waiting in the queue is never overwritten - it is skipped and listed for you.
+
+| Setting | What it does | In printer.cfg |
+|---|---|---|
+| **fleet.dry_run** | Runs the whole sync without writing anything: it connects, compares every file and tells you what it would send, replace or skip. Use it the first time you point the app at a printer you care about. |  |
+| **fleet.skip_same** | A file already on the printer with exactly the same size is left alone. Turn this off to send everything again, for example after re-slicing with the same file names. |  |
+
+### Printer files
+
+What is on a printer right now. Double-click a folder to open it, hover a file to see the thumbnail the slicer put in it, and select files to delete them.  
+  
+Anything printing or queued is marked and cannot be deleted.
 
 ### Troubleshooter
 

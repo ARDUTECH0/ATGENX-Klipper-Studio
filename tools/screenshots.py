@@ -47,6 +47,14 @@ def main(lang="en"):
     shots = {"page_start": "start", "page_board": "board", "page_features": "features", "page_probe": "probe",
              "page_preview": "review", "page_files": "files"}
 
+    # a small fleet so the Printers page has something to show
+    from studio import printers as _PR
+    _PR.save_printers([_PR.new_printer("Voron 2.4", "192.168.1.21"),
+                       _PR.new_printer("Ender 3 - shelf", "192.168.1.22", remote_path="shelf"),
+                       _PR.new_printer("Test bench", "192.168.1.23", port=7126, ssh_port=2222)])
+    win.fleet = _PR.load_printers()
+    win._fill_printers()
+
     def shot(builder, name):
         win.goto_page(builder)
         if builder == "page_preview":
@@ -98,6 +106,7 @@ def main(lang="en"):
     img.save(path)
     print(path)
 
+    shot("page_printers", "printers")
     win._doctor_show("MCU 'mcu' shutdown: Timer too close\n"
                      "Unable to read tmc uart 'stepper_x' register IFCNT", "klippy.log")
     shot("page_doctor", "doctor")

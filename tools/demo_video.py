@@ -82,9 +82,10 @@ AR = {
     "Uploading is the careful part": "الرفع هو الجزء اللي محتاج حرص",
     "Refused while printing, backed up on the printer and on your PC, FIRMWARE_RESTART, one-click restore.":
         "مرفوض أثناء الطباعة، نسخة احتياطية على الطابعة وعلى جهازك، FIRMWARE_RESTART، واسترجاع بضغطة واحدة.",
-    "Free for personal use": "مجاني للاستخدام الشخصي",
+    "Tested on a real printer": "مجرّب على طابعة حقيقية",
+    "Free software  ·  GPL-3.0": "برنامج حر  ·  GPL-3.0",
     "Windows: download KlipperStudio.exe and double-click": "ويندوز: نزّل KlipperStudio.exe ودوس عليه دبل كليك",
-    "English and Arabic": "بالعربي والإنجليزي",
+    "English and Arabic": "بالإنجليزي",
 }
 
 
@@ -364,8 +365,8 @@ def script(r, win, app):
            sub="Refused while printing, backed up on the printer and on your PC, FIRMWARE_RESTART, one-click restore.",
            seconds=3.4, do=upload, move_to=r.at(win.tabs, 0.5, 0.9))
 
-    r.card("Free for personal use", [REPO_URL, "Windows: download KlipperStudio.exe and double-click",
-                                     "", "%s  ·  %s" % (r.t("English and Arabic"), __version__)], logo=True, seconds=4.0)
+    r.card("Free software  ·  GPL-3.0", [REPO_URL, "Windows: download KlipperStudio.exe and double-click",
+                                     "", "%s  ·  %s" % (r.t("Tested on a real printer"), __version__)], logo=True, seconds=4.0)
 
 
 def encode(gif=False, fps=FPS, suffix=""):

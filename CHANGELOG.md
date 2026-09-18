@@ -1,11 +1,51 @@
 # Changelog
 
-## Unreleased
+## 1.0.0-beta.5 - 2026-09-18
+
+**Tested on a real printer for the first time** - an SKR 1.4 Turbo running Klipper v0.13.0, backed up first:
+28 checks, none failed. Importing the real 52 KB `printer.cfg` with its includes and `SAVE_CONFIG` rewrote
+**0 lines** when nothing was edited, and all 52 macros and 3,962 comments survived untouched. A real upload
+made its backup on the printer, ran `FIRMWARE_RESTART`, waited for Klipper to come back, and left the file
+byte-identical. A gcode file went up at 1.4 MB/s with live progress and was skipped on the second run.
 
 ### License
-- The project is now **GNU GPL v3.0 or later**, replacing PolyForm Noncommercial. It is free
-  software: use it, change it, share it, sell it - as long as what you pass on stays GPL with
-  its source. This is what was promised to the community when they asked.
+- The project is now **GNU GPL v3.0 or later**, replacing PolyForm Noncommercial. Free software: use it,
+  study it, change it, share it, sell it - as long as what you pass on stays GPL and ships its source.
+  No warranty.
+
+### Printers (new page)
+- Add, edit, remove and reorder your machines. Each one can override the Moonraker port, the SSH port, the
+  API key and the folder its files go into.
+- **Send the same files to every printer at once**, one thread each, with a progress bar, transfer speed and
+  time left per printer, and a colour-coded log of what happened.
+- **Dry run** connects, compares every file and reports what it would send, replace or skip - and writes nothing.
+- Files already on the printer with the same size are skipped, unless you turn that off.
+- **A file that is printing, or waiting in Moonraker's queue, is never overwritten and never deleted.** It is
+  skipped and listed for you to handle yourself.
+
+### Printer files (new page)
+- Browse what is on a printer: folders, sizes, and the thumbnail the slicer embedded in each gcode, pulled
+  from `.thumbs/`. Hover a file to see it bigger.
+- Select several files - or a whole folder - and delete them in one go, with the protected ones refused.
+
+### Look
+- One **accent colour** drives the whole window, with six presets and a colour picker. The default is red.
+- **Every emoji is gone.** The sidebar and toolbar icons are drawn in code, so they follow the accent colour
+  and look the same on every machine, with nothing extra to ship.
+
+### English only
+- The language switch has been removed and the app starts in English. The Arabic strings are still in the
+  code and can be reached with `python -m studio --lang ar`.
+
+### Fixes
+- The wiring map no longer reports a problem for a section that is switched off: a commented-out `[adxl345]`
+  pointing at a commented-out `[mcu pico]` is correct, not an error. Found on a real printer.
+- **Fit to window** centres on the diagram instead of the origin, so devices are no longer cut off.
+- The motors table no longer truncates the driver socket column.
+
+### Testing
+- 55 unit tests and 56 end-to-end checks against a fake Moonraker, plus the live run above.
+- `tests/test_fleet.py` covers the printer list, the sync engine, dry run, and the print-safety rules.
 
 ## 1.0.0-beta.4 - 2026-09-17
 
