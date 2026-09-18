@@ -9,11 +9,11 @@
 ![status](https://img.shields.io/badge/status-beta-orange)
 ![boards](https://img.shields.io/badge/boards-83-blue)
 ![python](https://img.shields.io/badge/python-3.9%2B-3776ab)
-![license](https://img.shields.io/badge/license-PolyForm%20Noncommercial-lightgrey)
-![languages](https://img.shields.io/badge/UI-English%20%7C%20العربية-2ea043)
+![license](https://img.shields.io/badge/license-GPL--3.0-blue)
+![interface](https://img.shields.io/badge/UI-English-2ea043)
 [![Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-support-ffdd00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/seifemadatv)
 
-[العربية](README.ar.md) · [User guide](docs/GUIDE.md) · [Supported boards](docs/BOARDS.md) · [Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md)
+[User guide](docs/GUIDE.md) · [Supported boards](docs/BOARDS.md) · [Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md)
 
 <img src="docs/demo/demo.gif" width="900" alt="Klipper Studio: importing a printer.cfg, setting up motors, the wiring map and the diff">
 
@@ -72,7 +72,7 @@ checks the common mistakes, and uploads it through Moonraker with a backup.
 - **It explains itself.** A help panel shows what every setting does, typical values and where it lands in
   printer.cfg; the generated file gets a heading per group and an explanation per section; and there is a full
   [user guide](docs/GUIDE.md).
-- **English and Arabic** (right-to-left) interface, switchable at any time.
+- **Printers page.** Add your machines, then send the same files to all of them at once: a progress bar, speed and ETA per printer, a dry run that writes nothing, and a rule that a file which is printing or queued is never overwritten. A separate page browses what is on a printer, with the slicer's thumbnails, and deletes safely.
 - **Command line** for automation and CI: `python -m studio check printer.cfg`.
 
 ## Screenshots
@@ -80,8 +80,8 @@ checks the common mistakes, and uploads it through Moonraker with a backup.
 | Board | All config files |
 |---|---|
 | <img src="docs/screenshots/board-en.png" width="440"> | <img src="docs/screenshots/files-en.png" width="440"> |
-| **Motors & drivers** | **Troubleshooter (Arabic UI)** |
-| <img src="docs/screenshots/motors-en.png" width="440"> | <img src="docs/screenshots/doctor-ar.png" width="440"> |
+| **Motors & drivers** | **Troubleshooter** |
+| <img src="docs/screenshots/motors-en.png" width="440"> | <img src="docs/screenshots/doctor-en.png" width="440"> |
 | **Wiring map** | **Features** |
 | <img src="docs/screenshots/map-en.png" width="440"> | <img src="docs/screenshots/features-en.png" width="440"> |
 | **Switch any section of your file** | **All config files** |
@@ -168,12 +168,11 @@ If Klipper Studio saved you time:
 
 ## License
 
-[PolyForm Noncommercial 1.0.0](LICENSE). **Free for personal, hobby, educational and other noncommercial use**,
-including modifying it and sharing your changes under the same terms.
-**Selling it, bundling it with a paid product or using it commercially is not allowed** without written permission
-from the author. For commercial licensing, open an issue.
+[GNU General Public License v3.0 or later](LICENSE). **Free software**: you may use it, study it, change it
+and share it, including commercially. If you distribute it, or a program based on it, you must pass on the
+same freedoms and the source code under the GPL.
 
-This is a *source-available* license, not an OSI-approved open source license.
+It comes with **no warranty**. Read the *Differences* tab before you upload anything to a printer.
 
 ## Credits
 

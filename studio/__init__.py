@@ -5,7 +5,7 @@ import sys
 
 APP_NAME = "ATGENX Klipper Studio"
 __version__ = "1.0.0-beta.4"
-LICENSE_NAME = "PolyForm Noncommercial 1.0.0"
+LICENSE_NAME = "GNU GPL v3.0 or later"
 REPO_URL = "https://github.com/ARDUTECH0/ATGENX-Klipper-Studio"
 SUPPORT_URL = "https://buymeacoffee.com/seifemadatv"
 
